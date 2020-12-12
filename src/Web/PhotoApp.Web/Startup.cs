@@ -29,8 +29,9 @@ namespace PhotoApp.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<PhotoAppDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                 options.UseMySql(
+                     Configuration.GetConnectionString("DefaultConnection")));
+
 
             services.AddDefaultIdentity<PhotoAppUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<PhotoAppDbContext>();
