@@ -19,14 +19,12 @@ namespace PhotoApp.Data.Models
         public string LastName { get; set; }
 
         [Required]
-        [MaxLength(NameMaxLength)]
-        public string Nickname { get; set; }
-
-        [Required]
         public DateTime Birthday { get; set; }
 
-        public string ProfilePictureId { get; set; }
+        public AccountUserPhoto ProfilePicture { get; set; }
 
         public DateTime CreatedOn { get; set; }
+
+        public ICollection<UserPhoto> UsersPhotos { get; set; } = new HashSet<UserPhoto>();
     }
 }

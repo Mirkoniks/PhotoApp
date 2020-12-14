@@ -38,6 +38,15 @@ namespace PhotoApp.Web.Controllers
             List<string> photos = new List<string>();
             photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607333511/tgeahxxe9dubfn4iifay.png");
             photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325364/sample.jpg");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325378/samples/landscapes/nature-mountains.jpg");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325375/samples/landscapes/beach-boat.jpg");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325374/samples/landscapes/architecture-signs.jpg");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325371/samples/landscapes/girl-urban-view.jpg");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325379/samples/animals/kitten-playing.gif");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325373/samples/animals/three-dogs.jpg");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325369/samples/animals/reindeer.jpg");
+            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607325368/samples/animals/cat.jpg");
+
 
             photosViewModel.Photos = photos;
 

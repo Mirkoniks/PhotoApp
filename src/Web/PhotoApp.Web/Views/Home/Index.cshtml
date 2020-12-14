@@ -14,7 +14,15 @@
     <ul>
         @foreach (var item in Model.Photos)
         {
-            <li><img src="@item" alt="Alternate Text" />></li>
+            <li><img class="lazy" src="@item" alt="Alternate Text" />></li>
         }
     </ul>
 </div>
+
+<script type="text/javascript" src="jquery.lazy.min.js"></script>
+
+<script>
+    $(function () {
+        $('.lazy').Lazy();
+    });
+</script>

@@ -33,7 +33,15 @@ namespace PhotoApp.Web
                      Configuration.GetConnectionString("DefaultConnection")));
 
 
-            services.AddDefaultIdentity<PhotoAppUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<PhotoAppUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredLength = 3;
+            })
                 .AddEntityFrameworkStores<PhotoAppDbContext>();
 
             services.AddControllersWithViews();

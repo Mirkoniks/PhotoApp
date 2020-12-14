@@ -43,14 +43,43 @@ namespace PhotoApp.Data.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 30, nullable: false),
                     LastName = table.Column<string>(maxLength: 30, nullable: false),
-                    Nickname = table.Column<string>(maxLength: 30, nullable: false),
                     Birthday = table.Column<DateTime>(nullable: false),
-                    ProfilePictureId = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Challanges",
+                columns: table => new
+                {
+                    ChallangeId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    IsOpen = table.Column<bool>(nullable: false),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    MaxPhotos = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Challanges", x => x.ChallangeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    PhotoId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Link = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.PhotoId);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,6 +101,26 @@ namespace PhotoApp.Data.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountsUsersPhotos",
+                columns: table => new
+                {
+                    AccountUserPhotoId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PhotoLink = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountsUsersPhotos", x => x.AccountUserPhotoId);
+                    table.ForeignKey(
+                        name: "FK_AccountsUsersPhotos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -159,6 +208,61 @@ namespace PhotoApp.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PhotosChallanges",
+                columns: table => new
+                {
+                    PhotoId = table.Column<int>(nullable: false),
+                    ChallangeId = table.Column<int>(nullable: false),
+                    VotesCount = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PhotosChallanges", x => new { x.PhotoId, x.ChallangeId });
+                    table.ForeignKey(
+                        name: "FK_PhotosChallanges_Challanges_ChallangeId",
+                        column: x => x.ChallangeId,
+                        principalTable: "Challanges",
+                        principalColumn: "ChallangeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PhotosChallanges_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "PhotoId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsersPhotos",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    PhotoId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersPhotos", x => new { x.UserId, x.PhotoId });
+                    table.ForeignKey(
+                        name: "FK_UsersPhotos_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "PhotoId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UsersPhotos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountsUsersPhotos_UserId",
+                table: "AccountsUsersPhotos",
+                column: "UserId",
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -195,10 +299,23 @@ namespace PhotoApp.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PhotosChallanges_ChallangeId",
+                table: "PhotosChallanges",
+                column: "ChallangeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersPhotos_PhotoId",
+                table: "UsersPhotos",
+                column: "PhotoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AccountsUsersPhotos");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -215,7 +332,19 @@ namespace PhotoApp.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "PhotosChallanges");
+
+            migrationBuilder.DropTable(
+                name: "UsersPhotos");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Challanges");
+
+            migrationBuilder.DropTable(
+                name: "Photos");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

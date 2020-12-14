@@ -9,7 +9,7 @@ using PhotoApp.Data;
 namespace PhotoApp.Data.Migrations
 {
     [DbContext(typeof(PhotoAppDbContext))]
-    [Migration("20201212201750_Initial")]
+    [Migration("20201213224019_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -151,6 +151,69 @@ namespace PhotoApp.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("PhotoApp.Data.Models.AccountUserPhoto", b =>
+                {
+                    b.Property<int>("AccountUserPhotoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhotoLink")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("AccountUserPhotoId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("AccountsUsersPhotos");
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.Challange", b =>
+                {
+                    b.Property<int>("ChallangeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsOpen")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MaxPhotos")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("ChallangeId");
+
+                    b.ToTable("Challanges");
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.Photo", b =>
+                {
+                    b.Property<int>("PhotoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Link")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("PhotoId");
+
+                    b.ToTable("Photos");
+                });
+
             modelBuilder.Entity("PhotoApp.Data.Models.PhotoAppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -192,11 +255,6 @@ namespace PhotoApp.Data.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Nickname")
-                        .IsRequired()
-                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
-                        .HasMaxLength(30);
-
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
@@ -213,9 +271,6 @@ namespace PhotoApp.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("ProfilePictureId")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -237,6 +292,39 @@ namespace PhotoApp.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.PhotoChallange", b =>
+                {
+                    b.Property<int>("PhotoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChallangeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VotesCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("PhotoId", "ChallangeId");
+
+                    b.HasIndex("ChallangeId");
+
+                    b.ToTable("PhotosChallanges");
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.UserPhoto", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("PhotoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "PhotoId");
+
+                    b.HasIndex("PhotoId");
+
+                    b.ToTable("UsersPhotos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -287,6 +375,43 @@ namespace PhotoApp.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.AccountUserPhoto", b =>
+                {
+                    b.HasOne("PhotoApp.Data.Models.PhotoAppUser", "User")
+                        .WithOne("ProfilePicture")
+                        .HasForeignKey("PhotoApp.Data.Models.AccountUserPhoto", "UserId");
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.PhotoChallange", b =>
+                {
+                    b.HasOne("PhotoApp.Data.Models.Challange", "Challange")
+                        .WithMany("PhotosChallanges")
+                        .HasForeignKey("ChallangeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PhotoApp.Data.Models.Photo", "Photo")
+                        .WithMany("PhotosChallanges")
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.UserPhoto", b =>
+                {
+                    b.HasOne("PhotoApp.Data.Models.Photo", "Photo")
+                        .WithMany("UsersPhotos")
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PhotoApp.Data.Models.PhotoAppUser", "User")
+                        .WithMany("UsersPhotos")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
