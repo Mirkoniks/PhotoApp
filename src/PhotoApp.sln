@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BB0184F6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoApp.Tests", "..\tests\PhotoApp.Tests\PhotoApp.Tests.csproj", "{1D67BD89-B8F1-4ABA-814A-01BE39C27A83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoApp.Data", "Data\PhotoApp.Data\PhotoApp.Data.csproj", "{E2A9EA1C-E323-4074-A939-01E60FFC31ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoApp.Data", "Data\PhotoApp.Data\PhotoApp.Data.csproj", "{E2A9EA1C-E323-4074-A939-01E60FFC31ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

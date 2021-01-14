@@ -13,6 +13,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PhotoApp.Data;
 using PhotoApp.Data.Models;
+using CloudinaryDotNet;
+using PhotoApp.Services.CloudinaryService;
+using PhotoApp.Services.PhotoService;
+using PhotoApp.Services.UserService;
+using PhotoApp.Services.ChallangeService;
+using PhotoApp.Web.Hubs;
 
 namespace PhotoApp.Web
 {
@@ -42,7 +48,24 @@ namespace PhotoApp.Web
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredLength = 3;
             })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<PhotoAppDbContext>();
+
+
+            Account account = new Account(
+                this.Configuration["Cloudinary:Appname"],
+                this.Configuration["Cloudinary:ApiKey"],
+                this.Configuration["Cloudinary:ApiSecret"]
+                );
+            Cloudinary cloudinary = new Cloudinary(account);
+
+            services.AddSingleton(cloudinary);
+            services.AddTransient<ICloundinaryService, CloudinaryService>();
+            services.AddTransient<IPhotoService, PhotoService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IChallangeService, ChallangeService>();
+
+            services.AddSignalR();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -71,9 +94,16 @@ namespace PhotoApp.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<LoadHub>("/load");
+
+                endpoints.MapControllerRoute(
+                    name: "Admin",
+                    pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }

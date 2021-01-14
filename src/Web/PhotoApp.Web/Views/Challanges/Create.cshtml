@@ -1,0 +1,37 @@
+﻿@using PhotoApp.Web.ViewModels
+@model CreateChallangeModel
+
+
+    <div class="row">
+        <div class="col-4">
+
+        </div>
+        <div class=" col-4">
+            <form asp-action="CreateConfirm" method="post">
+                <div>
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Description"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="StartTime"></label>
+                    <input asp-for="StartTime" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="EndTime"></label>
+                    <input asp-for="EndTime" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <input type="submit" class="btn btn-primary" />
+            </form>
+        </div>
+        <div class="col-4">
+
+        </div>
+    </div>

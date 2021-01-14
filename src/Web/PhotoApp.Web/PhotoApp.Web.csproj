@@ -26,7 +26,13 @@
     <ProjectReference Include="..\..\Data\PhotoApp.Data.Models\PhotoApp.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\PhotoApp.Data\PhotoApp.Data.csproj" />
     <ProjectReference Include="..\..\Services\PhotoApp.Services.Models\PhotoApp.Services.Models.csproj" />
+    <ProjectReference Include="..\..\Services\PhotoApp.Services\PhotoApp.Services.csproj" />
     <ProjectReference Include="..\PhotoApp.Web.ViewModels\PhotoApp.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\adminPanel\" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <UserSecretsId>66f47efe-7eb0-492d-b524-9e6689bef390</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.14.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\PhotoApp.Data\PhotoApp.Data.csproj" />
+    <ProjectReference Include="..\PhotoApp.Services.Models\PhotoApp.Services.Models.csproj" />
+  </ItemGroup>
 
 </Project>

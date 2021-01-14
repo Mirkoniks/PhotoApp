@@ -1,0 +1,79 @@
+﻿@model PhotoApp.Web.ViewModels.ChallangeViewModel
+
+
+
+
+
+
+
+<div class="ml-2 mr-2">
+    <div class="card text-center ">
+        <div class="containerPhoto">
+            <img src="https://www.wallpapertip.com/wmimgs/2-21896_fantastic-full-hd-wallpaper-hd-walpaper.jpg"
+                 class="m-2" width="99%" alt="Alternate Text" />
+            <div class="centered ">@Model.Name</div>
+            <div class="centered1 back rounded">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus iusto dolor est eum, quidem neque aliquid eius sequi culpa ducimus nisi vel minus autem odit vitae, cupiditate cumque accusamus eligendi!
+            </div>
+            <a href="#" class="btn btn-primary btn-lg centered3 ">Rate photos</a>
+
+            <!-- Button trigger modal -->
+            <button id="uploadButton" type="button" class="btn btn-primary btn-lg centered4" data-toggle="modal" data-target="#exampleModal">
+                Upload Photo
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Upload</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-dark ulpoadForm">
+                            <form method="post" enctype="multipart/form-data" asp-controller="Challanges" asp-action="Upload">
+                                <input type="file" name="files" multiple />
+                                <input type="number" name="challangeId" value="@Model.Id" hidden/>
+                                <button type="submit"  value="Upload">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $("#uploadButton").
+    </script>
+}
+
+@*<ul class="nav nav-tabs justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Active</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li>
+    </ul>*@
