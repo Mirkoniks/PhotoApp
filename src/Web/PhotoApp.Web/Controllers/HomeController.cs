@@ -43,7 +43,7 @@ namespace PhotoApp.Web.Controllers
 
         public IActionResult Index()
         {
-            PhotosViewModel photosViewModel = new PhotosViewModel();
+            ViewModels.PhotosViewModel photosViewModel = new ViewModels.PhotosViewModel();
 
 
             List<string> photos = new List<string>();

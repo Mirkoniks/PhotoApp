@@ -3,6 +3,7 @@ using PhotoApp.Data.Models;
 using PhotoApp.Services.Models.Photo;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,9 +46,17 @@ namespace PhotoApp.Services.PhotoService
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task FindPhotoByIdAsync()
+        public async Task<PhotoServiceModel> FindPhotoByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            Photo photo = dbContext.Photos.Where(p => p.PhotoId == id).FirstOrDefault();
+
+            PhotoServiceModel photoServiceModel = new PhotoServiceModel
+            {
+                PhotoId = photo.PhotoId,
+                PhotoLink = photo.Link
+            };
+
+            return photoServiceModel;
         }
     }
 }

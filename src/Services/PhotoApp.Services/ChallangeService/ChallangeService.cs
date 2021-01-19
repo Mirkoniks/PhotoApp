@@ -93,5 +93,33 @@ namespace PhotoApp.Services.ChallangeService
 
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task<PhotosChallangesServiceModel> SkipAndGetPhotosFromChallange(int skipStep, int numPhotos, int challangeId)
+        {
+            IEnumerable<PhotoChallange> photoChallanges = dbContext.PhotosChallanges
+                                                                   .Where(c => c.ChallangeId == challangeId)
+                                                                   .Skip(skipStep).Take(numPhotos)
+                                                                   .ToList();
+
+            PhotosChallangesServiceModel photosChallangesServiceModel = new PhotosChallangesServiceModel();
+
+            List<PhotoChallangeServiceModel> serviceModels = new List<PhotoChallangeServiceModel>();
+
+            foreach (var item in photoChallanges)
+            {
+                PhotoChallangeServiceModel serviceModel = new PhotoChallangeServiceModel()
+                {
+                    PhotoId = item.PhotoId,
+                    ChallangeId = item.ChallangeId,
+                    VoteCount = item.VotesCount
+                };
+
+                serviceModels.Add(serviceModel);
+            }
+
+            photosChallangesServiceModel.PhotosChallanges = serviceModels;
+
+            return photosChallangesServiceModel;
+        }
     }
 }

@@ -15,7 +15,7 @@
             <div class="centered1 back rounded">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus iusto dolor est eum, quidem neque aliquid eius sequi culpa ducimus nisi vel minus autem odit vitae, cupiditate cumque accusamus eligendi!
             </div>
-            <a href="#" class="btn btn-primary btn-lg centered3 ">Rate photos</a>
+            <button id="rate" class="btn btn-primary btn-lg centered3 ">Rate photos</button>
 
             <!-- Button trigger modal -->
             <button id="uploadButton" type="button" class="btn btn-primary btn-lg centered4" data-toggle="modal" data-target="#exampleModal">
@@ -35,8 +35,8 @@
                         <div class="modal-body text-dark ulpoadForm">
                             <form method="post" enctype="multipart/form-data" asp-controller="Challanges" asp-action="Upload">
                                 <input type="file" name="files" multiple />
-                                <input type="number" name="challangeId" value="@Model.Id" hidden/>
-                                <button type="submit"  value="Upload">Upload</button>
+                                <input type="number" name="challangeId" value="@Model.Id" hidden />
+                                <button type="submit" value="Upload">Upload</button>
                             </form>
                         </div>
                     </div>
@@ -47,19 +47,98 @@
 
         </div>
     </div>
-    <div class="card mt-3">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+    <div id="photos">
+        <div class="card mt-3">
+            <div class="card-body">
+                <div id="photosContainer" class="row">
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
 @section Scripts{
     <script>
-        $("#uploadButton").
+
+        var TotalPhotos;
+        var StepsCount;
+
+        $(document).ready(function () {
+            $("#photos").hide();
+
+        });
+        $("#rate").click(
+            function () {
+                $("#photos").show();
+                $("#rate").prop('disabled', true)
+            }
+        )
+
+
+        //SingulaR for loading photos
+
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/load")
+            .build();
+
+        //     connection.on("GetPhotosCount",
+        //    function (lastPhotoId) {
+        //        LastPhotoId = lastPhotoId
+        //    }
+        //);
+
+        //connection.on("GetStepsCount",
+        //    function (totalPhotos) {
+        //        TotalPhotos = totalPhotos
+        //    }
+        //);
+
+        connection.on("GetPhotos",
+            function (model) {
+                var i;
+                for (i = 0; i < model.photos.length; i++) {
+                    $("#photosContainer").append(`<div class="col-3"><img width="90%" src="${model.photos[i].photoLink}" alt="Alternate Text" /> ${model.photos[i].photoId} </div>`)
+                }
+
+                TotalPhotos = model.photosCount;
+                StepsCount = model.stepsCount
+            }
+        );
+
+        $("#rate").click(function () {
+            //connection.invoke("LoadLastPhotoIdBack",LastPhotoId);
+            //connection.invoke("LoadTotalPhotosBack",TotalPhotos );
+
+            var loadInfo =
+            {
+                totalPhotos: TotalPhotos,
+                stepsCount: StepsCount,
+                challangeId: @Model.Id,
+            };
+
+            connection.invoke("LoadPhotos", loadInfo);
+        }
+        );
+
+        $(window).on("scroll", function () {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                //connection.invoke("LoadLastPhotoIdBack", LastPhotoId);
+                //connection.invoke("LoadTotalPhotosBack", TotalPhotos);
+
+            var loadInfo =
+            {
+                totalPhotos: TotalPhotos,
+                stepsCount: StepsCount,
+                challangeId: @Model.Id,
+            };
+
+                connection.invoke("LoadPhotos", loadInfo);
+            }
+        });
+
+        connection.start();
+
     </script>
 }
 

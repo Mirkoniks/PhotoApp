@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using PhotoApp.Data;
 using PhotoApp.Data.Models;
+using PhotoApp.Services.ChallangeService;
+using PhotoApp.Services.PhotoService;
+using PhotoApp.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +13,100 @@ namespace PhotoApp.Web.Hubs
 {
     public class LoadHub : Hub
     {
-        private readonly PhotoAppDbContext dbContext;
+        private const int PHOTOS_STEP = 6;
 
-        public LoadHub(PhotoAppDbContext dbContext)
+        private readonly PhotoAppDbContext dbContext;
+        private readonly IChallangeService challangeService;
+        private readonly IPhotoService photoService;
+
+        private int PhotosCount { get; set; }
+        private int StepsCount { get; set; }
+
+        public LoadHub(PhotoAppDbContext dbContext,
+                        IChallangeService challangeService,
+                        IPhotoService photoService
+                        )
         {
             this.dbContext = dbContext;
+            this.challangeService = challangeService;
+            this.photoService = photoService;
         }
 
-            
-        public async Task Send()
+        public async Task LoadPhotos(LoadInfo photos)
         {
-            string link = dbContext.Photos.First().Link;
+            List<PhotoViewModel> photoViewModels = new List<PhotoViewModel>();
 
-            await this.Clients.Caller.SendAsync(
-                "Load",
-                 link
-                );
+            StepsCount = photos.StepsCount;
+            PhotosCount = photos.TotalPhotos;
+
+            if (StepsCount == 0)
+            {
+                PhotosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == photos.ChallangeId).Count();
+            }
+
+            int step = PHOTOS_STEP;
+
+            if (PhotosCount < step)
+            {
+                step = PhotosCount;
+            }
+
+            if (StepsCount != 0)
+            {
+                var photosChallanges = dbContext
+                                       .PhotosChallanges
+                                       .Where(c => c.ChallangeId == photos.ChallangeId)
+                                       .Skip(StepsCount)
+                                       .Take(step)
+                                       .ToList();
+
+
+                for (int i = 0; i < photosChallanges.Count; i++)
+                {
+                    var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
+
+                    PhotoViewModel photoViewModel = new PhotoViewModel
+                    {
+                        PhotoId = photo.PhotoId,
+                        PhotoLink = photo.PhotoLink
+                    };
+
+                    photoViewModels.Add(photoViewModel);
+                }
+            }
+            else
+            {
+                var photosChallanges = dbContext.PhotosChallanges.Where(c => c.ChallangeId == photos.ChallangeId).Take(step).ToList();
+
+                for (int i = 0; i < photosChallanges.Count; i++)
+                {
+                    var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
+
+                    PhotoViewModel photoViewModel = new PhotoViewModel
+                    {
+                        PhotoId = photo.PhotoId,
+                        PhotoLink = photo.PhotoLink
+                    };
+
+                    photoViewModels.Add(photoViewModel);
+                }
+            }
+
+            StepsCount += step;
+
+            PhotosCount -= step;
+
+            PhotosViewModel1 photosViewModel = new PhotosViewModel1
+            {
+                Photos = photoViewModels,
+                PhotosCount = PhotosCount,
+                StepsCount = StepsCount
+            };
+
+                await Clients.Caller.SendAsync(
+                    "GetPhotos",
+                     photosViewModel
+                    );
         }
     }
 }

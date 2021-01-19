@@ -16,5 +16,7 @@ namespace PhotoApp.Services.ChallangeService
         public Task<ChallangeServiceModel> FindChallangeById(int id);
 
         public Task AddPhotoToChallange(int photoId, int challangeId);
+
+        public Task<PhotosChallangesServiceModel> SkipAndGetPhotosFromChallange(int skipStep, int numPhotos, int challangeId);
     }
 }

@@ -10,7 +10,7 @@ namespace PhotoApp.Services.PhotoService
     {
         public Task<int> AddPhotoAsync(string photoLink);
 
-        public Task FindPhotoByIdAsync();
+        public Task<PhotoServiceModel> FindPhotoByIdAsync(int id);
 
         public Task AssingPhotoToChallangeAsync(AssignPhotoToChallangeServiceModel serviceModel);
     }
