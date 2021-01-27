@@ -95,6 +95,7 @@ namespace PhotoApp.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<LoadHub>("/load");
+                endpoints.MapHub<VoteHub>("/vote");
 
                 endpoints.MapControllerRoute(
                     name: "Admin",

@@ -44,6 +44,11 @@ namespace PhotoApp.Web.Hubs
                 PhotosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == photos.ChallangeId).Count();
             }
 
+            if (PhotosCount == 0)
+            {
+                return;
+            }
+
             int step = PHOTOS_STEP;
 
             if (PhotosCount < step)
@@ -103,10 +108,10 @@ namespace PhotoApp.Web.Hubs
                 StepsCount = StepsCount
             };
 
-                await Clients.Caller.SendAsync(
-                    "GetPhotos",
-                     photosViewModel
-                    );
+             await Clients.Caller.SendAsync(
+                 "GetPhotos",
+                  photosViewModel
+                 );
         }
     }
 }

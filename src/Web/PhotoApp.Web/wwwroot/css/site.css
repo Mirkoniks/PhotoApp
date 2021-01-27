@@ -111,6 +111,18 @@ body {
     transform: translate(-50%, -50%);
 }
 
+.centered5 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+
+.card:hover .centered5 {
+    opacity: 1;
+}
+
 .back {
     background-color: rgb(0, 0, 0, 0.6);
 }
