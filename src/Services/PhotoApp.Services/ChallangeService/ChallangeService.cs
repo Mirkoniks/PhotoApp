@@ -12,6 +12,8 @@ namespace PhotoApp.Services.ChallangeService
 {
     public class ChallangeService : IChallangeService
     {
+        public static DateTime TodayDate { get; set; }
+
         private readonly PhotoAppDbContext dbContext;
 
         public ChallangeService(PhotoAppDbContext dbContext)
@@ -120,6 +122,17 @@ namespace PhotoApp.Services.ChallangeService
             photosChallangesServiceModel.PhotosChallanges = serviceModels;
 
             return photosChallangesServiceModel;
+        }
+
+        public async Task<bool> IsNewDay(DateTime now)
+        {
+            DateTime dateNow = DateTime.Today;
+
+            if (dateNow < TodayDate)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

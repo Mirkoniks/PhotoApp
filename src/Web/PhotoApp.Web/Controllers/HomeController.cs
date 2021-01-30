@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PhotoApp.Data.Models;
+using PhotoApp.Services.ChallangeService;
 using PhotoApp.Services.CloudinaryService;
 using PhotoApp.Services.PhotoService;
 using PhotoApp.Services.UserService;
@@ -31,7 +32,8 @@ namespace PhotoApp.Web.Controllers
                               Cloudinary cloudinary,
                               UserManager<PhotoAppUser> userManager,
                               IPhotoService photoService,
-                              IUserService userService)
+                              IUserService userService,
+                              IChallangeService challangeService)
         {
             _logger = logger;
             this.cloudinaryService = cloudinaryService;
@@ -43,6 +45,11 @@ namespace PhotoApp.Web.Controllers
 
         public IActionResult Index()
         {
+            if (ChallangeService.TodayDate == new DateTime())
+            {
+                ChallangeService.TodayDate = DateTime.Today;
+            }
+
             ViewModels.PhotosViewModel photosViewModel = new ViewModels.PhotosViewModel();
 
 

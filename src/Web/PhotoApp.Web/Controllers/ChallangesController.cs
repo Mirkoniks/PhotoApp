@@ -123,5 +123,11 @@ namespace PhotoApp.Web.Controllers
             return Redirect("/Challanges/Challange/" + challangeId);
 
         }
+
+        [HttpGet]
+        public IActionResult Latest()
+        {
+            return View();
+        }
     }
 }

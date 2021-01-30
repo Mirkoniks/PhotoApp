@@ -19,6 +19,8 @@ namespace PhotoApp.Data
 
         public DbSet<AccountUserPhoto> AccountsUsersPhotos { get; set; }
 
+        public DbSet<UsersPhotoLikes> UsersPhotoLikes { get; set; }
+
         public PhotoAppDbContext(DbContextOptions<PhotoAppDbContext> options)
             : base(options)
         {
@@ -60,6 +62,21 @@ namespace PhotoApp.Data
                 .HasOne(pc => pc.Challange)
                 .WithMany(c => c.PhotosChallanges)
                 .HasForeignKey(pc => pc.ChallangeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UsersPhotoLikes>()
+                .HasKey(upl => new { upl.PhotoId, upl.UserId });
+
+            builder.Entity<UsersPhotoLikes>()
+                .HasOne<Photo>(upl => upl.Photo)
+                .WithMany(p => p.UsersPhotoLikes)
+                .HasForeignKey(upl => upl.PhotoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UsersPhotoLikes>()
+                .HasOne<PhotoAppUser>(upl => upl.User)
+                .WithMany(pau => pau.UsersPhotoLikes)
+                .HasForeignKey(upl => upl.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
 
