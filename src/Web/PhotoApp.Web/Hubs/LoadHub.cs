@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using PhotoApp.Data;
 using PhotoApp.Data.Models;
 using PhotoApp.Services.ChallangeService;
@@ -18,22 +19,26 @@ namespace PhotoApp.Web.Hubs
         private readonly PhotoAppDbContext dbContext;
         private readonly IChallangeService challangeService;
         private readonly IPhotoService photoService;
+        private readonly UserManager<PhotoAppUser> userManager;
 
         private int PhotosCount { get; set; }
         private int StepsCount { get; set; }
 
         public LoadHub(PhotoAppDbContext dbContext,
                         IChallangeService challangeService,
-                        IPhotoService photoService
+                        IPhotoService photoService,
+                        UserManager<PhotoAppUser> userManager
                         )
         {
             this.dbContext = dbContext;
             this.challangeService = challangeService;
             this.photoService = photoService;
+            this.userManager = userManager;
         }
 
         public async Task LoadPhotos(LoadInfo photos)
         {
+
             List<PhotoViewModel> photoViewModels = new List<PhotoViewModel>();
 
             StepsCount = photos.StepsCount;
@@ -70,13 +75,18 @@ namespace PhotoApp.Web.Hubs
                 {
                     var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
 
-                    PhotoViewModel photoViewModel = new PhotoViewModel
-                    {
-                        PhotoId = photo.PhotoId,
-                        PhotoLink = photo.PhotoLink
-                    };
+                    var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
 
-                    photoViewModels.Add(photoViewModel);
+                    if (!isLiked)
+                    {
+                        PhotoViewModel photoViewModel = new PhotoViewModel
+                        {
+                            PhotoId = photo.PhotoId,
+                            PhotoLink = photo.PhotoLink
+                        };
+
+                        photoViewModels.Add(photoViewModel);
+                    }
                 }
             }
             else
@@ -87,13 +97,18 @@ namespace PhotoApp.Web.Hubs
                 {
                     var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
 
-                    PhotoViewModel photoViewModel = new PhotoViewModel
-                    {
-                        PhotoId = photo.PhotoId,
-                        PhotoLink = photo.PhotoLink
-                    };
+                    var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
 
-                    photoViewModels.Add(photoViewModel);
+                    if (!isLiked)
+                    {
+                        PhotoViewModel photoViewModel = new PhotoViewModel
+                        {
+                            PhotoId = photo.PhotoId,
+                            PhotoLink = photo.PhotoLink
+                        };
+
+                        photoViewModels.Add(photoViewModel);
+                    };
                 }
             }
 

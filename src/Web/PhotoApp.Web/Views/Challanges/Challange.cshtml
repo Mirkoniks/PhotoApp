@@ -104,6 +104,8 @@
             }
         );
 
+        var uid1 = document.getElementById("userId").textContent;
+
         $("#rate").click(function () {
 
             var loadInfo =
@@ -111,6 +113,7 @@
                 totalPhotos: TotalPhotos,
                 stepsCount: StepsCount,
                 challangeId: @Model.Id,
+                userId: uid1,
             };
 
             connection.invoke("LoadPhotos", loadInfo);
@@ -118,10 +121,8 @@
         );
 
 
-
-
-
         $(window).on("scroll", function () {
+
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
 
             var loadInfo =
@@ -129,11 +130,16 @@
                 totalPhotos: TotalPhotos,
                 stepsCount: StepsCount,
                 challangeId: @Model.Id,
+                userId: uid1,
             };
 
                 connection.invoke("LoadPhotos", loadInfo);
             }
         });
+
+        connection.start();
+
+
 
         function addLike(id) {
 
@@ -152,7 +158,6 @@
                 url: "https://localhost:44371/Api/AddLike",
                 data: likeInfo,
                 dataType: "text",
-                success: function (resultData) { alert("Save Complete") }
             });
         }
 
@@ -174,11 +179,9 @@
                 url: "https://localhost:44371/Api/RemoveLike",
                 data: likeInfo,
                 dataType: "text",
-                success: function (resultData) { alert("Save Complete") }
             });
         }
 
-        connection.start();
 
 
         function like(id) {

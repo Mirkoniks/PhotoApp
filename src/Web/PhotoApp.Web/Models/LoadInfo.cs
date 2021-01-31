@@ -16,5 +16,8 @@ namespace PhotoApp.Web.Models
 
         [JsonProperty("challangeId")]
         public int ChallangeId { get; set; }
+
+        [JsonProperty("userId")]
+        public string UserId { get; set; }
     }
 }
