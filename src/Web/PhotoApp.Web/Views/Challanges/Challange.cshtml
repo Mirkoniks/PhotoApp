@@ -52,12 +52,14 @@
             <div class="card-body">
                 <div id="photosContainer" class="row">
                     <div class="card-columns">
-                       
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <p id="challangeId" hidden>@Model.Id</p>
+    <p id="userId" hidden>@Model.UserId</p>
 
 </div>
 <div class="container">
@@ -69,6 +71,7 @@
 
         var TotalPhotos;
         var StepsCount;
+        var likes = [];
 
         $(document).ready(function () {
             $("#photos").hide();
@@ -82,51 +85,26 @@
         )
 
 
+
         //SingulaR for loading photos
 
         var connection = new signalR.HubConnectionBuilder()
             .withUrl("/load")
             .build();
 
-        //     connection.on("GetPhotosCount",
-        //    function (lastPhotoId) {
-        //        LastPhotoId = lastPhotoId
-        //    }
-        //);
-
-        //connection.on("GetStepsCount",
-        //    function (totalPhotos) {
-        //        TotalPhotos = totalPhotos
-        //    }
-        //);
-
-        //connection.on("GetPhotos",
-        //    function (model) {
-        //        var i;
-        //        for (i = 0; i < model.photos.length; i++) {
-        //            $("#photosContainer").append(`<div class="col-3"><img width="90%" src="${model.photos[i].photoLink}" alt="Alternate Text" /> ${model.photos[i].photoId} </div>`)
-        //        }
-
-        //        TotalPhotos = model.photosCount;
-        //        StepsCount = model.stepsCount
-        //    }
-        //);
-
                 connection.on("GetPhotos",
             function (model) {
                 var i;
                 for (i = 0; i < model.photos.length; i++) {
-                    $(".card-columns").append(`<div class="card card1"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button class="btn btn-danger centered5" type="submit">Like</button></div>`)
+                    $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
                 }
 
                 TotalPhotos = model.photosCount;
-                StepsCount = model.stepsCount
+                StepsCount = model.stepsCount;
             }
         );
 
         $("#rate").click(function () {
-            //connection.invoke("LoadLastPhotoIdBack",LastPhotoId);
-            //connection.invoke("LoadTotalPhotosBack",TotalPhotos );
 
             var loadInfo =
             {
@@ -139,10 +117,12 @@
         }
         );
 
+
+
+
+
         $(window).on("scroll", function () {
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                //connection.invoke("LoadLastPhotoIdBack", LastPhotoId);
-                //connection.invoke("LoadTotalPhotosBack", TotalPhotos);
 
             var loadInfo =
             {
@@ -155,22 +135,52 @@
             }
         });
 
+        function addLike(id) {
+
+            var uid = document.getElementById("userId").textContent;
+            var chid = document.getElementById("challangeId").textContent;
+
+            var likeInfo =
+            {
+                photoId: id,
+                userId: uid,
+                challangeId: chid,
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: "https://localhost:44371/Api/AddLike",
+                data: likeInfo,
+                dataType: "text",
+                success: function (resultData) { alert("Save Complete") }
+            });
+        }
+
         connection.start();
+
+
+        function like(id) {
+            if (likes.indexOf(id) === -1) {
+                likes.push(id);
+
+                document.getElementById(id).classList.remove('btn-danger');
+                document.getElementById(id).classList.add('btn-success');
+
+                addLike(id);
+            }
+            else {
+                let index = likes.indexOf(id);
+                delete likes[index];
+
+                document.getElementById(id).classList.remove('btn-success');
+                document.getElementById(id).classList.add('btn-danger');
+            }
+
+            likes = likes.filter(function (el) {
+                return el != null && el != '';
+            });
+
+        }
 
     </script>
 }
-
-@*<ul class="nav nav-tabs justify-content-center">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-    </ul>*@

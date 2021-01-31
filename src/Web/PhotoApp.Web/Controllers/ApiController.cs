@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PhotoApp.Data;
+using PhotoApp.Data.Models;
+using PhotoApp.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,28 +10,28 @@ using System.Threading.Tasks;
 namespace PhotoApp.Web.Controllers
 {
     public class ApiController : Controller
-    { 
-        public class Model
-        {
-            public string Name { get; set; }
+    {
+        private readonly PhotoAppDbContext dbContext;
 
-            public int Count { get; set; }
+        public ApiController(PhotoAppDbContext dbContext)
+        {
+            this.dbContext = dbContext;
         }
 
-        [HttpGet]
-        public IActionResult ResultTest()
+        [HttpPost]
+        public async Task AddLike(Like like)
         {
-            List<Model> list = new List<Model>();
+            dbContext.PhotosChallanges.Where(p => p.PhotoId == like.PhotoId).Where(c => c.ChallangeId == like.ChallangeId).FirstOrDefault().VotesCount++;
 
-            for (int i = 0; i < 1000; i++)
+            UsersPhotoLikes usersPhotoLikes = new UsersPhotoLikes
             {
-                Model model = new Model();
-                model.Count = i;
-                model.Name = "A" + i;
-                list.Add(model);
-            }
+                PhotoId = like.PhotoId,
+                UserId = like.UserId
+            };
 
-            return Json(list);
+            dbContext.UsersPhotoLikes.Add(usersPhotoLikes);
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }

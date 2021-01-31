@@ -113,5 +113,20 @@ namespace PhotoApp.Web.Hubs
                   photosViewModel
                  );
         }
+
+        public async Task AddLike(Like like)
+        {
+            dbContext.PhotosChallanges.Where(p => p.PhotoId == like.PhotoId).Where(c => c.ChallangeId == like.ChallangeId).FirstOrDefault().VotesCount++;
+
+            UsersPhotoLikes usersPhotoLikes = new UsersPhotoLikes
+            {
+                PhotoId = like.PhotoId,
+                UserId = like.UserId
+            };
+
+            dbContext.UsersPhotoLikes.Add(usersPhotoLikes);
+
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

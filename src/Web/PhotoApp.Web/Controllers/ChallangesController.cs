@@ -56,7 +56,7 @@ namespace PhotoApp.Web.Controllers
                     Name = item.Name,
                     Description = item.Description,
                     StartTime = item.StartTime,
-                    EndTime = item.EndTime
+                    EndTime = item.EndTime,
                 };
 
                 challangesList.Add(model);
@@ -98,7 +98,8 @@ namespace PhotoApp.Web.Controllers
                 Name = serviceModel.Name,
                 Description = serviceModel.Description,
                 StartTime = serviceModel.StartTime,
-                EndTime = serviceModel.EndTime
+                EndTime = serviceModel.EndTime,
+                UserId = userManager.GetUserId(this.User)
             };
 
             return View(model);
