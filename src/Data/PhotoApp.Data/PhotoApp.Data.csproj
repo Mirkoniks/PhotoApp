@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20201209192354_InitialCreate.cs" />
     <Compile Remove="Migrations\20201209192354_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210131133625_AddedColumnForChallanges.cs" />
+    <Compile Remove="Migrations\20210131133625_AddedColumnForChallanges.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

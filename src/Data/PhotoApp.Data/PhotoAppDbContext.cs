@@ -79,7 +79,6 @@ namespace PhotoApp.Data
                 .HasForeignKey(upl => upl.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             base.OnModelCreating(builder);
         }
     }

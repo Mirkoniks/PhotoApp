@@ -33,5 +33,21 @@ namespace PhotoApp.Web.Controllers
 
             await dbContext.SaveChangesAsync();
         }
+
+        [HttpDelete]
+        public async Task RemoveLike(Like like)
+        {
+            dbContext.PhotosChallanges.Where(p => p.PhotoId == like.PhotoId).Where(c => c.ChallangeId == like.ChallangeId).FirstOrDefault().VotesCount--;
+
+            UsersPhotoLikes usersPhotoLikes = new UsersPhotoLikes
+            {
+                PhotoId = like.PhotoId,
+                UserId = like.UserId
+            };
+
+            dbContext.Remove(usersPhotoLikes);
+
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

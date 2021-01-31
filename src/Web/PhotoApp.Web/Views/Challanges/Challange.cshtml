@@ -156,6 +156,28 @@
             });
         }
 
+
+        function removeLike(id) {
+
+            var uid = document.getElementById("userId").textContent;
+            var chid = document.getElementById("challangeId").textContent;
+
+            var likeInfo =
+            {
+                photoId: id,
+                userId: uid,
+                challangeId: chid,
+            };
+
+            $.ajax({
+                type: 'DELETE',
+                url: "https://localhost:44371/Api/RemoveLike",
+                data: likeInfo,
+                dataType: "text",
+                success: function (resultData) { alert("Save Complete") }
+            });
+        }
+
         connection.start();
 
 
@@ -174,6 +196,8 @@
 
                 document.getElementById(id).classList.remove('btn-success');
                 document.getElementById(id).classList.add('btn-danger');
+
+                removeLike(id);
             }
 
             likes = likes.filter(function (el) {
