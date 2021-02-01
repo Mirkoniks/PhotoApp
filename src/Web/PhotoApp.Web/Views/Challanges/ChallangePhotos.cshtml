@@ -1,0 +1,63 @@
+﻿@model PhotoApp.Web.ViewModels.TopPhotosViewModel
+
+<div class="m-2">
+    <div class="card text-center p-2">
+        <div class="card-columns">
+            @foreach (var photo in Model.Photos)
+            {
+                <div class="card">
+                    <img class="card-img-top" src="@photo.PhotoLink" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@photo.VotesCount Likes</h5>
+                        <p class="card-text"><small class="text-muted">Photo by @photo.Username</small></p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+    var photosSend1 = @Model.Photos.Count();
+    var challangeId1 = @Model.ChallangeId;
+
+
+    var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/load")
+            .build();
+
+    connection.on("GetTopPhotos",
+        function (model) {
+            var i;
+            for (i = 0; i < model.photos.length; i++) {
+                $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
+                photosSend1++;
+            }
+
+            TotalPhotos = model.photosCount;
+            StepsCount = model.stepsCount;
+        }
+    );
+
+
+    $(window).on("scroll", function () {
+
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+
+        var loadInfo =
+        {
+            photos: null,
+            challangeId: @Model.ChallangeId,
+            photosSend: photosSend1,
+        };
+
+            connection.invoke("LoadTopPhotos", loadInfo);
+        }
+    });
+
+    connection.start();
+
+    </script>
+}

@@ -129,19 +129,44 @@ namespace PhotoApp.Web.Hubs
                  );
         }
 
-        public async Task AddLike(Like like)
+        public async Task LoadTopPhotos(TopPhotosModel model)
         {
-            dbContext.PhotosChallanges.Where(p => p.PhotoId == like.PhotoId).Where(c => c.ChallangeId == like.ChallangeId).FirstOrDefault().VotesCount++;
+            int step = 6;
+            int photosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
+            int photosToGet = photosCount - model.PhotosSend;
 
-            UsersPhotoLikes usersPhotoLikes = new UsersPhotoLikes
+            if (photosToGet < 0)
             {
-                PhotoId = like.PhotoId,
-                UserId = like.UserId
-            };
+                return;
+            }
+            else if (photosToGet < step)
+            {
+                step = photosToGet;
+            }
 
-            dbContext.UsersPhotoLikes.Add(usersPhotoLikes);
+            var photos = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).OrderByDescending(v => v.VotesCount).Skip(model.PhotosSend).Take(step).ToList();
 
-            await dbContext.SaveChangesAsync();
+            TopPhotosModel topPhotosModel = new TopPhotosModel();
+            List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
+
+            foreach (var photo in photos)
+            {
+                TopPhotoModel topPhotoModel = new TopPhotoModel();
+                string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
+
+                topPhotoModel.VotesCount = photo.VotesCount;
+                topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
+                topPhotoModel.Username = username;
+
+                photoModels.Add(topPhotoModel);
+            }
+
+            topPhotosModel.Photos = photoModels;
+
+            await Clients.Caller.SendAsync(
+                "GetTopPhotos",
+                 topPhotosModel
+                );
         }
     }
 }

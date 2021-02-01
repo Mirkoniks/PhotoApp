@@ -134,5 +134,47 @@ namespace PhotoApp.Services.ChallangeService
             }
             return false;
         }
+
+        public async Task<TopPhotosServiceModel> FirstTopPhotosFromChallange(int challangeId, int numPhotos)
+        {
+            var photos = dbContext.PhotosChallanges.OrderByDescending(v => v.VotesCount).Take(numPhotos).ToList();
+
+            TopPhotosServiceModel serviceModel = new TopPhotosServiceModel();
+            List<TopPhotoServiceModel> photoServiceModels = new List<TopPhotoServiceModel>();
+
+
+            foreach (var photo in photos)
+            {
+                TopPhotoServiceModel photoServiceModel = new TopPhotoServiceModel();
+
+                photoServiceModel.VotesCount = photo.VotesCount;
+                photoServiceModel.PhotoLink =  GetPhotoLinkById(photo.PhotoId);
+                photoServiceModel.UserId = GetUserIdByPicureId(photo.PhotoId);
+
+                photoServiceModels.Add(photoServiceModel);
+            }
+
+            serviceModel.ChallangeId = challangeId;
+            serviceModel.Photos = photoServiceModels;
+
+            return serviceModel;
+        }
+
+        public async Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        private string GetPhotoLinkById(int id)
+        {
+            return dbContext.Photos.Where(p => p.PhotoId == id).FirstOrDefault().Link;
+        }
+
+        private string GetUserIdByPicureId(int id)
+        {
+            var result =  dbContext.UsersPhotos.Where(p => p.PhotoId == id).FirstOrDefault().UserId;
+
+            return result;
+        }
     }
 }

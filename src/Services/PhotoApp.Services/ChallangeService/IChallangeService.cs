@@ -20,5 +20,10 @@ namespace PhotoApp.Services.ChallangeService
         public Task<PhotosChallangesServiceModel> SkipAndGetPhotosFromChallange(int skipStep, int numPhotos, int challangeId);
 
         public Task<bool> IsNewDay(DateTime now);
+
+        public Task<TopPhotosServiceModel> FirstTopPhotosFromChallange(int challangeId, int numPhotos);
+
+        //if startPhotoId == 0, then take pic from begining
+        public Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0);
     }
 }
