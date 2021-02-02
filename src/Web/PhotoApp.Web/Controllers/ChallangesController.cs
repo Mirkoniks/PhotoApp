@@ -171,6 +171,7 @@ namespace PhotoApp.Web.Controllers
                 topPhoto.PhotoLink = item.PhotoLink;
                 topPhoto.Username = username.UserName;
                 topPhoto.VotesCount = item.VotesCount;
+                topPhoto.ChallangeName = item.ChallangeName;
 
                 list.Add(topPhoto);
             }
@@ -198,6 +199,7 @@ namespace PhotoApp.Web.Controllers
                 topPhoto.PhotoLink = item.PhotoLink;
                 topPhoto.Username = username.UserName;
                 topPhoto.VotesCount = item.VotesCount;
+                topPhoto.ChallangeName = item.ChallangeName;
 
                 list.Add(topPhoto);
             }

@@ -12,5 +12,7 @@ namespace PhotoApp.Services.Models.Challange
 
         public string PhotoLink { get; set; }
 
+        public string ChallangeName { get; set; }
+
     }
 }

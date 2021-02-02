@@ -174,6 +174,7 @@ namespace PhotoApp.Services.ChallangeService
                 photoServiceModel.VotesCount = photo.VotesCount;
                 photoServiceModel.PhotoLink = GetPhotoLinkById(photo.PhotoId);
                 photoServiceModel.UserId = GetUserIdByPicureId(photo.PhotoId);
+                photoServiceModel.ChallangeName = await GetChallangeNameById(photo.ChallangeId);
 
                 photoServiceModels.Add(photoServiceModel);
             }
@@ -197,6 +198,7 @@ namespace PhotoApp.Services.ChallangeService
                 photoServiceModel.VotesCount = photo.VotesCount;
                 photoServiceModel.PhotoLink = GetPhotoLinkById(photo.PhotoId);
                 photoServiceModel.UserId = GetUserIdByPicureId(photo.PhotoId);
+                photoServiceModel.ChallangeName = await GetChallangeNameById(photo.ChallangeId);
 
                 photoServiceModels.Add(photoServiceModel);
             }
@@ -206,6 +208,12 @@ namespace PhotoApp.Services.ChallangeService
             return serviceModel;
         }
 
+        public async Task<string> GetChallangeNameById(int id)
+        {
+            var challange = dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault().Name;
+
+            return challange;
+        }
 
         public async Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0)
         {

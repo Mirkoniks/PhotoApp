@@ -29,5 +29,8 @@ namespace PhotoApp.Services.ChallangeService
         public Task<TopPhotosServiceModel> GetTopPhotos(int numPhotos);
 
         public Task<TopPhotosServiceModel> GetLatestPhotos(int numPhotos);
+
+        public Task<string> GetChallangeNameById(int id);
+
     }
 }

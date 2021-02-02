@@ -14,5 +14,8 @@ namespace PhotoApp.Web.Models
         public string Username { get; set; }
         [JsonProperty("votesCount")]
         public int VotesCount { get; set; }
+
+        [JsonProperty("challangeName")]
+        public string ChallangeName { get; set; }
     }
 }

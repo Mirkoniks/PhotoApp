@@ -12,5 +12,7 @@ namespace PhotoApp.Web.ViewModels
 
         public string PhotoLink { get; set; }
 
+        public string ChallangeName { get; set; }
+
     }
 }

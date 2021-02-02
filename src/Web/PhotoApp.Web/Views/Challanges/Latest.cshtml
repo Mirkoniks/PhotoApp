@@ -9,6 +9,7 @@
                 <img class="card-img-top" src="@photo.PhotoLink" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">@photo.VotesCount Likes</h5>
+                    <p class="card-text">@photo.ChallangeName</p>
                     <p class="card-text"><small class="text-muted">Photo by @photo.Username</small></p>
                 </div>
             </div>
@@ -34,7 +35,7 @@
             if (photosSend1 != photosCount1) {
                 var i;
                 for (i = 0; i < model.photos.length; i++) {
-                    $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
+                    $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text">${model.photos[i].challangeName}</p><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
                     photosSend1++;
                 }
             }

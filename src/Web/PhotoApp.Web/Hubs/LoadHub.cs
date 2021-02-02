@@ -194,10 +194,13 @@ namespace PhotoApp.Web.Hubs
             {
                 TopPhotoModel topPhotoModel = new TopPhotoModel();
                 string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
+                var challangeId = dbContext.PhotosChallanges.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().ChallangeId;
+                string challangeName = dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().Name;
 
                 topPhotoModel.VotesCount = photo.VotesCount;
                 topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
                 topPhotoModel.Username = username;
+                topPhotoModel.ChallangeName = challangeName;
 
                 photoModels.Add(topPhotoModel);
             }
@@ -235,10 +238,13 @@ namespace PhotoApp.Web.Hubs
             {
                 TopPhotoModel topPhotoModel = new TopPhotoModel();
                 string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
+                var challangeId = dbContext.PhotosChallanges.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().ChallangeId;
+                string challangeName = dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().Name;
 
                 topPhotoModel.VotesCount = photo.VotesCount;
                 topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
                 topPhotoModel.Username = username;
+                topPhotoModel.ChallangeName = challangeName;
 
                 photoModels.Add(topPhotoModel);
             }
