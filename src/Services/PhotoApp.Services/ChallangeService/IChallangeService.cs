@@ -25,5 +25,7 @@ namespace PhotoApp.Services.ChallangeService
 
         //if startPhotoId == 0, then take pic from begining
         public Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0);
+
+        public Task<TopPhotosServiceModel> GetTopPhotos(int numPhotos);
     }
 }

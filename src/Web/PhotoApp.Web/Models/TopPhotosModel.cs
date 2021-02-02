@@ -14,6 +14,9 @@ namespace PhotoApp.Web.Models
         [JsonProperty("photosSend")]
         public int PhotosSend { get; set; }
 
+        [JsonProperty("photosCount")]
+        public int PhotosCount { get; set; }
+
         [JsonProperty("challangeId")]
         public int ChallangeId { get; set; }
     }

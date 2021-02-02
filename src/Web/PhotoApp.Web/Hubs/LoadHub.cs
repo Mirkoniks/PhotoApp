@@ -162,9 +162,51 @@ namespace PhotoApp.Web.Hubs
             }
 
             topPhotosModel.Photos = photoModels;
+            topPhotosModel.PhotosCount = photosCount;
 
             await Clients.Caller.SendAsync(
                 "GetTopPhotos",
+                 topPhotosModel
+                );
+        }
+
+        public async Task LoadAllTopPhotos(TopPhotosModel model)
+        {
+            int step = 10;
+            int photosCount = dbContext.PhotosChallanges.Count();
+            int photosToGet = photosCount - model.PhotosSend;
+
+            if (photosToGet < 0)
+            {
+                return;
+            }
+            else if (photosToGet < step)
+            {
+                step = photosToGet;
+            }
+
+            var photos = dbContext.PhotosChallanges.OrderByDescending(v => v.VotesCount).Skip(model.PhotosSend).Take(step).ToList();
+
+            TopPhotosModel topPhotosModel = new TopPhotosModel();
+            List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
+
+            foreach (var photo in photos)
+            {
+                TopPhotoModel topPhotoModel = new TopPhotoModel();
+                string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
+
+                topPhotoModel.VotesCount = photo.VotesCount;
+                topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
+                topPhotoModel.Username = username;
+
+                photoModels.Add(topPhotoModel);
+            }
+
+            topPhotosModel.Photos = photoModels;
+            topPhotosModel.PhotosCount = photosCount;
+
+            await Clients.Caller.SendAsync(
+                "GetAllTopPhotos",
                  topPhotosModel
                 );
         }

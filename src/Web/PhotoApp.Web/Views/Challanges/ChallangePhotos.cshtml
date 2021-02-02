@@ -22,7 +22,7 @@
     <script>
     var photosSend1 = @Model.Photos.Count();
     var challangeId1 = @Model.ChallangeId;
-
+    var photosCount1 = 0;
 
     var connection = new signalR.HubConnectionBuilder()
             .withUrl("/load")
@@ -30,12 +30,14 @@
 
     connection.on("GetTopPhotos",
         function (model) {
-            var i;
-            for (i = 0; i < model.photos.length; i++) {
-                $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
-                photosSend1++;
+            photosCount1 = model.photosCount;
+            if (photosSend1 != photosCount1) {
+                for (i = 0; i < model.photos.length; i++) {
+                    var i;
+                    $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
+                    photosSend1++;
+                }
             }
-
             TotalPhotos = model.photosCount;
             StepsCount = model.stepsCount;
         }
