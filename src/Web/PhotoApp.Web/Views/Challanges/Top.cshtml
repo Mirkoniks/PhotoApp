@@ -5,13 +5,13 @@
         <div class="card-columns">
             @foreach (var photo in Model.Photos)
             {
-            <div class="card">
-                <img class="card-img-top" src="@photo.PhotoLink" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">@photo.VotesCount Likes</h5>
-                    <p class="card-text"><small class="text-muted">Photo by @photo.Username</small></p>
+                <div class="card">
+                    <img class="card-img-top" src="@photo.PhotoLink" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@photo.VotesCount Likes</h5>
+                        <p class="card-text"><small class="text-muted">Photo by @photo.Username</small></p>
+                    </div>
                 </div>
-            </div>
             }
         </div>
     </div>
@@ -28,7 +28,7 @@
             .withUrl("/load")
             .build();
 
-    connection.on("GetLatestPhotos",
+    connection.on("GetAllTopPhotos",
         function (model) {
             photosCount1 = model.photosCount;
             if (photosSend1 != photosCount1) {
@@ -53,7 +53,7 @@
             photosSend: photosSend1,
         };
 
-            connection.invoke("LoadLatestPhotos", loadInfo);
+            connection.invoke("LoadAllTopPhotos", loadInfo);
         }
     });
 

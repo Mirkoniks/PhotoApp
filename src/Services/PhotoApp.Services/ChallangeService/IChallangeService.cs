@@ -27,5 +27,7 @@ namespace PhotoApp.Services.ChallangeService
         public Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0);
 
         public Task<TopPhotosServiceModel> GetTopPhotos(int numPhotos);
+
+        public Task<TopPhotosServiceModel> GetLatestPhotos(int numPhotos);
     }
 }

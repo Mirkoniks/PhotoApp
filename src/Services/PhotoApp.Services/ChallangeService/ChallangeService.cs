@@ -183,6 +183,30 @@ namespace PhotoApp.Services.ChallangeService
             return serviceModel;
         }
 
+        public async Task<TopPhotosServiceModel> GetLatestPhotos(int numPhotos)
+        {
+            var photos = dbContext.PhotosChallanges.OrderByDescending(v => v.PhotoId).Take(numPhotos).ToList();
+
+            TopPhotosServiceModel serviceModel = new TopPhotosServiceModel();
+            List<TopPhotoServiceModel> photoServiceModels = new List<TopPhotoServiceModel>();
+
+            foreach (var photo in photos)
+            {
+                TopPhotoServiceModel photoServiceModel = new TopPhotoServiceModel();
+
+                photoServiceModel.VotesCount = photo.VotesCount;
+                photoServiceModel.PhotoLink = GetPhotoLinkById(photo.PhotoId);
+                photoServiceModel.UserId = GetUserIdByPicureId(photo.PhotoId);
+
+                photoServiceModels.Add(photoServiceModel);
+            }
+
+            serviceModel.Photos = photoServiceModels;
+
+            return serviceModel;
+        }
+
+
         public async Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0)
         {
             throw new NotImplementedException();
@@ -200,6 +224,5 @@ namespace PhotoApp.Services.ChallangeService
             return result;
         }
 
-    
     }
 }

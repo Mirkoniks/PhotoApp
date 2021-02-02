@@ -126,7 +126,36 @@ namespace PhotoApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LatestAsync()
+
+        public async Task<IActionResult> ChallangePhotosAsync(int id)
+        {
+            TopPhotosServiceModel serviceModel = await challangeService.FirstTopPhotosFromChallange(id, 10);
+
+            TopPhotosViewModel viewModel = new TopPhotosViewModel();
+            List<TopPhotoViewModel> list = new List<TopPhotoViewModel>();
+
+            foreach (var item in serviceModel.Photos)
+            {
+                TopPhotoViewModel topPhoto = new TopPhotoViewModel();
+
+                var username = await userManager.FindByIdAsync(item.UserId);
+
+                topPhoto.PhotoLink = item.PhotoLink;
+                topPhoto.Username = username.UserName;
+                topPhoto.VotesCount = item.VotesCount;
+
+                list.Add(topPhoto);
+            }
+
+            viewModel.ChallangeId = serviceModel.ChallangeId;
+            viewModel.Photos = list;
+
+            return View(viewModel);
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> TopAsync()
         {
             TopPhotosServiceModel serviceModel = await challangeService.GetTopPhotos(10);
 
@@ -153,9 +182,9 @@ namespace PhotoApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ChallangePhotosAsync(int id)
+        public async Task<IActionResult> LatestAsync()
         {
-            TopPhotosServiceModel serviceModel = await challangeService.FirstTopPhotosFromChallange(id, 10);
+            TopPhotosServiceModel serviceModel = await challangeService.GetLatestPhotos(10);
 
             TopPhotosViewModel viewModel = new TopPhotosViewModel();
             List<TopPhotoViewModel> list = new List<TopPhotoViewModel>();
