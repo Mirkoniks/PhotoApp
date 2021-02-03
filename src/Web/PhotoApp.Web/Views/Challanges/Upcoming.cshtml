@@ -1,0 +1,33 @@
+﻿@using PhotoApp.Web.ViewModels
+@model OpenChallangesViewModel
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<div class="row">
+    <div class="col-6 text-center">
+        <h1>Upcoming Challagnes</h1>
+    </div>
+</div>
+
+<hr />
+
+<div class="container-fluid">
+    <div class="row text-center">
+        @foreach (var challange in Model.Challanges)
+        {
+            <div class="col-4">
+                <div class="card mb-4" style=" ">
+                    <img src="@challange.TopPhotoLink" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@challange.Name</h5>
+                        <p class="card-text">@challange.Description</p>
+                        <p class="card-text">Start: @challange.StartTime.Date</p>
+                        <p class="card-text">End: @challange.EndTime.Date</p>
+                        <a asp-controller="Challanges" asp-action="Challange" asp-route-id="@challange.Id" class="btn btn-primary">Take a look</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

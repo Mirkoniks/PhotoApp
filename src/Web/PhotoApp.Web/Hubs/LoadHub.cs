@@ -120,13 +120,15 @@ namespace PhotoApp.Web.Hubs
             {
                 Photos = photoViewModels,
                 PhotosCount = PhotosCount,
-                StepsCount = StepsCount
+                StepsCount = StepsCount,
+                IsOpen = dbContext.Challanges.Where(c => c.ChallangeId == photos.ChallangeId).FirstOrDefault().IsOpen,
+                IsUpcomig = dbContext.Challanges.Where(c => c.ChallangeId == photos.ChallangeId).FirstOrDefault().IsUpcoming,
             };
 
-             await Clients.Caller.SendAsync(
-                 "GetPhotos",
-                  photosViewModel
-                 );
+            await Clients.Caller.SendAsync(
+                "GetPhotos",
+                 photosViewModel
+                );
         }
 
         public async Task LoadTopPhotos(TopPhotosModel model)

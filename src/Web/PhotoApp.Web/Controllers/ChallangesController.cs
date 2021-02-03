@@ -41,22 +41,117 @@ namespace PhotoApp.Web.Controllers
             this.userService = userService;
         }
 
-        public IActionResult Open()
+        [HttpGet]
+        public async Task<IActionResult> OpenAsync()
         {
-            AllChallangesServiceModel serviceModel = challangeService.GetFisrtChallanges(9);
+            AllChallangesServiceModel serviceModel = await challangeService.GetAllOpenChallanges();
 
             OpenChallangesViewModel viewModel = new OpenChallangesViewModel();
             List<ChallangeViewModel> challangesList = new List<ChallangeViewModel>();
 
             foreach (var item in serviceModel.Challanges)
             {
+                string photoLink;
+                var photo = await challangeService.FirstTopPhotosFromChallange(item.Id, 1);
+
+                if (photo.Photos.FirstOrDefault() == null)
+                {
+                    photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
+                }
+                else
+                {
+                    photoLink = photo.Photos.FirstOrDefault().PhotoLink;
+                }
+
                 ChallangeViewModel model = new ChallangeViewModel()
                 {
+
                     Id = item.Id,
                     Name = item.Name,
                     Description = item.Description,
-                    StartTime = item.StartTime,
-                    EndTime = item.EndTime,
+                    StartTime = item.StartTime.Date,
+                    EndTime = item.EndTime.Date,
+                    TopPhotoLink = photoLink
+                };
+
+                challangesList.Add(model);
+            }
+            viewModel.Challanges = challangesList;
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ClosedAsync()
+        {
+            AllChallangesServiceModel serviceModel = await challangeService.GetAllClosedCallanges();
+
+            OpenChallangesViewModel viewModel = new OpenChallangesViewModel();
+            List<ChallangeViewModel> challangesList = new List<ChallangeViewModel>();
+
+            foreach (var item in serviceModel.Challanges)
+            {
+                string photoLink;
+                var photo = await challangeService.FirstTopPhotosFromChallange(item.Id, 1);
+
+                if (photo.Photos.FirstOrDefault() == null)
+                {
+                    photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
+                }
+                else
+                {
+                    photoLink = photo.Photos.FirstOrDefault().PhotoLink;
+                }
+
+                ChallangeViewModel model = new ChallangeViewModel()
+                {
+
+                    Id = item.Id,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StartTime = item.StartTime.Date,
+                    EndTime = item.EndTime.Date,
+                    TopPhotoLink = photoLink
+                };
+
+                challangesList.Add(model);
+            }
+            viewModel.Challanges = challangesList;
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpcomingAsync()
+        {
+            AllChallangesServiceModel serviceModel = await challangeService.GetAllUpcomingChallanges();
+
+            OpenChallangesViewModel viewModel = new OpenChallangesViewModel();
+            List<ChallangeViewModel> challangesList = new List<ChallangeViewModel>();
+
+            foreach (var item in serviceModel.Challanges)
+            {
+                string photoLink;
+                var photo = await challangeService.FirstTopPhotosFromChallange(item.Id, 1);
+
+                if (photo.Photos.FirstOrDefault() == null)
+                {
+                    photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
+                }
+                else
+                {
+                    photoLink = photo.Photos.FirstOrDefault().PhotoLink;
+                }
+
+                ChallangeViewModel model = new ChallangeViewModel()
+                {
+
+                    Id = item.Id,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StartTime = item.StartTime.Date,
+                    EndTime = item.EndTime.Date,
+                    TopPhotoLink = photoLink
                 };
 
                 challangesList.Add(model);
@@ -83,13 +178,24 @@ namespace PhotoApp.Web.Controllers
                 EndTime = model.EndTime
             };
 
-           await challangeService.CreateChallangeAsync(serviceModel);
+            await challangeService.CreateChallangeAsync(serviceModel);
 
             return RedirectToAction("Create");
         }
 
         public async Task<IActionResult> ChallangeAsync(int id)
         {
+            string photoLink;
+            var photo = await challangeService.FirstTopPhotosFromChallange(id, 1);
+
+            if (photo.Photos.FirstOrDefault() == null)
+            {
+                photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
+            }
+            else
+            {
+                photoLink = photo.Photos.FirstOrDefault().PhotoLink;
+            }
             ChallangeServiceModel serviceModel = await challangeService.FindChallangeById(id);
 
             ChallangeViewModel model = new ChallangeViewModel()
@@ -99,7 +205,10 @@ namespace PhotoApp.Web.Controllers
                 Description = serviceModel.Description,
                 StartTime = serviceModel.StartTime,
                 EndTime = serviceModel.EndTime,
-                UserId = userManager.GetUserId(this.User)
+                UserId = userManager.GetUserId(this.User),
+                TopPhotoLink = photoLink,
+                IsUpcoming = serviceModel.IsUpcoming,
+                IsOpen = serviceModel.IsOpen
             };
 
             return View(model);
@@ -119,7 +228,7 @@ namespace PhotoApp.Web.Controllers
 
                 await challangeService.AddPhotoToChallange(photoId, challangeId);
             }
-        
+
 
             return Redirect("/Challanges/Challange/" + challangeId);
 
@@ -153,7 +262,7 @@ namespace PhotoApp.Web.Controllers
             return View(viewModel);
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> TopAsync()
         {

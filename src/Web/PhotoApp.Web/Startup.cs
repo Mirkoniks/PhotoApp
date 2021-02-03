@@ -1,23 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PhotoApp.Data;
 using PhotoApp.Data.Models;
-using CloudinaryDotNet;
+using PhotoApp.Services.ChallangeService;
 using PhotoApp.Services.CloudinaryService;
 using PhotoApp.Services.PhotoService;
+using PhotoApp.Services.UpdateService;
 using PhotoApp.Services.UserService;
-using PhotoApp.Services.ChallangeService;
 using PhotoApp.Web.Hubs;
 
 namespace PhotoApp.Web
@@ -64,6 +59,8 @@ namespace PhotoApp.Web
             services.AddTransient<IPhotoService, PhotoService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IChallangeService, ChallangeService>();
+
+            services.AddHostedService<ChallangeUpdateService>();
 
             services.AddSignalR();
 

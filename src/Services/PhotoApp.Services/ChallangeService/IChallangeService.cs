@@ -32,5 +32,13 @@ namespace PhotoApp.Services.ChallangeService
 
         public Task<string> GetChallangeNameById(int id);
 
+        public Task  RunChallagesCheckAsync();
+
+        public Task<AllChallangesServiceModel> GetAllOpenChallanges();
+
+        public Task<AllChallangesServiceModel> GetAllClosedCallanges();
+
+        public Task<AllChallangesServiceModel> GetAllUpcomingChallanges();
+
     }
 }

@@ -76,6 +76,7 @@ namespace PhotoApp.Services.ChallangeService
                 Name = challange.Name,
                 Description = challange.Description,
                 IsOpen = challange.IsOpen,
+                IsUpcoming = challange.IsUpcoming,
                 StartTime = challange.StartTime,
                 EndTime = challange.EndTime,
             };
@@ -148,7 +149,7 @@ namespace PhotoApp.Services.ChallangeService
                 TopPhotoServiceModel photoServiceModel = new TopPhotoServiceModel();
 
                 photoServiceModel.VotesCount = photo.VotesCount;
-                photoServiceModel.PhotoLink =  GetPhotoLinkById(photo.PhotoId);
+                photoServiceModel.PhotoLink = GetPhotoLinkById(photo.PhotoId);
                 photoServiceModel.UserId = GetUserIdByPicureId(photo.PhotoId);
 
                 photoServiceModels.Add(photoServiceModel);
@@ -215,8 +216,41 @@ namespace PhotoApp.Services.ChallangeService
             return challange;
         }
 
+        public async Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task RunChallagesCheckAsync()
+        {
+            var challanges = dbContext.Challanges.ToList();
+
+            for (int i = 0; i < challanges.Count; i++)
+            {
+
+                switch (CheckChallangeStatus(challanges[i].StartTime, challanges[i].EndTime))
+                {
+                    case -1:
+                       var challange = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = true;
+                        break;
+                    case 0:
+                        var challange1= dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = true;
+                        break;
+                    case 1:
+                        var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+           await dbContext.SaveChangesAsync();
+        }
+
+
+        //temporary  solution
         //if -1 is upcommig, if 0 is now, if 1 closed
-        public async Task<int> CheckChallangeStatus(DateTime startTime, DateTime endTime)
+        private int CheckChallangeStatus(DateTime startTime, DateTime endTime)
         {
             DateTime now = DateTime.UtcNow.Date.AddDays(-1);
 
@@ -240,10 +274,84 @@ namespace PhotoApp.Services.ChallangeService
             return 1;
         }
 
-        public async Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0)
+        public async Task<AllChallangesServiceModel> GetAllOpenChallanges()
         {
-            throw new NotImplementedException();
+            IEnumerable<Challange> challanges = dbContext.Challanges.Where(c => c.IsOpen == true).ToList();
+
+            AllChallangesServiceModel serviceModel = new AllChallangesServiceModel();
+            List<ChallangeServiceModel> challangesList = new List<ChallangeServiceModel>();
+
+            foreach (var item in challanges)
+            {
+                ChallangeServiceModel challange = new ChallangeServiceModel
+                {
+                    Id = item.ChallangeId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    IsOpen = item.IsOpen,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                };
+                challangesList.Add(challange);
+            }
+
+            serviceModel.Challanges = challangesList;
+
+            return serviceModel;
         }
+
+        public async Task<AllChallangesServiceModel> GetAllUpcomingChallanges()
+        {
+            IEnumerable<Challange> challanges = dbContext.Challanges.Where(c => c.IsUpcoming == true).ToList();
+
+            AllChallangesServiceModel serviceModel = new AllChallangesServiceModel();
+            List<ChallangeServiceModel> challangesList = new List<ChallangeServiceModel>();
+
+            foreach (var item in challanges)
+            {
+                ChallangeServiceModel challange = new ChallangeServiceModel
+                {
+                    Id = item.ChallangeId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    IsOpen = item.IsOpen,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                };
+                challangesList.Add(challange);
+            }
+
+            serviceModel.Challanges = challangesList;
+
+            return serviceModel;
+        }
+
+        public async Task<AllChallangesServiceModel> GetAllClosedCallanges()
+        {
+            IEnumerable<Challange> challanges = dbContext.Challanges.Where(c => c.IsOpen == false).ToList();
+
+            AllChallangesServiceModel serviceModel = new AllChallangesServiceModel();
+            List<ChallangeServiceModel> challangesList = new List<ChallangeServiceModel>();
+
+            foreach (var item in challanges)
+            {
+                ChallangeServiceModel challange = new ChallangeServiceModel
+                {
+                    Id = item.ChallangeId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    IsOpen = item.IsOpen,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                };
+                challangesList.Add(challange);
+            }
+
+            serviceModel.Challanges = challangesList;
+
+            return serviceModel;
+        }
+
 
         private string GetPhotoLinkById(int id)
         {
@@ -252,10 +360,9 @@ namespace PhotoApp.Services.ChallangeService
 
         private string GetUserIdByPicureId(int id)
         {
-            var result =  dbContext.UsersPhotos.Where(p => p.PhotoId == id).FirstOrDefault().UserId;
+            var result = dbContext.UsersPhotos.Where(p => p.PhotoId == id).FirstOrDefault().UserId;
 
             return result;
         }
-
     }
 }

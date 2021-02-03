@@ -13,6 +13,8 @@ namespace PhotoApp.Web.ViewModels
 
         public bool IsOpen { get; set; }
 
+        public bool IsUpcoming { get; set; }
+
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }

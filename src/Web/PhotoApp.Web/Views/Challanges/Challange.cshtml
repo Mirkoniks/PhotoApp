@@ -1,48 +1,52 @@
 ﻿@model PhotoApp.Web.ViewModels.ChallangeViewModel
 
-
-
-
-
-
-
 <div class="ml-2 mr-2">
     <div class="card text-center ">
         <div class="containerPhoto">
-            <img src="https://www.wallpapertip.com/wmimgs/2-21896_fantastic-full-hd-wallpaper-hd-walpaper.jpg"
+            <img src="@Model.TopPhotoLink"
                  class="m-2" width="99%" alt="Alternate Text" />
             <div class="centered ">@Model.Name</div>
             <div class="centered1 back rounded ">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus iusto dolor est eum, quidem neque aliquid eius sequi culpa ducimus nisi vel minus autem odit vitae, cupiditate cumque accusamus eligendi!
+                @Model.Description
             </div>
             <button id="rate" class="btn btn-primary btn-lg centered3 ">Rate photos</button>
 
-            <!-- Button trigger modal --> 
-            <button id="uploadButton" type="button" class="btn btn-primary btn-lg centered4" data-toggle="modal" data-target="#exampleModal">
-                Upload Photo
-            </button>
+            @if ((Model.IsOpen == true) || (Model.IsUpcoming == false))
+            {
+                <!-- Button trigger modal -->
+                <button id="uploadButton" type="button" class="btn btn-primary btn-lg centered4" data-toggle="modal" data-target="#exampleModal">
+                    Upload Photo
+                </button>
 
 
-            <!-- Modal -->
-            <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-dark" id="exampleModalLabel">Upload</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body text-dark ulpoadForm">
-                            <form method="post" enctype="multipart/form-data" asp-controller="Challanges" asp-action="Upload">
-                                <input type="file" name="files" multiple />
-                                <input type="number" name="challangeId" value="@Model.Id" hidden />
-                                <button type="submit" value="Upload">Upload</button>
-                            </form>
+                <!-- Modal -->
+                <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" id="exampleModalLabel">Upload</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-dark ulpoadForm">
+                                <form method="post" enctype="multipart/form-data" asp-controller="Challanges" asp-action="Upload">
+                                    <input type="file" name="files" multiple />
+                                    <input type="number" name="challangeId" value="@Model.Id" hidden />
+                                    <button type="submit" value="Upload">Upload</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <button type="button" class="btn btn-primary btn-lg centered4" disabled>
+                    Upload Photo
+                </button>
+            }
+
         </div>
         <div class="card-body">
 
@@ -93,15 +97,23 @@
             .withUrl("/load")
             .build();
 
-                connection.on("GetPhotos",
+        connection.on("GetPhotos",
             function (model) {
-                var i;
-                for (i = 0; i < model.photos.length; i++) {
-                    $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
-                }
 
-                TotalPhotos = model.photosCount;
-                StepsCount = model.stepsCount;
+                if ($('#rate').prop('disabled')) {
+                    var i;
+                    for (i = 0; i < model.photos.length; i++) {
+                        $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
+                    }
+
+                    if ((model.isOpen === false) || model.isUpcoming === true) {
+                        $("#uploadButton").prop('disabled', true);
+                        $(".centered5").hide();
+                    }
+               
+                    TotalPhotos = model.photosCount;
+                    StepsCount = model.stepsCount;
+                }
             }
         );
 
@@ -124,17 +136,20 @@
 
         $(window).on("scroll", function () {
 
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
 
-            var loadInfo =
-            {
-                totalPhotos: TotalPhotos,
-                stepsCount: StepsCount,
-                challangeId: @Model.Id,
-                userId: uid1,
-            };
+            if ($('#rate').prop('disabled')) {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
 
-                connection.invoke("LoadPhotos", loadInfo);
+                var loadInfo =
+                {
+                    totalPhotos: TotalPhotos,
+                    stepsCount: StepsCount,
+                    challangeId: @Model.Id,
+                    userId: uid1,
+                };
+
+                    connection.invoke("LoadPhotos", loadInfo);
+                }
             }
         });
 

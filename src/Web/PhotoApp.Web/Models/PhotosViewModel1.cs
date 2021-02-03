@@ -17,5 +17,10 @@ namespace PhotoApp.Web.Models
         [JsonProperty("stepsCount")]
         public int StepsCount { get; set; }
 
+        [JsonProperty("isOpen")]
+        public bool IsOpen { get; set; }
+
+        [JsonProperty("isUpcoming")]
+        public bool IsUpcomig { get; set; }
     }
 }
