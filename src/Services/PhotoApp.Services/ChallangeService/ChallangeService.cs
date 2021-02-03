@@ -215,6 +215,31 @@ namespace PhotoApp.Services.ChallangeService
             return challange;
         }
 
+        //if -1 is upcommig, if 0 is now, if 1 closed
+        public async Task<int> CheckChallangeStatus(DateTime startTime, DateTime endTime)
+        {
+            DateTime now = DateTime.UtcNow.Date.AddDays(-1);
+
+            if ((DateTime.Compare(now, startTime) == -1) && (DateTime.Compare(now, endTime) == -1))
+            {
+                return -1;
+            }
+            else if ((DateTime.Compare(now, startTime) == 0) && (DateTime.Compare(now, endTime) == -1))
+            {
+                return 0;
+            }
+            else if ((DateTime.Compare(now, startTime) == 1) && (DateTime.Compare(now, endTime) == -1))
+            {
+                return 0;
+            }
+            else if ((DateTime.Compare(now, startTime) == 1) && (DateTime.Compare(now, endTime) == 0))
+            {
+                return 0;
+            }
+
+            return 1;
+        }
+
         public async Task<TopPhotosServiceModel> GetTopPhotosFromChallange(int challangeId, int numPhotos, int startPhotoId = 0)
         {
             throw new NotImplementedException();

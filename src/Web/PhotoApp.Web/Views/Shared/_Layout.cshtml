@@ -8,18 +8,18 @@
     <link rel="stylesheet" href="~/css/site.css" />
 
     @*<style>
-        .centered5 {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-        }
+            .centered5 {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                opacity: 0;
+            }
 
-        .card1:hover .centered5 {
-            opacity: 1;
-        }
-    </style>*@
+            .card1:hover .centered5 {
+                opacity: 1;
+            }
+        </style>*@
 
 </head>
 <body class="bg-dark">
@@ -36,9 +36,17 @@
                     @if (this.User.IsInRole("User") || this.User.IsInRole("Moderator") || this.User.IsInRole("Admin"))
                     {
                         <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Challanges" asp-action="Open">Challengers</a>
-                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                   >
+                                    Challanges
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Challanges" asp-action="Open">Open</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Challanges" asp-action="Upcoming">Upcoming</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Challanges" asp-action="Closed">Closed</a>
+                                </div>
+                            </li>                  
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Challanges" asp-action="Latest">Lastest Photos</a>
                             </li>
