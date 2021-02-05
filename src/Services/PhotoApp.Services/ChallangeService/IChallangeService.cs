@@ -40,5 +40,8 @@ namespace PhotoApp.Services.ChallangeService
 
         public Task<AllChallangesServiceModel> GetAllUpcomingChallanges();
 
+        public Task SetChallangeCoverPhoto(int challangeId, int photoId);
+
+        public Task RunChallageCheckAsync(int id);
     }
 }

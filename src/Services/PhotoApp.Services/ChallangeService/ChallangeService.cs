@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using PhotoApp.Services.PhotoService;
 
 namespace PhotoApp.Services.ChallangeService
 {
@@ -15,10 +16,12 @@ namespace PhotoApp.Services.ChallangeService
         public static DateTime TodayDate { get; set; }
 
         private readonly PhotoAppDbContext dbContext;
+        private readonly IPhotoService photoService;
 
-        public ChallangeService(PhotoAppDbContext dbContext)
+        public ChallangeService(PhotoAppDbContext dbContext, IPhotoService photoService)
         {
             this.dbContext = dbContext;
+            this.photoService = photoService;
         }
         public async Task<int> CreateChallangeAsync(CreateChallangeServiceModel serviceModel)
         {
@@ -32,10 +35,13 @@ namespace PhotoApp.Services.ChallangeService
                 MaxPhotos = serviceModel.MaxPhotos
             };
 
-            int challangeId = challange.ChallangeId;
 
             await dbContext.Challanges.AddAsync(challange);
             await dbContext.SaveChangesAsync();
+
+            int challangeId = challange.ChallangeId;
+
+            await RunChallageCheckAsync(challangeId);
 
             return challangeId;
         }
@@ -247,6 +253,36 @@ namespace PhotoApp.Services.ChallangeService
            await dbContext.SaveChangesAsync();
         }
 
+        public async Task RunChallageCheckAsync(int id)
+        {
+            var challangeDb = dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault(); ;
+
+                switch (CheckChallangeStatus(challangeDb.StartTime, challangeDb.EndTime))
+                {
+                    case -1:
+                        var challange = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = true;
+                        break;
+                    case 0:
+                        var challange1 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = true;
+                        break;
+                    case 1:
+                        var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
+                        break;
+                    default:
+                        break;
+                }
+
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task SetChallangeCoverPhoto(int challangeId, int photoId)
+        {
+            dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().ChallangeCoverPhotoId = photoId;
+
+           await dbContext.SaveChangesAsync();
+        }
+
+
 
         //temporary  solution
         //if -1 is upcommig, if 0 is now, if 1 closed
@@ -283,6 +319,7 @@ namespace PhotoApp.Services.ChallangeService
 
             foreach (var item in challanges)
             {
+                var photo = await photoService.FindPhotoByIdAsync(item.ChallangeCoverPhotoId);
                 ChallangeServiceModel challange = new ChallangeServiceModel
                 {
                     Id = item.ChallangeId,
@@ -291,6 +328,7 @@ namespace PhotoApp.Services.ChallangeService
                     IsOpen = item.IsOpen,
                     StartTime = item.StartTime,
                     EndTime = item.EndTime,
+                    ChallangeCoverPhotoLink = photo.PhotoLink
                 };
                 challangesList.Add(challange);
             }
@@ -309,6 +347,7 @@ namespace PhotoApp.Services.ChallangeService
 
             foreach (var item in challanges)
             {
+                var photo = await photoService.FindPhotoByIdAsync(item.ChallangeCoverPhotoId);
                 ChallangeServiceModel challange = new ChallangeServiceModel
                 {
                     Id = item.ChallangeId,
@@ -317,7 +356,9 @@ namespace PhotoApp.Services.ChallangeService
                     IsOpen = item.IsOpen,
                     StartTime = item.StartTime,
                     EndTime = item.EndTime,
+                    ChallangeCoverPhotoLink = photo.PhotoLink
                 };
+
                 challangesList.Add(challange);
             }
 
@@ -328,13 +369,14 @@ namespace PhotoApp.Services.ChallangeService
 
         public async Task<AllChallangesServiceModel> GetAllClosedCallanges()
         {
-            IEnumerable<Challange> challanges = dbContext.Challanges.Where(c => c.IsOpen == false).ToList();
+            IEnumerable<Challange> challanges = dbContext.Challanges.Where(c => c.IsOpen == false).Where(c => c.IsUpcoming == false).ToList();
 
             AllChallangesServiceModel serviceModel = new AllChallangesServiceModel();
             List<ChallangeServiceModel> challangesList = new List<ChallangeServiceModel>();
 
             foreach (var item in challanges)
             {
+                var photo = await photoService.FindPhotoByIdAsync(item.ChallangeCoverPhotoId);
                 ChallangeServiceModel challange = new ChallangeServiceModel
                 {
                     Id = item.ChallangeId,
@@ -343,6 +385,7 @@ namespace PhotoApp.Services.ChallangeService
                     IsOpen = item.IsOpen,
                     StartTime = item.StartTime,
                     EndTime = item.EndTime,
+                    ChallangeCoverPhotoLink = photo.PhotoLink
                 };
                 challangesList.Add(challange);
             }

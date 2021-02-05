@@ -51,10 +51,15 @@ namespace PhotoApp.Web.Controllers
 
             foreach (var item in serviceModel.Challanges)
             {
-                string photoLink;
+                string photoLink = "";
+
                 var photo = await challangeService.FirstTopPhotosFromChallange(item.Id, 1);
 
-                if (photo.Photos.FirstOrDefault() == null)
+                if (item.ChallangeCoverPhotoLink != null)
+                {
+                    photoLink = item.ChallangeCoverPhotoLink;
+                }
+                else if (photo.Photos.FirstOrDefault() == null)
                 {
                     photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
                 }
@@ -71,7 +76,7 @@ namespace PhotoApp.Web.Controllers
                     Description = item.Description,
                     StartTime = item.StartTime.Date,
                     EndTime = item.EndTime.Date,
-                    TopPhotoLink = photoLink
+                    CoverPhotoLink = photoLink
                 };
 
                 challangesList.Add(model);
@@ -91,14 +96,19 @@ namespace PhotoApp.Web.Controllers
 
             foreach (var item in serviceModel.Challanges)
             {
-                string photoLink;
+                string photoLink = "";
+
                 var photo = await challangeService.FirstTopPhotosFromChallange(item.Id, 1);
 
-                if (photo.Photos.FirstOrDefault() == null)
+                if (item.ChallangeCoverPhotoLink != null)
+                {
+                    photoLink = item.ChallangeCoverPhotoLink;
+                }
+                else if (photo.Photos.FirstOrDefault() == null)
                 {
                     photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
                 }
-                else
+                else 
                 {
                     photoLink = photo.Photos.FirstOrDefault().PhotoLink;
                 }
@@ -111,7 +121,7 @@ namespace PhotoApp.Web.Controllers
                     Description = item.Description,
                     StartTime = item.StartTime.Date,
                     EndTime = item.EndTime.Date,
-                    TopPhotoLink = photoLink
+                    CoverPhotoLink = photoLink
                 };
 
                 challangesList.Add(model);
@@ -131,16 +141,21 @@ namespace PhotoApp.Web.Controllers
 
             foreach (var item in serviceModel.Challanges)
             {
-                string photoLink;
+                string photoLink = "";
+
                 var photo = await challangeService.FirstTopPhotosFromChallange(item.Id, 1);
 
-                if (photo.Photos.FirstOrDefault() == null)
+                if (item.ChallangeCoverPhotoLink != null)
                 {
-                    photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
+                    photoLink = item.ChallangeCoverPhotoLink;
+                }
+                else if (photo.Photos.FirstOrDefault() != null)
+                {
+                    photoLink = photo.Photos.FirstOrDefault().PhotoLink;
                 }
                 else
                 {
-                    photoLink = photo.Photos.FirstOrDefault().PhotoLink;
+                    photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
                 }
 
                 ChallangeViewModel model = new ChallangeViewModel()
@@ -151,7 +166,7 @@ namespace PhotoApp.Web.Controllers
                     Description = item.Description,
                     StartTime = item.StartTime.Date,
                     EndTime = item.EndTime.Date,
-                    TopPhotoLink = photoLink
+                    CoverPhotoLink = photoLink
                 };
 
                 challangesList.Add(model);
@@ -178,7 +193,11 @@ namespace PhotoApp.Web.Controllers
                 EndTime = model.EndTime
             };
 
-            await challangeService.CreateChallangeAsync(serviceModel);
+            var photoLink = await cloudinaryService.UploadAsync(cloudinary, model.Photos);
+            int photoId = await photoService.AddPhotoAsync(photoLink.FirstOrDefault());
+            int challangeId = await challangeService.CreateChallangeAsync(serviceModel);
+
+            await challangeService.SetChallangeCoverPhoto(challangeId, photoId);
 
             return RedirectToAction("Create");
         }

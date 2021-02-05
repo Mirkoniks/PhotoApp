@@ -22,6 +22,8 @@ namespace PhotoApp.Data.Models
 
         public int MaxPhotos { get; set; }
 
+        public int ChallangeCoverPhotoId { get; set; }
+
         public ICollection<PhotoChallange> PhotosChallanges { get; set; } = new HashSet<PhotoChallange>();
 
     }

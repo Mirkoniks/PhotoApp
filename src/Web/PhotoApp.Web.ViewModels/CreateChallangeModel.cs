@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace PhotoApp.Web.ViewModels
 {
@@ -27,5 +28,9 @@ namespace PhotoApp.Web.ViewModels
         [DataType(DataType.Date)]
         [Display(Name = "Challange end")]
         public DateTime EndTime { get; set; }
+
+        [Required]
+        [Display(Name ="Photos upload")]
+        public ICollection<IFormFile> Photos{ get; set; }
     }
 }

@@ -48,12 +48,27 @@ namespace PhotoApp.Services.PhotoService
 
         public async Task<PhotoServiceModel> FindPhotoByIdAsync(int id)
         {
-            Photo photo = dbContext.Photos.Where(p => p.PhotoId == id).FirstOrDefault();
+            PhotoServiceModel photoServiceModel;
 
-            PhotoServiceModel photoServiceModel = new PhotoServiceModel
+            if (id != default(int))
             {
-                PhotoId = photo.PhotoId,
-                PhotoLink = photo.Link
+                Photo photo = dbContext.Photos.Where(p => p.PhotoId == id).FirstOrDefault();
+
+
+                photoServiceModel = new PhotoServiceModel
+                {
+                    PhotoId = photo.PhotoId,
+                    PhotoLink = photo.Link
+                };
+
+                return photoServiceModel;
+            }
+
+
+            photoServiceModel = new PhotoServiceModel
+            {
+                PhotoId = 0,
+                PhotoLink = null
             };
 
             return photoServiceModel;

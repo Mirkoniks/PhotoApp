@@ -18,5 +18,7 @@ namespace PhotoApp.Web.ViewModels
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }
+
+        public string ChallangeCoverPhotoLink { get; set; }
     }
 }

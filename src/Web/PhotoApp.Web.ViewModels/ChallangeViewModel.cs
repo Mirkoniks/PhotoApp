@@ -22,5 +22,7 @@ namespace PhotoApp.Web.ViewModels
         public string UserId { get; set; }
 
         public string TopPhotoLink { get; set; }
+
+        public string CoverPhotoLink { get; set; }
     }
 }
