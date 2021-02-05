@@ -10,6 +10,8 @@ namespace PhotoApp.Data.Models
 
         public string Link { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public ICollection<UserPhoto> UsersPhotos { get; set; } = new HashSet<UserPhoto>();
 
         public ICollection<PhotoChallange> PhotosChallanges { get; set; } = new HashSet<PhotoChallange>();

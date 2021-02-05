@@ -1,8 +1,42 @@
-﻿
+﻿@using PhotoApp.Web.ViewModels
+@model EditChallangeViewModel
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12">
+    <div class="col-6">
+         
 
+    </div>
+        <div class="col-6">
+            <form method="post" enctype="multipart/form-data" asp-action="EditConfirm">
+                <div>
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Description"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="StartTime"></label>
+                    <input asp-for="StartTime" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="EndTime"></label>
+                    <input asp-for="EndTime" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="ChallangeCoverPhoto"></label>
+                    <input type="file" asp-for="ChallangeCoverPhoto" multiple />
+                </div>
+                <input asp-for="ChallangeId" value="@Model.ChallangeId" hidden />
+                <input type="submit" class="btn btn-primary" />
+            </form>
+            <p>assas</p>
         </div>
     </div>
 </div>

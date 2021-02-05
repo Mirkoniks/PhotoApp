@@ -108,7 +108,7 @@ namespace PhotoApp.Web.Controllers
                 {
                     photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
                 }
-                else 
+                else
                 {
                     photoLink = photo.Photos.FirstOrDefault().PhotoLink;
                 }
@@ -336,6 +336,40 @@ namespace PhotoApp.Web.Controllers
             viewModel.Photos = list;
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditAsync(int id)
+        {
+            EditChallangeViewModel viewModel = new EditChallangeViewModel();
+
+            var challange = await challangeService.FindChallangeById(id);
+
+            viewModel.Name = challange.Name;
+            viewModel.Description = challange.Description;
+            viewModel.StartTime = challange.StartTime;
+            viewModel.EndTime = challange.EndTime;
+            viewModel.ChallangeId = id;
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditConfirmAsync(EditChallangeViewModel challangeViewModel)
+        {
+
+            EditChallangeServiceModel serviceModel = new EditChallangeServiceModel();
+
+            serviceModel.ChallangeId = challangeViewModel.ChallangeId;
+            serviceModel.Name = challangeViewModel.Name;
+            serviceModel.Description = challangeViewModel.Description;
+            serviceModel.StartTime = challangeViewModel.StartTime;
+            serviceModel.EndTime = challangeViewModel.EndTime;
+            serviceModel.ChallangeCoverPhoto = challangeViewModel.ChallangeCoverPhoto;
+
+            await challangeService.EditChallange(serviceModel);
+
+            return Redirect("/Challanges/Challange/" + challangeViewModel.ChallangeId);
         }
     }
 }

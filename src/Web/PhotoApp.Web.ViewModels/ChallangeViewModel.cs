@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace PhotoApp.Web.ViewModels
@@ -15,8 +16,10 @@ namespace PhotoApp.Web.ViewModels
 
         public bool IsUpcoming { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime StartTime { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime EndTime { get; set; }
 
         public string UserId { get; set; }

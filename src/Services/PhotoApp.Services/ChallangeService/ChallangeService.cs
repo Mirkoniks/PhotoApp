@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using PhotoApp.Services.PhotoService;
+using PhotoApp.Services.CloudinaryService;
+using CloudinaryDotNet;
 
 namespace PhotoApp.Services.ChallangeService
 {
@@ -17,11 +19,15 @@ namespace PhotoApp.Services.ChallangeService
 
         private readonly PhotoAppDbContext dbContext;
         private readonly IPhotoService photoService;
+        private readonly ICloundinaryService cloundinaryService;
+        private readonly Cloudinary cloudinary;
 
-        public ChallangeService(PhotoAppDbContext dbContext, IPhotoService photoService)
+        public ChallangeService(PhotoAppDbContext dbContext, IPhotoService photoService, ICloundinaryService cloundinaryService, Cloudinary cloudinary)
         {
             this.dbContext = dbContext;
             this.photoService = photoService;
+            this.cloundinaryService = cloundinaryService;
+            this.cloudinary = cloudinary;
         }
         public async Task<int> CreateChallangeAsync(CreateChallangeServiceModel serviceModel)
         {
@@ -237,10 +243,10 @@ namespace PhotoApp.Services.ChallangeService
                 switch (CheckChallangeStatus(challanges[i].StartTime, challanges[i].EndTime))
                 {
                     case -1:
-                       var challange = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = true;
+                        var challange = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = true;
                         break;
                     case 0:
-                        var challange1= dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = true;
+                        var challange1 = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = true;
                         break;
                     case 1:
                         var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = false;
@@ -250,27 +256,27 @@ namespace PhotoApp.Services.ChallangeService
                 }
             }
 
-           await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task RunChallageCheckAsync(int id)
         {
             var challangeDb = dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault(); ;
 
-                switch (CheckChallangeStatus(challangeDb.StartTime, challangeDb.EndTime))
-                {
-                    case -1:
-                        var challange = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = true;
-                        break;
-                    case 0:
-                        var challange1 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = true;
-                        break;
-                    case 1:
-                        var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
-                        break;
-                    default:
-                        break;
-                }
+            switch (CheckChallangeStatus(challangeDb.StartTime, challangeDb.EndTime))
+            {
+                case -1:
+                    var challange = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = true;
+                    break;
+                case 0:
+                    var challange1 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = true;
+                    break;
+                case 1:
+                    var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
+                    break;
+                default:
+                    break;
+            }
 
             await dbContext.SaveChangesAsync();
         }
@@ -279,7 +285,7 @@ namespace PhotoApp.Services.ChallangeService
         {
             dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().ChallangeCoverPhotoId = photoId;
 
-           await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
 
@@ -366,7 +372,6 @@ namespace PhotoApp.Services.ChallangeService
 
             return serviceModel;
         }
-
         public async Task<AllChallangesServiceModel> GetAllClosedCallanges()
         {
             IEnumerable<Challange> challanges = dbContext.Challanges.Where(c => c.IsOpen == false).Where(c => c.IsUpcoming == false).ToList();
@@ -393,6 +398,35 @@ namespace PhotoApp.Services.ChallangeService
             serviceModel.Challanges = challangesList;
 
             return serviceModel;
+        }
+        public async Task EditChallange(EditChallangeServiceModel editChallangeServiceModel)
+        {
+            var challange = dbContext.Challanges.Where(c => c.ChallangeId == editChallangeServiceModel.ChallangeId).FirstOrDefault();
+
+            if (editChallangeServiceModel.ChallangeCoverPhoto != null)
+            {
+                var photoLink = await cloundinaryService.UploadAsync(cloudinary, editChallangeServiceModel.ChallangeCoverPhoto);
+
+                var photoId = await photoService.AddPhotoAsync(photoLink.FirstOrDefault());
+
+                challange.ChallangeCoverPhotoId = photoId;
+            }
+
+            challange.Name = editChallangeServiceModel.Name;
+            challange.Description = editChallangeServiceModel.Description;
+            challange.StartTime = editChallangeServiceModel.StartTime;
+            challange.EndTime = editChallangeServiceModel.EndTime;
+
+            await dbContext.SaveChangesAsync();
+
+            await RunChallageCheckAsync(editChallangeServiceModel.ChallangeId);
+        }
+
+        public async Task DeleteChallange(int id)
+        {
+            dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault().IsDeleted = true;
+
+            await dbContext.SaveChangesAsync();
         }
 
 

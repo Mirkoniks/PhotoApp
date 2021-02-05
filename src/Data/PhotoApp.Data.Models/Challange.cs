@@ -24,6 +24,8 @@ namespace PhotoApp.Data.Models
 
         public int ChallangeCoverPhotoId { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public ICollection<PhotoChallange> PhotosChallanges { get; set; } = new HashSet<PhotoChallange>();
 
     }
