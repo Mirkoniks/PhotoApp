@@ -162,6 +162,8 @@
             var uid = document.getElementById("userId").textContent;
             var chid = document.getElementById("challangeId").textContent;
 
+            document.getElementById(id).innerHTML = "Unlike";
+
             var likeInfo =
             {
                 photoId: id,
@@ -182,6 +184,9 @@
 
             var uid = document.getElementById("userId").textContent;
             var chid = document.getElementById("challangeId").textContent;
+
+            document.getElementById(id).innerHTML = "Like";
+
 
             var likeInfo =
             {
@@ -207,6 +212,8 @@
                 document.getElementById(id).classList.remove('btn-danger');
                 document.getElementById(id).classList.add('btn-success');
 
+                document.getElementById(id).innerHTML = "Like";
+
                 addLike(id);
             }
             else {
@@ -215,6 +222,8 @@
 
                 document.getElementById(id).classList.remove('btn-success');
                 document.getElementById(id).classList.add('btn-danger');
+
+                document.getElementById(id).innerHTML = "Unlike";
 
                 removeLike(id);
             }
