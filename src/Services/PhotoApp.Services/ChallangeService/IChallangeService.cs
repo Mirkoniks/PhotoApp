@@ -1,4 +1,5 @@
 ﻿using PhotoApp.Services.Models.Challange;
+using PhotoApp.Services.Models.Photo;
 using PhotoApp.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -47,5 +48,9 @@ namespace PhotoApp.Services.ChallangeService
         public Task EditChallange(EditChallangeServiceModel editChallangeServiceModel);
 
         public Task DeleteChallange(int id);
+
+        public Task<UserLikedPhotosServiceModel> GetUserLikedPhotos(string userId);
+
+        public Task<UserPhotosServiceModel> GetUserPhotos(string userId);
     }
 }

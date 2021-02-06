@@ -10,6 +10,7 @@ using System.Linq;
 using PhotoApp.Services.PhotoService;
 using PhotoApp.Services.CloudinaryService;
 using CloudinaryDotNet;
+using PhotoApp.Services.Models.Photo;
 
 namespace PhotoApp.Services.ChallangeService
 {
@@ -421,6 +422,61 @@ namespace PhotoApp.Services.ChallangeService
 
             await RunChallageCheckAsync(editChallangeServiceModel.ChallangeId);
         }
+
+        public async Task<UserLikedPhotosServiceModel> GetUserLikedPhotos(string userId)
+        {
+            var photos = dbContext.UsersPhotoLikes.Where(u => u.UserId == userId).ToList();
+            UserLikedPhotosServiceModel userLikedPhotosServiceModel = new UserLikedPhotosServiceModel();
+
+            if (photos != null)
+            {
+                List<UserLikedPhotoServiceModel> list = new List<UserLikedPhotoServiceModel>();
+
+                foreach (var item in photos)
+                {
+                    var photoLink = await photoService.FindPhotoByIdAsync(item.PhotoId);
+
+                    UserLikedPhotoServiceModel userLikedPhotoServiceModel = new UserLikedPhotoServiceModel()
+                    {
+                        PhotoLink = photoLink.PhotoLink
+                    };
+
+
+                    list.Add(userLikedPhotoServiceModel);
+
+                    userLikedPhotosServiceModel.Photos = list;
+                }
+            }
+
+            return userLikedPhotosServiceModel;
+        }
+
+        public async Task<UserPhotosServiceModel> GetUserPhotos(string userId)
+        {
+            var photos = dbContext.UsersPhotos.Where(u => u.UserId == userId).ToList();
+
+            UserPhotosServiceModel userPhotosServiceModel = new UserPhotosServiceModel();
+            List<UserPhotoServiceModel> list = new List<UserPhotoServiceModel>();
+
+            if (photos != null)
+            {
+                foreach (var item in photos)
+                {
+                    var photo = await photoService.FindPhotoByIdAsync(item.PhotoId);
+
+                    UserPhotoServiceModel serviceModel = new UserPhotoServiceModel
+                    {
+                        PhotoLink = photo.PhotoLink
+                    };
+
+                    list.Add(serviceModel);
+                }
+            }
+            userPhotosServiceModel.Photo = list;
+
+            return userPhotosServiceModel;
+        }
+
 
         public async Task DeleteChallange(int id)
         {

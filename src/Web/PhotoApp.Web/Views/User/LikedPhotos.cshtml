@@ -1,0 +1,13 @@
+﻿@model PhotoApp.Web.ViewModels.LikedPhotosViewModel
+
+
+<div class="container">
+    <div class="card-columns">
+        @foreach (var item in Model.Photos)
+        {
+            <div class="card">
+                <img src="@item.PhotoLink" class="card-img-top" alt="...">
+            </div>
+        }
+    </div>
+</div>
