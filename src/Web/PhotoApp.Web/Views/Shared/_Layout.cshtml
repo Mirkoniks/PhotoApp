@@ -33,28 +33,28 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                    @if (this.User.IsInRole("User") || this.User.IsInRole("Moderator") || this.User.IsInRole("Admin"))
-                    {
+                    @*@if (this.User.IsInRole("User") || this.User.IsInRole("Moderator") || this.User.IsInRole("Admin"))
+                    {*@
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                    >
-                                    Challanges
+                                    Challenges
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" asp-area="" asp-controller="Challanges" asp-action="Open">Open</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Challanges" asp-action="Open">Ongoing</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Challanges" asp-action="Upcoming">Upcoming</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Challanges" asp-action="Closed">Closed</a>
                                 </div>
                             </li>                  
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Challanges" asp-action="Latest">Lastest Photos</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Challanges" asp-action="Latest">Latest Photos</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Challanges" asp-action="Top">Top Photos</a>
                             </li>
                         </ul>
-                    }
+                    @*}*@
                 </div>
             </div>
         </nav>
