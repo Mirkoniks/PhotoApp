@@ -21,6 +21,13 @@ namespace PhotoApp.Data
 
         public DbSet<UsersPhotoLikes> UsersPhotoLikes { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<UserNotification> UserNotifications { get; set; }
+
+        public DbSet<UserWonChallange> UserWonChallanges { get; set; }
+
+
         public PhotoAppDbContext(DbContextOptions<PhotoAppDbContext> options)
             : base(options)
         {
@@ -77,6 +84,36 @@ namespace PhotoApp.Data
                 .HasOne<PhotoAppUser>(upl => upl.User)
                 .WithMany(pau => pau.UsersPhotoLikes)
                 .HasForeignKey(upl => upl.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserNotification>()
+                .HasKey(un => new { un.UserId, un.NotificationId });
+
+            builder.Entity<UserNotification>()
+                .HasOne<PhotoAppUser>(un => un.User)
+                .WithMany(pau => pau.UserNotifications)
+                .HasForeignKey(un => un.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserNotification>()
+                .HasOne<Notification>(un => un.Notification)
+                .WithMany(n => n.UserNotifications)
+                .HasForeignKey(un => un.NotificationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserWonChallange>()
+                .HasKey(uwc => new { uwc.UserId, uwc.ChallangeId });
+
+            builder.Entity<UserWonChallange>()
+                .HasOne<PhotoAppUser>(uwc => uwc.User)
+                .WithMany(pau => pau.UserWonChallanges)
+                .HasForeignKey(uwc => uwc.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserWonChallange>()
+                .HasOne<Challange>(uwc => uwc.Challange)
+                .WithMany(c => c.UserWonChallanges)
+                .HasForeignKey(uwc => uwc.ChallangeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

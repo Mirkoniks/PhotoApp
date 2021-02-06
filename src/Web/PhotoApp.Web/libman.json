@@ -17,5 +17,10 @@
         "dist/browser/signalr.min.js"
       ]
     }
+    //,
+    //{
+    //  "library": "@js"
+    //}
+
   ]
 }

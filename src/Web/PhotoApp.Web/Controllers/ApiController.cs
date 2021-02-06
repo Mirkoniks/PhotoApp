@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PhotoApp.Data;
 using PhotoApp.Data.Models;
 using PhotoApp.Web.Models;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace PhotoApp.Web.Controllers
 {
+    [Authorize]
     public class ApiController : Controller
     {
         private readonly PhotoAppDbContext dbContext;

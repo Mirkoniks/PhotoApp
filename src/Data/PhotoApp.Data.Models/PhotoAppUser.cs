@@ -28,5 +28,9 @@ namespace PhotoApp.Data.Models
         public ICollection<UserPhoto> UsersPhotos { get; set; } = new HashSet<UserPhoto>();
 
         public ICollection<UsersPhotoLikes> UsersPhotoLikes { get; set; } = new HashSet<UsersPhotoLikes>();
+
+        public ICollection<UserNotification> UserNotifications { get; set; } = new HashSet<UserNotification>();
+
+        public ICollection<UserWonChallange> UserWonChallanges { get; set; } = new HashSet<UserWonChallange>();
     }
 }

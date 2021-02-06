@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace PhotoApp.Web.Controllers
         private readonly UserManager<PhotoAppUser> userManager;
         private readonly IPhotoService photoService;
         private readonly IUserService userService;
+        private readonly SignInManager<PhotoAppUser> signInManager;
 
         public HomeController(ILogger<HomeController> logger,
                               ICloundinaryService cloudinaryService,
@@ -33,7 +35,8 @@ namespace PhotoApp.Web.Controllers
                               UserManager<PhotoAppUser> userManager,
                               IPhotoService photoService,
                               IUserService userService,
-                              IChallangeService challangeService)
+                              IChallangeService challangeService,
+                              SignInManager<PhotoAppUser> signInManager)
         {
             _logger = logger;
             this.cloudinaryService = cloudinaryService;
@@ -41,9 +44,23 @@ namespace PhotoApp.Web.Controllers
             this.userManager = userManager;
             this.photoService = photoService;
             this.userService = userService;
+            this.signInManager = signInManager;
         }
 
+        [HttpGet]
         public IActionResult Index()
+        {
+            if (!signInManager.IsSignedIn(this.User))
+            {
+                return View();
+            }
+
+            return RedirectToAction("Home");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Home()
         {
             if (ChallangeService.TodayDate == new DateTime())
             {
@@ -60,9 +77,12 @@ namespace PhotoApp.Web.Controllers
             photosViewModel.UserId = userManager.GetUserId(this.User);
 
             return View(photosViewModel);
+
+            return View();
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Upload(ICollection<IFormFile> files, int id)
         {
             var photoLinks = await cloudinaryService.UploadAsync(this.cloudinary, files);

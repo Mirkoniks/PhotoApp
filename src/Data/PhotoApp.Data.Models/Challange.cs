@@ -28,5 +28,6 @@ namespace PhotoApp.Data.Models
 
         public ICollection<PhotoChallange> PhotosChallanges { get; set; } = new HashSet<PhotoChallange>();
 
+        public ICollection<UserWonChallange> UserWonChallanges { get; set; } = new HashSet<UserWonChallange>();
     }
 }
