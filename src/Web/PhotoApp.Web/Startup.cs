@@ -103,7 +103,7 @@ namespace PhotoApp.Web
                         dbContext.Roles.Add(new IdentityRole
                         {
                             Name = "Moderator",
-                            NormalizedName = "ADMIN",
+                            NormalizedName = "MODERATOR",
                             ConcurrencyStamp = Guid.NewGuid().ToString()
                         });
 
