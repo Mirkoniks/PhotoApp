@@ -195,11 +195,17 @@ namespace PhotoApp.Web.Controllers
                 EndTime = model.EndTime
             };
 
-            var photoLink = await cloudinaryService.UploadAsync(cloudinary, model.Photos);
-            int photoId = await photoService.AddPhotoAsync(photoLink.FirstOrDefault());
             int challangeId = await challangeService.CreateChallangeAsync(serviceModel);
 
-            await challangeService.SetChallangeCoverPhoto(challangeId, photoId);
+            if (model.Photos != null)
+            {
+
+                var photoLink = await cloudinaryService.UploadAsync(cloudinary, model.Photos);
+                int photoId = await photoService.AddPhotoAsync(photoLink.FirstOrDefault());
+                await challangeService.SetChallangeCoverPhoto(challangeId, photoId);
+
+            }
+
 
             return RedirectToAction("Create");
         }

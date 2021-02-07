@@ -7,7 +7,19 @@
 
     </div>
     <div class=" col-4">
-        <form method="post" enctype="multipart/form-data" asp-action="CreateConfirm" >
+        <form method="post" enctype="multipart/form-data" asp-action="CreateConfirm">
+            <div>
+                sasa
+            </div>
+            <div>
+                sasa
+            </div>
+            <div>
+                sasa
+            </div>
+            <div>
+                sasa
+            </div>
             <div>
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control" />
@@ -30,8 +42,8 @@
             </div>
             <div>
                 <label asp-for="Photos"></label>
-                <input asp-for="Photos" class="form-control" />
                 <input type="file" asp-for="Photos" multiple />
+                <span asp-validation-for="Photos" class="text-danger"></span>
             </div>
 
             <input type="submit" class="btn btn-primary" />

@@ -50,6 +50,11 @@
                                         <li><a asp-controller="Challanges" asp-action="Open">Ongoing</a></li>
                                         <li><a asp-controller="Challanges" asp-action="Closed">Closed</a></li>
                                         <li><a asp-controller="Challanges" asp-action="Upcoming">Upcoming</a></li>
+                                        @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(this.User), "Admin"))
+                                        {
+                                            <hr />
+                                            <li><a asp-controller="Challanges" asp-action="Create">Create a challange</a></li>
+                                        }
 
                                     </ul>
                                 </li>

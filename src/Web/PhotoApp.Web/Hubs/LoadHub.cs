@@ -75,8 +75,16 @@ namespace PhotoApp.Web.Hubs
                 {
                     var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
 
-                    var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
+                    //var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
 
+                    var photosLikes = dbContext.UsersPhotoLikes.Where(p => p.PhotoId == photosChallanges[i].PhotoId).FirstOrDefault();
+
+                    bool isLiked = false;
+
+                    if (photosLikes != null)
+                    {
+                        isLiked = photosLikes.UserId == photos.UserId;
+                    }
                     if (!isLiked)
                     {
                         PhotoViewModel photoViewModel = new PhotoViewModel
@@ -97,7 +105,16 @@ namespace PhotoApp.Web.Hubs
                 {
                     var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
 
-                    var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
+                    //var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
+
+                    var photosLikes = dbContext.UsersPhotoLikes.Where(p => p.PhotoId == photosChallanges[i].PhotoId).FirstOrDefault();
+
+                    bool isLiked = false;
+
+                    if (photosLikes != null)
+                    {
+                        isLiked = photosLikes.UserId == photos.UserId;
+                    }
 
                     if (!isLiked)
                     {
