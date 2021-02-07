@@ -74,8 +74,8 @@
 @section Scripts{
     <script>
 
-        var TotalPhotos;
-        var StepsCount;
+        var TotalPhotos = 0;
+        var PhotosSend = 0;
         var likes = [];
 
         $(document).ready(function () {
@@ -104,15 +104,16 @@
                     var i;
                     for (i = 0; i < model.photos.length; i++) {
                         $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
+
+                        PhotosSend++;
                     }
 
                     if ((model.isOpen === false) || model.isUpcoming === true) {
                         $("#uploadButton").prop('disabled', true);
                         $(".centered5").hide();
                     }
-               
-                    TotalPhotos = model.photosCount;
-                    StepsCount = model.stepsCount;
+
+                    TotalPhotos = model.totalPhotos
                 }
             }
         );
@@ -124,7 +125,7 @@
             var loadInfo =
             {
                 totalPhotos: TotalPhotos,
-                stepsCount: StepsCount,
+                photosSend: PhotosSend,
                 challangeId: @Model.Id,
                 userId: uid1,
             };
@@ -143,7 +144,7 @@
                 var loadInfo =
                 {
                     totalPhotos: TotalPhotos,
-                    stepsCount: StepsCount,
+                    photosSend: PhotosSend,
                     challangeId: @Model.Id,
                     userId: uid1,
                 };

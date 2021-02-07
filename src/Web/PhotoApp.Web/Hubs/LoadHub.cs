@@ -41,118 +41,10 @@ namespace PhotoApp.Web.Hubs
 
             List<PhotoViewModel> photoViewModels = new List<PhotoViewModel>();
 
-            StepsCount = photos.StepsCount;
-            PhotosCount = photos.TotalPhotos;
 
-            if (StepsCount == 0)
-            {
-                PhotosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == photos.ChallangeId).Count();
-            }
-
-            if (PhotosCount == 0)
-            {
-                return;
-            }
-
-            int step = PHOTOS_STEP;
-
-            if (PhotosCount < step)
-            {
-                step = PhotosCount;
-            }
-
-            if (StepsCount != 0)
-            {
-                var photosChallanges = dbContext
-                                       .PhotosChallanges
-                                       .Where(c => c.ChallangeId == photos.ChallangeId)
-                                       .Skip(StepsCount)
-                                       .Take(step)
-                                       .ToList();
-
-
-                for (int i = 0; i < photosChallanges.Count; i++)
-                {
-                    var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
-
-                    //var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
-
-                    var photosLikes = dbContext.UsersPhotoLikes.Where(p => p.PhotoId == photosChallanges[i].PhotoId).FirstOrDefault();
-
-                    bool isLiked = false;
-
-                    if (photosLikes != null)
-                    {
-                        isLiked = photosLikes.UserId == photos.UserId;
-                    }
-                    if (!isLiked)
-                    {
-                        PhotoViewModel photoViewModel = new PhotoViewModel
-                        {
-                            PhotoId = photo.PhotoId,
-                            PhotoLink = photo.PhotoLink
-                        };
-
-                        photoViewModels.Add(photoViewModel);
-                    }
-                }
-            }
-            else
-            {
-                var photosChallanges = dbContext.PhotosChallanges.Where(c => c.ChallangeId == photos.ChallangeId).Take(step).ToList();
-
-                for (int i = 0; i < photosChallanges.Count; i++)
-                {
-                    var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
-
-                    //var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
-
-                    var photosLikes = dbContext.UsersPhotoLikes.Where(p => p.PhotoId == photosChallanges[i].PhotoId).FirstOrDefault();
-
-                    bool isLiked = false;
-
-                    if (photosLikes != null)
-                    {
-                        isLiked = photosLikes.UserId == photos.UserId;
-                    }
-
-                    if (!isLiked)
-                    {
-                        PhotoViewModel photoViewModel = new PhotoViewModel
-                        {
-                            PhotoId = photo.PhotoId,
-                            PhotoLink = photo.PhotoLink
-                        };
-
-                        photoViewModels.Add(photoViewModel);
-                    };
-                }
-            }
-
-            StepsCount += step;
-
-            PhotosCount -= step;
-
-            PhotosViewModel1 photosViewModel = new PhotosViewModel1
-            {
-                Photos = photoViewModels,
-                PhotosCount = PhotosCount,
-                StepsCount = StepsCount,
-                IsOpen = dbContext.Challanges.Where(c => c.ChallangeId == photos.ChallangeId).FirstOrDefault().IsOpen,
-                IsUpcomig = dbContext.Challanges.Where(c => c.ChallangeId == photos.ChallangeId).FirstOrDefault().IsUpcoming,
-            };
-
-            await Clients.Caller.SendAsync(
-                "GetPhotos",
-                 photosViewModel
-                );
-        }
-
-        public async Task LoadTopPhotos(TopPhotosModel model)
-        {
             int step = 6;
-            int photosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
-            int photosToGet = photosCount - model.PhotosSend;
+            int photosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == photos.ChallangeId).Count();
+            int photosToGet = photosCount - photos.PhotosSend;
 
             if (photosToGet < 0)
             {
@@ -163,118 +55,179 @@ namespace PhotoApp.Web.Hubs
                 step = photosToGet;
             }
 
-            var photos = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).OrderByDescending(v => v.VotesCount).Skip(model.PhotosSend).Take(step).ToList();
+            var photosChallanges = dbContext.PhotosChallanges.Where(c => c.ChallangeId == photos.ChallangeId).Skip(photos.PhotosSend).Take(step).ToList();
 
-            TopPhotosModel topPhotosModel = new TopPhotosModel();
-            List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
 
-            foreach (var photo in photos)
+            for (int i = 0; i < photosChallanges.Count; i++)
             {
-                TopPhotoModel topPhotoModel = new TopPhotoModel();
-                string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
+                var photo = await photoService.FindPhotoByIdAsync(photosChallanges[i].PhotoId);
 
-                topPhotoModel.VotesCount = photo.VotesCount;
-                topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
-                topPhotoModel.Username = username;
+                //var isLiked = (dbContext.UsersPhotoLikes.Any(p => p.PhotoId == photo.PhotoId)) && (dbContext.UsersPhotoLikes.Any(u => u.UserId == photos.UserId));
 
-                photoModels.Add(topPhotoModel);
+                var photosLikes = dbContext.UsersPhotoLikes.Where(p => p.PhotoId == photosChallanges[i].PhotoId).FirstOrDefault();
+
+                bool isLiked = false;
+
+                if (photosLikes != null)
+                {
+                    isLiked = photosLikes.UserId == photos.UserId;
+                }
+
+                if (!isLiked)
+                {
+                    PhotoViewModel photoViewModel = new PhotoViewModel
+                    {
+                        PhotoId = photo.PhotoId,
+                        PhotoLink = photo.PhotoLink
+                    };
+
+                    photoViewModels.Add(photoViewModel);
+                };
+
+
             }
+                PhotosViewModel1 photosViewModel = new PhotosViewModel1
+                {
+                    Photos = photoViewModels,
+                    PhotosCount = PhotosCount,
+                    StepsCount = StepsCount,
+                    IsOpen = dbContext.Challanges.Where(c => c.ChallangeId == photos.ChallangeId).FirstOrDefault().IsOpen,
+                    IsUpcomig = dbContext.Challanges.Where(c => c.ChallangeId == photos.ChallangeId).FirstOrDefault().IsUpcoming,
+                };
 
-            topPhotosModel.Photos = photoModels;
-            topPhotosModel.PhotosCount = photosCount;
-
-            await Clients.Caller.SendAsync(
-                "GetTopPhotos",
-                 topPhotosModel
-                );
+                await Clients.Caller.SendAsync(
+                    "GetPhotos",
+                     photosViewModel
+                    );
         }
 
-        public async Task LoadAllTopPhotos(TopPhotosModel model)
-        {
-            int step = 10;
-            int photosCount = dbContext.PhotosChallanges.Count();
-            int photosToGet = photosCount - model.PhotosSend;
-
-            if (photosToGet < 0)
+            public async Task LoadTopPhotos(TopPhotosModel model)
             {
-                return;
-            }
-            else if (photosToGet < step)
-            {
-                step = photosToGet;
-            }
+                int step = 6;
+                int photosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
+                int photosToGet = photosCount - model.PhotosSend;
 
-            var photos = dbContext.PhotosChallanges.OrderByDescending(v => v.VotesCount).Skip(model.PhotosSend).Take(step).ToList();
+                if (photosToGet < 0)
+                {
+                    return;
+                }
+                else if (photosToGet < step)
+                {
+                    step = photosToGet;
+                }
 
-            TopPhotosModel topPhotosModel = new TopPhotosModel();
-            List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
+                var photos = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).OrderByDescending(v => v.VotesCount).Skip(model.PhotosSend).Take(step).ToList();
 
-            foreach (var photo in photos)
-            {
-                TopPhotoModel topPhotoModel = new TopPhotoModel();
-                string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
-                var challangeId = dbContext.PhotosChallanges.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().ChallangeId;
-                string challangeName = dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().Name;
+                TopPhotosModel topPhotosModel = new TopPhotosModel();
+                List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
 
-                topPhotoModel.VotesCount = photo.VotesCount;
-                topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
-                topPhotoModel.Username = username;
-                topPhotoModel.ChallangeName = challangeName;
+                foreach (var photo in photos)
+                {
+                    TopPhotoModel topPhotoModel = new TopPhotoModel();
+                    string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
 
-                photoModels.Add(topPhotoModel);
-            }
+                    topPhotoModel.VotesCount = photo.VotesCount;
+                    topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
+                    topPhotoModel.Username = username;
 
-            topPhotosModel.Photos = photoModels;
-            topPhotosModel.PhotosCount = photosCount;
+                    photoModels.Add(topPhotoModel);
+                }
 
-            await Clients.Caller.SendAsync(
-                "GetAllTopPhotos",
-                 topPhotosModel
-                );
-        }
+                topPhotosModel.Photos = photoModels;
+                topPhotosModel.PhotosCount = photosCount;
 
-        public async Task LoadLatestPhotos(TopPhotosModel model)
-        {
-            int step = 10;
-            int photosCount = dbContext.PhotosChallanges.Count();
-            int photosToGet = photosCount - model.PhotosSend;
-
-            if (photosToGet < 0)
-            {
-                return;
-            }
-            else if (photosToGet < step)
-            {
-                step = photosToGet;
+                await Clients.Caller.SendAsync(
+                    "GetTopPhotos",
+                     topPhotosModel
+                    );
             }
 
-            var photos = dbContext.PhotosChallanges.OrderByDescending(p => p.PhotoId).Skip(model.PhotosSend).Take(step).ToList();
-
-            TopPhotosModel topPhotosModel = new TopPhotosModel();
-            List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
-
-            foreach (var photo in photos)
+            public async Task LoadAllTopPhotos(TopPhotosModel model)
             {
-                TopPhotoModel topPhotoModel = new TopPhotoModel();
-                string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
-                var challangeId = dbContext.PhotosChallanges.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().ChallangeId;
-                string challangeName = dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().Name;
+                int step = 10;
+                int photosCount = dbContext.PhotosChallanges.Count();
+                int photosToGet = photosCount - model.PhotosSend;
 
-                topPhotoModel.VotesCount = photo.VotesCount;
-                topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
-                topPhotoModel.Username = username;
-                topPhotoModel.ChallangeName = challangeName;
+                if (photosToGet < 0)
+                {
+                    return;
+                }
+                else if (photosToGet < step)
+                {
+                    step = photosToGet;
+                }
 
-                photoModels.Add(topPhotoModel);
+                var photos = dbContext.PhotosChallanges.OrderByDescending(v => v.VotesCount).Skip(model.PhotosSend).Take(step).ToList();
+
+                TopPhotosModel topPhotosModel = new TopPhotosModel();
+                List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
+
+                foreach (var photo in photos)
+                {
+                    TopPhotoModel topPhotoModel = new TopPhotoModel();
+                    string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
+                    var challangeId = dbContext.PhotosChallanges.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().ChallangeId;
+                    string challangeName = dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().Name;
+
+                    topPhotoModel.VotesCount = photo.VotesCount;
+                    topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
+                    topPhotoModel.Username = username;
+                    topPhotoModel.ChallangeName = challangeName;
+
+                    photoModels.Add(topPhotoModel);
+                }
+
+                topPhotosModel.Photos = photoModels;
+                topPhotosModel.PhotosCount = photosCount;
+
+                await Clients.Caller.SendAsync(
+                    "GetAllTopPhotos",
+                     topPhotosModel
+                    );
             }
 
-            topPhotosModel.Photos = photoModels;
-            topPhotosModel.PhotosCount = photosCount;
+            public async Task LoadLatestPhotos(TopPhotosModel model)
+            {
+                int step = 10;
+                int photosCount = dbContext.PhotosChallanges.Count();
+                int photosToGet = photosCount - model.PhotosSend;
 
-            await Clients.Caller.SendAsync(
-                "GetLatestPhotos",
-                 topPhotosModel
-                );
+                if (photosToGet < 0)
+                {
+                    return;
+                }
+                else if (photosToGet < step)
+                {
+                    step = photosToGet;
+                }
+
+                var photos = dbContext.PhotosChallanges.OrderByDescending(p => p.PhotoId).Skip(model.PhotosSend).Take(step).ToList();
+
+                TopPhotosModel topPhotosModel = new TopPhotosModel();
+                List<TopPhotoModel> photoModels = new List<TopPhotoModel>();
+
+                foreach (var photo in photos)
+                {
+                    TopPhotoModel topPhotoModel = new TopPhotoModel();
+                    string username = userManager.FindByIdAsync(dbContext.UsersPhotos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().UserId).Result.UserName;
+                    var challangeId = dbContext.PhotosChallanges.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().ChallangeId;
+                    string challangeName = dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().Name;
+
+                    topPhotoModel.VotesCount = photo.VotesCount;
+                    topPhotoModel.PhotoLink = dbContext.Photos.Where(p => p.PhotoId == photo.PhotoId).FirstOrDefault().Link;
+                    topPhotoModel.Username = username;
+                    topPhotoModel.ChallangeName = challangeName;
+
+                    photoModels.Add(topPhotoModel);
+                }
+
+                topPhotosModel.Photos = photoModels;
+                topPhotosModel.PhotosCount = photosCount;
+
+                await Clients.Caller.SendAsync(
+                    "GetLatestPhotos",
+                     topPhotosModel
+                    );
+            }
         }
     }
-}

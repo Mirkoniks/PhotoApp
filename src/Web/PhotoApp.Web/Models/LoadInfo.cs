@@ -8,8 +8,8 @@ namespace PhotoApp.Web.Models
 {
     public class LoadInfo
     {
-        [JsonProperty("stepsCount")]
-        public int StepsCount { get; set; }
+        [JsonProperty("photosSend")]
+        public int PhotosSend { get; set; }
 
         [JsonProperty("totalPhotos")]
         public int TotalPhotos { get; set; }
