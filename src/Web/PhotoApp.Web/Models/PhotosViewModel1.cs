@@ -14,6 +14,9 @@ namespace PhotoApp.Web.Models
         [JsonProperty("photosCount")]
         public int PhotosCount { get; set; }
 
+        [JsonProperty("totalPhotos")]
+        public int TotalPhotos { get; set; }
+
         [JsonProperty("stepsCount")]
         public int StepsCount { get; set; }
 

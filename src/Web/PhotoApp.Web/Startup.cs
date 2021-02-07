@@ -128,6 +128,8 @@ namespace PhotoApp.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<LoadHub>("/load");

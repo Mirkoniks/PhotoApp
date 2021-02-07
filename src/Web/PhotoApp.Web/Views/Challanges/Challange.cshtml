@@ -1,7 +1,7 @@
 ﻿@model PhotoApp.Web.ViewModels.ChallangeViewModel
 
 @{
-    ViewData["Title"] = "Challange";
+    ViewData["Title"] = "Home Page";
 
 }
 
@@ -16,6 +16,9 @@
                 @Model.Description
             </div>
             <button id="rate" class="btn btn-primary btn-sm centered3 ">Rate photos</button>
+
+            <a id="rate" asp-controller="Challanges" asp-action="ChallangePhotos" asp-route-id="@Model.Id" class="btn btn-primary btn-sm  ">Top challange photos</a>
+
 
             @if ((Model.IsOpen == true) || (Model.IsUpcoming == false))
             {
@@ -105,21 +108,23 @@
 
         connection.on("GetPhotos",
             function (model) {
+                TotalPhotos = model.totalPhotos;
 
-                if ($('#rate').prop('disabled')) {
-                    var i;
-                    for (i = 0; i < model.photos.length; i++) {
-                        $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
+                if (PhotosSend != TotalPhotos) {
+                    if ($('#rate').prop('disabled')) {
+                        var i;
+                        for (i = 0; i < model.photos.length; i++) {
+                            $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
 
-                        PhotosSend++;
+                            PhotosSend++;
+                        }
+
+                        if ((model.isOpen === false) || model.isUpcoming === true) {
+                            $("#uploadButton").prop('disabled', true);
+                            $(".centered5").hide();
+                        }
+
                     }
-
-                    if ((model.isOpen === false) || model.isUpcoming === true) {
-                        $("#uploadButton").prop('disabled', true);
-                        $(".centered5").hide();
-                    }
-
-                    TotalPhotos = model.totalPhotos
                 }
             }
         );
