@@ -212,6 +212,11 @@ namespace PhotoApp.Web.Controllers
 
         public async Task<IActionResult> ChallangeAsync(int id)
         {
+            if (!await challangeService.IsValidId(id))
+            {
+              return  RedirectToAction("Error");
+            }
+
             string photoLink;
             var photo = await challangeService.FirstTopPhotosFromChallange(id, 1);
 

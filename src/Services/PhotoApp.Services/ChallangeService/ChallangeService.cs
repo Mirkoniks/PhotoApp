@@ -497,5 +497,17 @@ namespace PhotoApp.Services.ChallangeService
 
             return result;
         }
+
+        public async Task<bool> IsValidId(int id)
+        {
+            if (id < 0)
+            {
+                return false;
+            }
+
+            var bol = dbContext.Challanges.Any(c => c.ChallangeId == id);
+
+            return bol;
+        }
     }
 }

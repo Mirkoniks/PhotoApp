@@ -52,5 +52,7 @@ namespace PhotoApp.Services.ChallangeService
         public Task<UserLikedPhotosServiceModel> GetUserLikedPhotos(string userId);
 
         public Task<UserPhotosServiceModel> GetUserPhotos(string userId);
+
+        public Task<bool> IsValidId(int id);
     }
 }
