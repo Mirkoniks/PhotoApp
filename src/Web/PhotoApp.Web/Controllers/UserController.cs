@@ -24,21 +24,24 @@ namespace PhotoApp.Web.Controllers
 
         public async Task<IActionResult> MyPhotosAsync()
         {
-           var userId =  userManager.GetUserId(this.User);
-
-            var serviceModel = await challangeService.GetUserPhotos(userId);
-
+            var userId = userManager.GetUserId(this.User);
             MyPhotosViewModel myPhotosViewModel = new MyPhotosViewModel();
             List<MyPhotoViewModel> list = new List<MyPhotoViewModel>();
 
-            foreach (var item in serviceModel.Photo)
-            {
-                MyPhotoViewModel photoServiceModel = new MyPhotoViewModel
-                {
-                    PhotoLink = item.PhotoLink
-                };
+            var serviceModel = await challangeService.GetUserPhotos(userId);
 
-                list.Add(photoServiceModel);
+            if (serviceModel != null && (serviceModel.Photo.Count()) > 0)
+            {
+
+                foreach (var item in serviceModel.Photo)
+                {
+                    MyPhotoViewModel photoServiceModel = new MyPhotoViewModel
+                    {
+                        PhotoLink = item.PhotoLink
+                    };
+
+                    list.Add(photoServiceModel);
+                }
             }
 
             myPhotosViewModel.Photos = list;
@@ -55,14 +58,20 @@ namespace PhotoApp.Web.Controllers
             LikedPhotosViewModel myPhotosViewModel = new LikedPhotosViewModel();
             List<LikedPhotoViewModel> list = new List<LikedPhotoViewModel>();
 
-            foreach (var item in serviceModel.Photos)
+            if (serviceModel.Photos != null)
             {
-                LikedPhotoViewModel photoServiceModel = new LikedPhotoViewModel
-                {
-                    PhotoLink = item.PhotoLink
-                };
+                if (serviceModel.Photos.Count() > 0)
+            {
+                    foreach (var item in serviceModel.Photos)
+                    {
+                        LikedPhotoViewModel photoServiceModel = new LikedPhotoViewModel
+                        {
+                            PhotoLink = item.PhotoLink
+                        };
 
-                list.Add(photoServiceModel);
+                        list.Add(photoServiceModel);
+                    }
+                }
             }
 
             myPhotosViewModel.Photos = list;
