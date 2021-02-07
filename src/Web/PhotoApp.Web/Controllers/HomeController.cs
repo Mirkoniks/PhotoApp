@@ -60,24 +60,8 @@ namespace PhotoApp.Web.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult Home()
+        public async Task<IActionResult> HomeAsync()
         {
-            if (ChallangeService.TodayDate == new DateTime())
-            {
-                ChallangeService.TodayDate = DateTime.Today;
-            }
-
-            ViewModels.PhotosViewModel photosViewModel = new ViewModels.PhotosViewModel();
-
-
-            List<string> photos = new List<string>();
-            photos.Add("https://res.cloudinary.com/djjdavsvc/image/upload/v1607333511/tgeahxxe9dubfn4iifay.png");
-
-            photosViewModel.Photos = photos;
-            photosViewModel.UserId = userManager.GetUserId(this.User);
-
-            return View(photosViewModel);
-
             return View();
         }
 
