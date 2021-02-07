@@ -45,17 +45,17 @@
                             @if (SignInManager.IsSignedIn(User))
                             {
                                 <li class="drop-down">
-                                    <a href="#">Challanges</a>
+                                    <a>Challenges</a>
                                     <ul>
                                         <li><a asp-controller="Challanges" asp-action="Open">Ongoing</a></li>
-                                        <li><a asp-controller="Challanges" asp-action="Closed">Closed</a></li>
                                         <li><a asp-controller="Challanges" asp-action="Upcoming">Upcoming</a></li>
+                                        <li><a asp-controller="Challanges" asp-action="Closed">Closed</a></li>
                                         @if (await UserManager.GetUserAsync(this.User) != null)
                                         {
                                             @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(this.User), "Admin"))
                                             {
                                                 <hr />
-                                                <li><a asp-controller="Challanges" asp-action="Create">Create a challange</a></li>
+                                                <li><a asp-controller="Challanges" asp-action="Create">Create a challenge</a></li>
                                             }
                                         }
 
@@ -126,9 +126,9 @@
                             <li><i class="bx bx-chevron-right"></i> <a asp-controller="Home" asp-action="Index">Home</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Latest">Latest Photos</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Top">Top Photos</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Open">Ongoing Challanges</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Closed">Closed Challanges</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Upcoming">Upcoming Challanges</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Open">Ongoing Challenges</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Upcoming">Upcoming Challenges</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a asp-controller="Challanges" asp-action="Closed">Closed Challenges</a></li>
                         </ul>
                     </div>
                 </div>
