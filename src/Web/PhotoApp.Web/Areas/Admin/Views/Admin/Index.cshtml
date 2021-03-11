@@ -1,35 +1,40 @@
-﻿<div class="container-fluid p-0">
-
-    <h1 class="h3 mb-3">Basic Inputs</h1>
-
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Input</h5>
-                </div>
-                <div class="card-body">
-                    <input type="text" class="form-control" placeholder="Input">
-                </div>
+﻿    <div class="card spur-card">
+        <div class="card-header">
+            <div class="spur-card-icon">
+                <i class="fas fa-table"></i>
             </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Textarea</h5>
-                </div>
-                <div class="card-body">
-                    <textarea class="form-control" rows="2" placeholder="Textarea"></textarea>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Checkboxes</h5>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <label class="form-check">
-                            <input class="form-check-input" type="checkbox" value="">
-                            <span class="form-check-label">
-                                Option one is this and that&mdash;be sure to include why it's great
-                            </span>
+            <div class="spur-card-title">Table with hover</div>
+        </div>
+        <div class="card-body ">
+            <table class="table table-hover table-in-card">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th onclick="location.href='https://www.google.com'" scope="row">1</th>
+                        <td onclick="location.href='https://www.google.com'">Mark</td>
+                        <td onclick="location.href='https://www.google.com'">Ott</td>
+                        <td onclick="location.href='https://www.google.com'">mdo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>fat</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                        <td>twitter</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
