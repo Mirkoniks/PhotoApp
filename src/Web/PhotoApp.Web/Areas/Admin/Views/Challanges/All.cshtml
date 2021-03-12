@@ -1,0 +1,31 @@
+﻿@model PhotoApp.Web.Areas.Admin.Models.AllChalangesViewModel
+
+<div class="card spur-card">
+    <div class="card-header">
+        <div class="spur-card-icon">
+            <i class="fas fa-hourglass-end"></i>
+        </div>
+        <div class="spur-card-title">All Challanges</div>
+    </div>
+    <div class="card-body ">
+        <table class="table table-hover table-in-card">
+            <thead>
+                <tr>
+                    <th scope="col">Status</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Challanges)
+                {
+                    <tr>
+                        <th onclick="location.href='/Admin/Challanges/Challange/@item.Id'" scope="row">@item.Status</th>
+                        <td onclick="location.href='/Admin/Challanges/Challange/@item.Id'">@item.Name</td>
+                        <td onclick="location.href='/Admin/Challanges/Challange/@item.Id'">@item.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

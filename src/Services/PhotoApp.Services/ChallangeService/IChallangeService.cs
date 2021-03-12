@@ -61,5 +61,10 @@ namespace PhotoApp.Services.ChallangeService
         public Task<int> GetOpenChallangesCount();
 
         public Task<int> GetClosedChallangesCount();
+
+        public Task<AdminAllChallangesServiceModel> AdminGetAllChallanges();
+
+        public Task<string> SetStatus(bool isOpen, bool isUpcoming);
+
     }
 }

@@ -16,6 +16,7 @@ namespace PhotoApp.Services.ChallangeService
 {
     public class ChallangeService : IChallangeService
     {
+
         public static DateTime TodayDate { get; set; }
 
         private readonly PhotoAppDbContext dbContext;
@@ -504,6 +505,47 @@ namespace PhotoApp.Services.ChallangeService
             int count = dbContext.Challanges.Where(c => c.IsOpen == false).Where(c => c.IsUpcoming == false).Count();
 
             return count;
+        }
+
+        public async Task<AdminAllChallangesServiceModel> AdminGetAllChallanges()
+        {
+            AdminAllChallangesServiceModel adminAllChallangesServiceModel = new AdminAllChallangesServiceModel();
+            List<AdminChallangeServiceModel> adminChallangeServiceModels = new List<AdminChallangeServiceModel>();
+
+            var challangesDb = dbContext.Challanges.Take(dbContext.Challanges.Count()).ToList();
+
+            foreach (var item in challangesDb)
+            {
+                AdminChallangeServiceModel model = new AdminChallangeServiceModel
+                {
+                    Id = item.ChallangeId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime
+                };
+
+                adminChallangeServiceModels.Add(model);
+            }
+
+
+            adminAllChallangesServiceModel.Challanges = adminChallangeServiceModels;
+
+            return adminAllChallangesServiceModel;
+        }
+
+        public async Task<string> SetStatus(bool isOpen, bool isUpcoming)
+        {
+            if (isOpen == true && isUpcoming == false)
+            {
+                return "Ongoing";
+            }
+            else if(isOpen == false && isUpcoming == false)
+            {
+                return "Closed";
+            }
+
+            return "Upcoming";
         }
 
 
