@@ -86,7 +86,7 @@ namespace PhotoApp.Services.PhotoService
         {
             DateTime now = DateTime.UtcNow.Date;
 
-            var phCount = dbContext.Photos.Where(p => p.UploadedOn == now).Count();
+            var phCount = dbContext.Photos.Where(p => p.UploadedOn.Date == now).Count();
 
             return phCount;
         }

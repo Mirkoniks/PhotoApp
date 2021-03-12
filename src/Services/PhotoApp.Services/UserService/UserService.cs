@@ -165,7 +165,7 @@ namespace PhotoApp.Services.UserService
         {
             DateTime now = DateTime.UtcNow.Date;
 
-            int usersCount = dbContext.Users.Where(u => u.CreatedOn == now).Count();
+            int usersCount = dbContext.Users.Where(u => u.CreatedOn.Date == now).Count();
 
             return usersCount;
         }
