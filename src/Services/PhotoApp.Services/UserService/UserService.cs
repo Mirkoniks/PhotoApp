@@ -14,15 +14,12 @@ namespace PhotoApp.Services.UserService
     public class UserService : IUserService
     {
         private readonly PhotoAppDbContext dbContext;
-        private readonly RoleManager<PhotoAppUser> roleManager;
         private readonly UserManager<PhotoAppUser> userManager;
 
         public UserService(PhotoAppDbContext dbContext,
-                           RoleManager<PhotoAppUser> roleManager,
                            UserManager<PhotoAppUser> userManager)
         {
             this.dbContext = dbContext;
-            this.roleManager = roleManager;
             this.userManager = userManager;
         }
 
@@ -140,7 +137,7 @@ namespace PhotoApp.Services.UserService
         /// <param name="userId"></param>
         /// <param name="role"></param>
         /// <returns></returns>
-        public async Task<UsersServiceModel> GetAllUsersWithCertainRole(int role = 3)
+        public async Task<UsersServiceModel> GetAllUsers(int role = 3)
         {
 
             var userIds = await GetUserIdFromRoles(role);
@@ -156,6 +153,23 @@ namespace PhotoApp.Services.UserService
 
             return usersServiceModels;
         }
+
+        public async Task<int> GetTotalUsersCount()
+        {
+            int usersCount = dbContext.Users.Count();
+
+            return usersCount;
+        }
+
+        public async Task<int> GetUsersCountFromToday()
+        {
+            DateTime now = DateTime.UtcNow.Date;
+
+            int usersCount = dbContext.Users.Where(u => u.CreatedOn == now).Count();
+
+            return usersCount;
+        }
+
 
         private async Task<List<IdentityUserRole<string>>> GetUserIdFromRoles(int role)
         {

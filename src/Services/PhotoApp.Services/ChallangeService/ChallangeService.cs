@@ -485,6 +485,27 @@ namespace PhotoApp.Services.ChallangeService
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<int> GetUpcomigChallangesCount()
+        {
+            int count = dbContext.Challanges.Where(c => c.IsUpcoming == true).Where(c => c.IsOpen == false).Count();
+
+            return count;
+        }
+
+        public async Task<int> GetOpenChallangesCount()
+        {
+            int count = dbContext.Challanges.Where(c => c.IsOpen == true).Where(c => c.IsUpcoming == false).Count();
+
+            return count;
+        }
+
+        public async Task<int> GetClosedChallangesCount()
+        {
+            int count = dbContext.Challanges.Where(c => c.IsOpen == false).Where(c => c.IsUpcoming == false).Count();
+
+            return count;
+        }
+
 
         private string GetPhotoLinkById(int id)
         {

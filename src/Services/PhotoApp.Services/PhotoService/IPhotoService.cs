@@ -13,5 +13,9 @@ namespace PhotoApp.Services.PhotoService
         public Task<PhotoServiceModel> FindPhotoByIdAsync(int id);
 
         public Task AssingPhotoToChallangeAsync(AssignPhotoToChallangeServiceModel serviceModel);
+
+        public Task<int> GetTotalPhotosCount();
+
+        public Task<int> GetPhotosCountFromToday();
     }
 }

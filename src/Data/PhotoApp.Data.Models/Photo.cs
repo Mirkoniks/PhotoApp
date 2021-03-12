@@ -12,6 +12,8 @@ namespace PhotoApp.Data.Models
 
         public bool IsDeleted { get; set; }
 
+        public DateTime UploadedOn { get; set; }
+
         public ICollection<UserPhoto> UsersPhotos { get; set; } = new HashSet<UserPhoto>();
 
         public ICollection<PhotoChallange> PhotosChallanges { get; set; } = new HashSet<PhotoChallange>();

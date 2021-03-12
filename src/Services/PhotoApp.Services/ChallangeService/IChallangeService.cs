@@ -54,5 +54,12 @@ namespace PhotoApp.Services.ChallangeService
         public Task<UserPhotosServiceModel> GetUserPhotos(string userId);
 
         public Task<bool> IsValidId(int id);
+
+
+        public Task<int> GetUpcomigChallangesCount();
+
+        public Task<int> GetOpenChallangesCount();
+
+        public Task<int> GetClosedChallangesCount();
     }
 }

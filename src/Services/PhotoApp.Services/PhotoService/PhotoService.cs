@@ -23,6 +23,7 @@ namespace PhotoApp.Services.PhotoService
             var model = new Photo
             {
                 Link = photoLink,
+                UploadedOn = DateTime.UtcNow.Date
             };
 
             await dbContext.Photos.AddAsync(model);
@@ -73,5 +74,22 @@ namespace PhotoApp.Services.PhotoService
 
             return photoServiceModel;
         }
+
+        public async Task<int> GetTotalPhotosCount()
+        {
+            int phCount = dbContext.Photos.Count();
+
+            return phCount;
+        }
+
+        public async Task<int> GetPhotosCountFromToday()
+        {
+            DateTime now = DateTime.UtcNow.Date;
+
+            var phCount = dbContext.Photos.Where(p => p.UploadedOn == now).Count();
+
+            return phCount;
+        }
+
     }
 }

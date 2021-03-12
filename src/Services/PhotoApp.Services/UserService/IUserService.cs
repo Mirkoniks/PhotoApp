@@ -17,6 +17,11 @@ namespace PhotoApp.Services.UserService
 
         public Task<UserServiceModel> GetUserById(string userId);
 
-        public Task<UsersServiceModel> GetAllUsers(int role = 4);
+        public Task<UsersServiceModel> GetAllUsers(int role);
+
+        public Task<int> GetTotalUsersCount();
+
+        public Task<int> GetUsersCountFromToday();
+
     }
 }

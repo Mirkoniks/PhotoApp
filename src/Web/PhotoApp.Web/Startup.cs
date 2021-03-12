@@ -62,6 +62,7 @@ namespace PhotoApp.Web
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IChallangeService, ChallangeService>();
 
+
             services.AddHostedService<ChallangeUpdateService>();
 
             services.AddSignalR();
