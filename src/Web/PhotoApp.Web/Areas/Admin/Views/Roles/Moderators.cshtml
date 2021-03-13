@@ -1,0 +1,33 @@
+﻿@model PhotoApp.Web.Areas.Admin.Models.UsersVIewModel
+
+<div class="card spur-card">
+    <div class="card-header">
+        <div class="spur-card-icon">
+            <i class="fas fa-angle-up"></i>
+        </div>
+        <div class="spur-card-title">Moderators</div>
+    </div>
+    <div class="card-body ">
+        <table class="table table-hover table-in-card">
+            <thead>
+                <tr>
+                    <th scope="col">Role</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Username</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Users)
+                {
+                <tr>
+                    <th onclick="location.href='/Admin/Roles/User/@item.Id'" scope="row">@item.Role</th>
+                    <td onclick="location.href='/Admin/Roles/User/@item.Id'">@item.FirstName</td>
+                    <td onclick="location.href='/Admin/Roles/User/@item.Id'">@item.LastName</td>
+                    <td onclick="location.href='/Admin/Roles/User/@item.Id'">@item.UserName</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

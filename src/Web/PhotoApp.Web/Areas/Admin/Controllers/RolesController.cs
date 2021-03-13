@@ -26,7 +26,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             editUserViewModel.IsAdmin = true;
             editUserViewModel.IsMember = false;
             editUserViewModel.IsModerator = false;
-              
+
 
             return View();
         }
@@ -69,9 +69,65 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
                 PhoneNumber = model.Phone,
             };
 
-           await userService.EditUser(userServiceModel);
+            await userService.EditUser(userServiceModel);
 
-            return RedirectToAction("/Admin/Roles/Edit/" + model.Id);
+            return Redirect("/Admin/Roles/User/" + model.Id);
+        }
+
+        public async Task<IActionResult> Search()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Admins()
+        {
+            UsersVIewModel usersVIewModel = new UsersVIewModel();
+            List<UserViewModel> users = new List<UserViewModel>();
+
+            var usersDb = await userService.GetAllAdmins();
+
+            foreach (var item in usersDb.Users)
+            {
+                UserViewModel user = new UserViewModel()
+                {
+                    Id = item.Id,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    UserName = item.UserName,
+                    Role = item.Role
+                };
+
+                users.Add(user);
+            }
+
+            usersVIewModel.Users = users;
+
+            return View(usersVIewModel);
+        }
+
+        public async Task<IActionResult> Moderators()
+        {
+            UsersVIewModel usersVIewModel = new UsersVIewModel();
+            List<UserViewModel> users = new List<UserViewModel>();
+
+            var usersDb = await userService.GetAllModerators();
+
+            foreach (var item in usersDb.Users)
+            {
+                UserViewModel user = new UserViewModel()
+                {
+                    Id = item.Id,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    UserName = item.UserName
+                };
+
+                users.Add(user);
+            }
+
+            usersVIewModel.Users = users;
+
+            return View(usersVIewModel);
         }
     }
 }

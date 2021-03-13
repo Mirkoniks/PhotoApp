@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace PhotoApp.Services.Models.User
+namespace PhotoApp.Web.Areas.Admin.Models
 {
-    public class UserServiceModel
+    public class UserViewModel
     {
         public string Id { get; set; }
 
@@ -21,12 +22,6 @@ namespace PhotoApp.Services.Models.User
         public DateTime Birthday { get; set; }
 
         public DateTime RegisterDate { get; set; }
-
-        public bool IsMember { get; set; }
-
-        public bool IsModerator { get; set; }
-
-        public bool IsAdmin { get; set; }
 
         public string Role { get; set; }
     }

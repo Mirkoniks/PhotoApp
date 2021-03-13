@@ -47,10 +47,16 @@
                 </div>
                 <div class="dash-nav-dropdown">
                     <a href="#!" class="dash-nav-item dash-nav-dropdown-toggle">
-                        <i class="fas fa-user-cog"></i> Roles
+                        <i class="fas fa-user-cog"></i> Users
                     </a>
                     <div class="dash-nav-dropdown-menu">
-                        <a asp-area="Admin" asp-controller="Roles" asp-action="All" class="dash-nav-dropdown-item"> <i class="fas fa-list-ul"></i> &nbsp All</a>
+                        <a asp-area="Admin" asp-controller="Roles" asp-action="Search" class="dash-nav-dropdown-item"> <i class="fas fa-search"></i> &nbsp Search</a>
+                    </div>
+                    <div class="dash-nav-dropdown-menu">
+                        <a asp-area="Admin" asp-controller="Roles" asp-action="Admins" class="dash-nav-dropdown-item"> <i class="fas fa-angle-double-up"></i> &nbsp Admins</a>
+                    </div>
+                    <div class="dash-nav-dropdown-menu">
+                        <a asp-area="Admin" asp-controller="Roles" asp-action="Moderators" class="dash-nav-dropdown-item"> <i class="fas fa-angle-up"></i> &nbsp Moderators</a>
                     </div>
                 </div>
                 <div class="dash-nav-dropdown">
@@ -107,7 +113,7 @@
 
             <main class="dash-content">
 
-                @RenderBody();
+                @RenderBody()
 
             </main>
 

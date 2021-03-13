@@ -53,7 +53,7 @@ namespace PhotoApp.Services.UserService
             switch (role)
             {
                 case 0:
-                    await userManager.AddToRoleAsync(user, "Member");
+                    await userManager.AddToRoleAsync(user, "User");
                     break;
                 case 1:
                     await userManager.AddToRoleAsync(user, "Moderator");
@@ -86,7 +86,7 @@ namespace PhotoApp.Services.UserService
             switch (role)
             {
                 case 0:
-                    await userManager.RemoveFromRoleAsync(user, "Member");
+                    await userManager.RemoveFromRoleAsync(user, "User");
                     break;
                 case 1:
                     await userManager.RemoveFromRoleAsync(user, "Moderator");
@@ -259,6 +259,47 @@ namespace PhotoApp.Services.UserService
             return usersCount;
         }
 
+        public async Task<UsersServiceModel> GetAllAdmins()
+        {
+            var adminRoleId = dbContext.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
+            var usersDb = dbContext.UserRoles.Where(ur => ur.RoleId == adminRoleId).ToList(); ;
+
+            UsersServiceModel serviceModel = new UsersServiceModel();
+            List<UserServiceModel> users = new List<UserServiceModel>();
+
+            foreach (var item in usersDb)
+            {
+                var userDb = await GetUserById(item.UserId);
+                userDb.Role = "Admin";
+
+                users.Add(userDb);
+            }
+
+            serviceModel.Users = users;
+
+            return serviceModel;
+        }
+
+        public async Task<UsersServiceModel> GetAllModerators()
+        {
+            var moderatorRoleId = dbContext.Roles.Where(r => r.Name == "Moderator").FirstOrDefault().Id;
+            var usersDb = dbContext.UserRoles.Where(ur => ur.RoleId == moderatorRoleId).ToList(); ;
+
+            UsersServiceModel serviceModel = new UsersServiceModel();
+            List<UserServiceModel> users = new List<UserServiceModel>();
+
+            foreach (var item in usersDb)
+            {
+                var userDb = await GetUserById(item.UserId);
+                userDb.Role = "Moderator";
+
+                users.Add(userDb);
+            }
+
+            serviceModel.Users = users;
+
+            return serviceModel;
+        }
 
         private async Task<List<IdentityUserRole<string>>> GetUserIdFromRoles(int role)
         {
