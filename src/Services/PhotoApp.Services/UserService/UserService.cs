@@ -115,6 +115,7 @@ namespace PhotoApp.Services.UserService
 
             UserServiceModel serviceModel = new UserServiceModel
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Birthday = user.Birthday,
                 Email = user.Email,
@@ -124,8 +125,96 @@ namespace PhotoApp.Services.UserService
                 RegisterDate = user.CreatedOn
             };
 
+            var roles = await GetUserRole(userId);
+
+            foreach (var item in roles)
+            {
+                switch (item)
+                {
+                    case "User":
+                        serviceModel.IsMember = true;
+                        break;
+                    case "Moderator":
+                        serviceModel.IsModerator = true;
+                        break;
+                    case "Admin":
+                        serviceModel.IsAdmin = true;
+                        break;
+                }
+            }
+
             return serviceModel;
         }
+
+        public async Task EditUser(UserServiceModel model)
+        {
+            var user = dbContext.Users.Where(u => u.Id == model.Id).FirstOrDefault();
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.UserName = model.UserName;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Email = model.PhoneNumber;
+            user.Birthday = model.Birthday;
+
+            if (model.IsMember)
+            {
+                await GiveRole(model.Id, 0);
+            }
+            else
+            {
+                await RemoveRole(model.Id, 0);
+            }
+
+            if (model.IsModerator)
+            {
+                await GiveRole(model.Id, 1);
+            }
+            else
+            {
+                await RemoveRole(model.Id, 1);
+            }
+
+            if (model.IsAdmin)
+            {
+                await GiveRole(model.Id, 2);
+            }
+            else
+            {
+                await RemoveRole(model.Id, 2);
+            }
+
+            await dbContext.SaveChangesAsync();
+        }
+
+
+        /// <summary>
+        /// 4 - no role
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private async Task<List<string>> GetUserRole(string id)
+        {
+            var roles = dbContext.UserRoles.Where(ur => ur.UserId == id).ToList();
+
+            if (roles != null)
+            {
+                List<string> roleNames = new List<string>();
+
+                foreach (var item in roles)
+                {
+                    var rolesDb = dbContext.Roles.Where(r => r.Id == item.RoleId).FirstOrDefault().Name;
+
+                    roleNames.Add(rolesDb);
+                }
+
+                return roleNames;
+            }
+
+            return null;
+        }
+
+
 
         /// <summary>
         /// This method gets users by groups depending what number the role param is

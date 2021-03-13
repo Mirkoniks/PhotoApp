@@ -23,5 +23,6 @@ namespace PhotoApp.Services.UserService
 
         public Task<int> GetUsersCountFromToday();
 
+        public Task EditUser(UserServiceModel model);
     }
 }
