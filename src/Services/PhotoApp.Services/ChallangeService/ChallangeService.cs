@@ -269,12 +269,15 @@ namespace PhotoApp.Services.ChallangeService
             {
                 case -1:
                     var challange = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = true;
+                    dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
                     break;
                 case 0:
                     var challange1 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = true;
+                    dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = false;
                     break;
                 case 1:
                     var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
+                    dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = false;
                     break;
                 default:
                     break;
@@ -536,13 +539,106 @@ namespace PhotoApp.Services.ChallangeService
             return adminAllChallangesServiceModel;
         }
 
+        public async Task<AdminAllChallangesServiceModel> AdminGetAllOpenChallanges()
+        {
+            AdminAllChallangesServiceModel adminAllChallangesServiceModel = new AdminAllChallangesServiceModel();
+            List<AdminChallangeServiceModel> adminChallangeServiceModels = new List<AdminChallangeServiceModel>();
+
+            var challangesDb = dbContext.Challanges.Where(c => c.IsOpen == true).Take(dbContext.Challanges.Where(c => c.IsOpen == true).Count());
+
+            foreach (var item in challangesDb)
+            {
+                AdminChallangeServiceModel model = new AdminChallangeServiceModel
+                {
+                    Id = item.ChallangeId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    IsOpen = item.IsOpen,
+                    IsUpcoming = item.IsUpcoming
+                };
+
+                adminChallangeServiceModels.Add(model);
+            }
+
+
+            adminAllChallangesServiceModel.Challanges = adminChallangeServiceModels;
+
+            return adminAllChallangesServiceModel;
+        }
+
+        public async Task<AdminAllChallangesServiceModel> AdminGetAllUpcomingChallanges()
+        {
+            AdminAllChallangesServiceModel adminAllChallangesServiceModel = new AdminAllChallangesServiceModel();
+            List<AdminChallangeServiceModel> adminChallangeServiceModels = new List<AdminChallangeServiceModel>();
+
+            var challangesDb = dbContext.Challanges.Where(c => c.IsUpcoming == true).Take(dbContext.Challanges.Where(c => c.IsUpcoming == true).Count());
+
+            foreach (var item in challangesDb)
+            {
+                AdminChallangeServiceModel model = new AdminChallangeServiceModel
+                {
+                    Id = item.ChallangeId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    IsOpen = item.IsOpen,
+                    IsUpcoming = item.IsUpcoming
+                };
+
+                adminChallangeServiceModels.Add(model);
+            }
+
+
+            adminAllChallangesServiceModel.Challanges = adminChallangeServiceModels;
+
+            return adminAllChallangesServiceModel;
+        }
+
+        public async Task<AdminAllChallangesServiceModel> AdminGetAllClosedChallanges()
+        {
+            AdminAllChallangesServiceModel adminAllChallangesServiceModel = new AdminAllChallangesServiceModel();
+            List<AdminChallangeServiceModel> adminChallangeServiceModels = new List<AdminChallangeServiceModel>();
+
+            var challangesDb = dbContext.Challanges.Where(c => c.IsOpen == false)
+                                                   .Where(c => c.IsUpcoming == false)
+                                                   .Take(dbContext.Challanges
+                                                   .Where(c => c.IsOpen == false)
+                                                   .Where(c => c.IsUpcoming == false)
+                                                   .Count());
+
+            foreach (var item in challangesDb)
+            {
+                AdminChallangeServiceModel model = new AdminChallangeServiceModel
+                {
+                    Id = item.ChallangeId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    IsOpen = item.IsOpen,
+                    IsUpcoming = item.IsUpcoming
+                };
+
+                adminChallangeServiceModels.Add(model);
+            }
+
+
+            adminAllChallangesServiceModel.Challanges = adminChallangeServiceModels;
+
+            return adminAllChallangesServiceModel;
+
+        }
+
         public async Task<string> SetStatus(bool isOpen, bool isUpcoming)
         {
             if (isOpen == true && isUpcoming == false)
             {
                 return "Ongoing";
             }
-            else if(isOpen == false && isUpcoming == false)
+            else if (isOpen == false && isUpcoming == false)
             {
                 return "Closed";
             }

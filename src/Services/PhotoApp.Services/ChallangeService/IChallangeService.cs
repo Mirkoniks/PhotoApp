@@ -64,6 +64,12 @@ namespace PhotoApp.Services.ChallangeService
 
         public Task<AdminAllChallangesServiceModel> AdminGetAllChallanges();
 
+        public Task<AdminAllChallangesServiceModel> AdminGetAllOpenChallanges();
+
+        public Task<AdminAllChallangesServiceModel> AdminGetAllUpcomingChallanges();
+
+        public Task<AdminAllChallangesServiceModel> AdminGetAllClosedChallanges();
+
         public Task<string> SetStatus(bool isOpen, bool isUpcoming);
 
         public Task<AdminChallangeServiceModel> GetChallangeById(int id);

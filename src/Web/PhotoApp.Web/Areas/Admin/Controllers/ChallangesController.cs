@@ -22,17 +22,83 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Ongoing()
         {
-            return View();
+            AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
+            List<ChallangeViewModel> challangeViewModels = new List<ChallangeViewModel>();
+
+            var challanges = await challangeService.AdminGetAllOpenChallanges();
+
+            foreach (var item in challanges.Challanges)
+            {
+                ChallangeViewModel model = new ChallangeViewModel
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StarTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    Status = await challangeService.SetStatus(item.IsOpen, item.IsUpcoming),
+                };
+
+                challangeViewModels.Add(model);
+            }
+
+            allChalangesViewModel.Challanges = challangeViewModels;
+
+            return View(allChalangesViewModel);
         }
 
         public async Task<IActionResult> Upcoming()
         {
-            return View();
+            AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
+            List<ChallangeViewModel> challangeViewModels = new List<ChallangeViewModel>();
+
+            var challanges = await challangeService.AdminGetAllUpcomingChallanges();
+
+            foreach (var item in challanges.Challanges)
+            {
+                ChallangeViewModel model = new ChallangeViewModel
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StarTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    Status = await challangeService.SetStatus(item.IsOpen, item.IsUpcoming),
+                };
+
+                challangeViewModels.Add(model);
+            }
+
+            allChalangesViewModel.Challanges = challangeViewModels;
+
+            return View(allChalangesViewModel);
         }
 
         public async Task<IActionResult> Closed()
         {
-            return View();
+            AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
+            List<ChallangeViewModel> challangeViewModels = new List<ChallangeViewModel>();
+
+            var challanges = await challangeService.AdminGetAllClosedChallanges();
+
+            foreach (var item in challanges.Challanges)
+            {
+                ChallangeViewModel model = new ChallangeViewModel
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Description = item.Description,
+                    StarTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    Status = await challangeService.SetStatus(item.IsOpen, item.IsUpcoming),
+                };
+
+                challangeViewModels.Add(model);
+            }
+
+            allChalangesViewModel.Challanges = challangeViewModels;
+
+            return View(allChalangesViewModel);
         }
 
         public async Task<IActionResult> All()
