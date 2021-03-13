@@ -522,7 +522,9 @@ namespace PhotoApp.Services.ChallangeService
                     Name = item.Name,
                     Description = item.Description,
                     StartTime = item.StartTime,
-                    EndTime = item.EndTime
+                    EndTime = item.EndTime,
+                    IsOpen = item.IsOpen,
+                    IsUpcoming = item.IsUpcoming
                 };
 
                 adminChallangeServiceModels.Add(model);
@@ -546,6 +548,24 @@ namespace PhotoApp.Services.ChallangeService
             }
 
             return "Upcoming";
+        }
+
+        public async Task<AdminChallangeServiceModel> GetChallangeById(int id)
+        {
+            var challangeDb = dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault();
+
+            AdminChallangeServiceModel adminChallangeServiceModel = new AdminChallangeServiceModel()
+            {
+                Id = challangeDb.ChallangeId,
+                Name = challangeDb.Name,
+                Description = challangeDb.Description,
+                StartTime = challangeDb.StartTime,
+                EndTime = challangeDb.EndTime,
+                IsOpen = challangeDb.IsOpen,
+                IsUpcoming = challangeDb.IsUpcoming
+            };
+
+            return adminChallangeServiceModel;
         }
 
 

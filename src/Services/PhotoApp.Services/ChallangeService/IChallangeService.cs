@@ -66,5 +66,7 @@ namespace PhotoApp.Services.ChallangeService
 
         public Task<string> SetStatus(bool isOpen, bool isUpcoming);
 
+        public Task<AdminChallangeServiceModel> GetChallangeById(int id);
+
     }
 }

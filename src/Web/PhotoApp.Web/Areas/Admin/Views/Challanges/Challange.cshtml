@@ -1,29 +1,33 @@
-﻿<div class="col-xl-12">
+﻿@model PhotoApp.Web.Areas.Admin.Models.ChallangeViewModel
+
+<div class="col-xl-12">
     <div class="card spur-card">
         <div class="card-header">
             <div class="spur-card-icon">
                 <i class="fas fa-chart-bar"></i>
             </div>
-            <div class="spur-card-title"> Edit</div>
+            <div class="spur-card-title"> Edit | Status: @Model.Status</div>
         </div>
         <div class="card-body ">
-            <form>
+            <form method="post" enctype="multipart/form-data" asp-area="Admin" asp-controller="Challanges" asp-action="Edit">
                 <div class="form-group">
-                    <label for="exampleFormControlInput1">Name</label>
-                    <input class="form-control">
+                    <label>Name</label>
+                    <input asp-for="Name" value="@Model.Name" class="form-control">
+                    <input hidden  asp-for="@Model.Id"/>
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlInput1">Start date</label>
-                    <input type="date" class="form-control" id="exampleFormControlInput1">
+                    <label >Start date</label>
+                    <input  asp-for="StarTime" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlInput1">End date</label>
-                    <input type="date" class="form-control" id="exampleFormControlInput1">
+                    <label>End date</label>
+                    <input asp-for="EndTime" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Description</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <label >Description</label>
+                    <textarea asp-for="Description" placeholder="@Model.Description" class="form-control"  rows="3"></textarea>
                 </div>
+                
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

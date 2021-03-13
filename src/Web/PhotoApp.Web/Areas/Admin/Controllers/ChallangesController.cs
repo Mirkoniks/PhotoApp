@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotoApp.Services.ChallangeService;
+using PhotoApp.Services.Models.Challange;
 using PhotoApp.Web.Areas.Admin.Models;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
                     Description = item.Description,
                     StarTime = item.StartTime,
                     EndTime = item.EndTime,
-                    Status =  await challangeService.SetStatus(item.IsOpen, item.IsUpcoming)
+                    Status =  await challangeService.SetStatus(item.IsOpen, item.IsUpcoming),
                 };
 
                 challangeViewModels.Add(model);
@@ -61,9 +62,38 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View(allChalangesViewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Challange(int id)
         {
-            return View();
+            var challangeServiceModel =  await challangeService.GetChallangeById(id);
+
+            ChallangeViewModel viewModel = new ChallangeViewModel()
+            {
+                Id = challangeServiceModel.Id,
+                Name = challangeServiceModel.Name,
+                Description = challangeServiceModel.Description,
+                StarTime = challangeServiceModel.StartTime,
+                EndTime = challangeServiceModel.EndTime,
+                Status = await challangeService.SetStatus(challangeServiceModel.IsOpen, challangeServiceModel.IsUpcoming)
+            };
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> Edit(ChallangeViewModel challangeModel)
+        {
+            EditChallangeServiceModel serviceModel = new EditChallangeServiceModel();
+
+            serviceModel.ChallangeId = challangeModel.Id;
+            serviceModel.Name = challangeModel.Name;
+            serviceModel.Description = challangeModel.Description;
+            serviceModel.StartTime = challangeModel.StarTime;
+            serviceModel.EndTime = challangeModel.EndTime;
+            serviceModel.ChallangeCoverPhoto = challangeModel.ChallangeCoverPhoto;
+
+            await challangeService.EditChallange(serviceModel);
+
+            return Redirect("/Admin/Challanges/Challange/" + challangeModel.Id);
         }
     }
 }

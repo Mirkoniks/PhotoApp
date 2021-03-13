@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PhotoApp.Web.Areas.Admin.Models
 {
-    public class ChallangeViewModel
+    public class EditChallangeModel
     {
         public int Id { get; set; }
 
@@ -16,14 +16,12 @@ namespace PhotoApp.Web.Areas.Admin.Models
         public string Description { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime StarTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime EndTime { get; set; }
 
-        public string Status { get; set; }
-
         public ICollection<IFormFile> ChallangeCoverPhoto { get; set; }
-
     }
 }
+
