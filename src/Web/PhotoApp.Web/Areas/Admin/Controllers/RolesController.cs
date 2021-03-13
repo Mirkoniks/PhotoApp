@@ -119,7 +119,8 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
                     Id = item.Id,
                     FirstName = item.FirstName,
                     LastName = item.LastName,
-                    UserName = item.UserName
+                    UserName = item.UserName,
+                    Role = item.Role
                 };
 
                 users.Add(user);
