@@ -1,0 +1,41 @@
+﻿@model PhotoApp.Web.Areas.Admin.Models.CreateChallangeModel
+
+<div class="col-xl-12">
+    <div class="card spur-card">
+        <div class="card-header">
+            <div class="spur-card-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="spur-card-title"> Create a challange </div>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" asp-area="Admin" asp-controller="Challanges" asp-action="CreateConfirm">
+                <div class="form-group">
+                    <label asp-for="Name" ></label>
+                    <input asp-for="Name" type="text" class="form-control">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="StartTime"></label>
+                        <input asp-for="StartTime"  class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="EndTime"></label>
+                        <input asp-for="EndTime" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Photos" class="mr-3"> </label>
+                        <input type="file" asp-for="Photos"  multiple />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Sign in</button>
+            </form>
+        </div>
+    </div>
+</div>

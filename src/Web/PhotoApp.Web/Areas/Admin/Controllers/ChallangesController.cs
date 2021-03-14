@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CloudinaryDotNet;
+using Microsoft.AspNetCore.Mvc;
 using PhotoApp.Services.ChallangeService;
+using PhotoApp.Services.CloudinaryService;
 using PhotoApp.Services.Models.Challange;
+using PhotoApp.Services.PhotoService;
 using PhotoApp.Web.Areas.Admin.Models;
 using System;
 using System.Collections.Generic;
@@ -13,13 +16,22 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
     public class ChallangesController : Controller
     {
         private readonly IChallangeService challangeService;
+        private readonly IPhotoService photoService;
+        private readonly Cloudinary cloudinary;
+        private readonly ICloundinaryService cloudinaryService;
 
-        public ChallangesController(IChallangeService challangeService
-                                    )
+        public ChallangesController(IChallangeService challangeService,
+                                    IPhotoService photoService,
+                                    Cloudinary cloudinary,
+                                    ICloundinaryService cloudinaryService)
         {
             this.challangeService = challangeService;
+            this.photoService = photoService;
+            this.cloudinary = cloudinary;
+            this.cloudinaryService = cloudinaryService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Ongoing()
         {
             AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
@@ -47,6 +59,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View(allChalangesViewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Upcoming()
         {
             AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
@@ -74,6 +87,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View(allChalangesViewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Closed()
         {
             AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
@@ -101,6 +115,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View(allChalangesViewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> All()
         {
             AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
@@ -146,6 +161,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Edit(ChallangeViewModel challangeModel)
         {
             EditChallangeServiceModel serviceModel = new EditChallangeServiceModel();
@@ -160,6 +176,37 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             await challangeService.EditChallange(serviceModel);
 
             return Redirect("/Admin/Challanges/Challange/" + challangeModel.Id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateConfirm(CreateChallangeModel model)
+        {
+            CreateChallangeServiceModel serviceModel = new CreateChallangeServiceModel()
+            {
+                Name = model.Name,
+                Description = model.Description,
+                StartTime = model.StartTime,
+                EndTime = model.EndTime
+            };
+
+            int challangeId = await challangeService.CreateChallangeAsync(serviceModel);
+
+            if (model.Photos != null)
+            {
+
+                var photoLink = await cloudinaryService.UploadAsync(cloudinary, model.Photos);
+                int photoId = await photoService.AddPhotoAsync(photoLink.FirstOrDefault());
+                await challangeService.SetChallangeCoverPhoto(challangeId, photoId);
+
+            }
+
+            return RedirectToAction("All");
         }
     }
 }

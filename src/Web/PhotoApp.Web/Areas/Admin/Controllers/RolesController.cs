@@ -20,6 +20,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             this.userService = userService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> All()
         {
             EditUserViewModel editUserViewModel = new EditUserViewModel();
@@ -31,6 +32,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> User(string id)
         {
             var user = await userService.GetUserById(id);
@@ -53,6 +55,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
             UserServiceModel userServiceModel = new UserServiceModel()
@@ -79,6 +82,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Admins()
         {
             UsersVIewModel usersVIewModel = new UsersVIewModel();
@@ -105,6 +109,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return View(usersVIewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Moderators()
         {
             UsersVIewModel usersVIewModel = new UsersVIewModel();
