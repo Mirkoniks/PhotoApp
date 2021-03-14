@@ -99,5 +99,12 @@ namespace PhotoApp.Services.PhotoService
             return photoLink;
         }
 
+        public async Task<int> GetChallangeCoverPhotoId(int id)
+        {
+            var photoId = dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault().ChallangeCoverPhotoId;
+
+            return photoId;
+        }
+
     }
 }

@@ -155,13 +155,14 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
                 Description = challangeServiceModel.Description,
                 StarTime = challangeServiceModel.StartTime,
                 EndTime = challangeServiceModel.EndTime,
-                Status = await challangeService.SetStatus(challangeServiceModel.IsOpen, challangeServiceModel.IsUpcoming)
+                Status = await challangeService.SetStatus(challangeServiceModel.IsOpen, challangeServiceModel.IsUpcoming),
+                CoverPhotoLink = await photoService.GetPhotoUrl( await photoService.GetChallangeCoverPhotoId(id))               
             };
 
             return View(viewModel);
         }
 
-        [HttpPatch]
+        [HttpPost]
         public async Task<IActionResult> Edit(ChallangeViewModel challangeModel)
         {
             EditChallangeServiceModel serviceModel = new EditChallangeServiceModel();
@@ -171,7 +172,15 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             serviceModel.Description = challangeModel.Description;
             serviceModel.StartTime = challangeModel.StarTime;
             serviceModel.EndTime = challangeModel.EndTime;
-            serviceModel.ChallangeCoverPhoto = challangeModel.ChallangeCoverPhoto;
+
+            if (challangeModel.ChallangeCoverPhoto != null)
+            {
+
+                var photoLink = await cloudinaryService.UploadAsync(cloudinary, challangeModel.ChallangeCoverPhoto);
+                int photoId = await photoService.AddPhotoAsync(photoLink.FirstOrDefault());
+                await challangeService.SetChallangeCoverPhoto(challangeModel.Id, photoId);
+
+            }
 
             await challangeService.EditChallange(serviceModel);
 

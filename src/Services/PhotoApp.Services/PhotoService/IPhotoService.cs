@@ -19,5 +19,7 @@ namespace PhotoApp.Services.PhotoService
         public Task<int> GetPhotosCountFromToday();
 
         public Task<string> GetPhotoUrl(int id);
+
+        public Task<int> GetChallangeCoverPhotoId(int id);
     }
 }

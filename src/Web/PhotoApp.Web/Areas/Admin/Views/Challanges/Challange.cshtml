@@ -10,24 +10,34 @@
         </div>
         <div class="card-body ">
             <form method="post" enctype="multipart/form-data" asp-area="Admin" asp-controller="Challanges" asp-action="Edit">
+                <div class="form-row">
+                    <div class="col-md-12 text-center">
+                        <img class="img-thumbnail " src="@Model.CoverPhotoLink" alt="Alternate Text" />
+                    </div>
+                </div>
                 <div class="form-group">
                     <label>Name</label>
                     <input asp-for="Name" value="@Model.Name" class="form-control">
-                    <input hidden  asp-for="@Model.Id"/>
+                    <input hidden asp-for="@Model.Id" />
                 </div>
                 <div class="form-group">
-                    <label >Start date</label>
-                    <input  asp-for="StarTime" class="form-control">
+                    <label>Start date</label>
+                    <input asp-for="StarTime" class="form-control">
                 </div>
                 <div class="form-group">
                     <label>End date</label>
                     <input asp-for="EndTime" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label >Description</label>
-                    <textarea asp-for="Description" placeholder="@Model.Description" class="form-control"  rows="3"></textarea>
+                    <label>Description</label>
+                    <textarea asp-for="Description" placeholder="@Model.Description" class="form-control" rows="3"></textarea>
                 </div>
-                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="ChallangeCoverPhoto" class="mr-3"> </label>
+                        <input type="file" asp-for="ChallangeCoverPhoto" multiple />
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

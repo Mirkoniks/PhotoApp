@@ -23,7 +23,9 @@ namespace PhotoApp.Web.Areas.Admin.Models
 
         public string Status { get; set; }
 
+        [Display(Name = "Cover photo")]
         public ICollection<IFormFile> ChallangeCoverPhoto { get; set; }
 
+        public string CoverPhotoLink { get; set; }
     }
 }
