@@ -91,5 +91,13 @@ namespace PhotoApp.Services.PhotoService
             return phCount;
         }
 
+
+        public async Task<string> GetPhotoUrl(int id)
+        {
+            var photoLink = dbContext.Photos.Where(p => p.PhotoId == id).FirstOrDefault().Link;
+
+            return photoLink;
+        }
+
     }
 }

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhotoApp.Data;
 
 namespace PhotoApp.Data.Migrations
 {
     [DbContext(typeof(PhotoAppDbContext))]
-    partial class PhotoAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210314094505_reportTables")]
+    partial class reportTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,6 +366,41 @@ namespace PhotoApp.Data.Migrations
                     b.ToTable("Reports");
                 });
 
+            modelBuilder.Entity("PhotoApp.Data.Models.ReportReportedSubject", b =>
+                {
+                    b.Property<string>("ReportId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("ReportedSubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReportId", "ReportedSubjectId");
+
+                    b.HasIndex("ReportedSubjectId");
+
+                    b.ToTable("ReportReportedSubjects");
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.ReportedSubject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPhoto")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsUser")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReportedSubjects");
+                });
+
             modelBuilder.Entity("PhotoApp.Data.Models.UserNotification", b =>
                 {
                     b.Property<string>("UserId")
@@ -493,6 +530,21 @@ namespace PhotoApp.Data.Migrations
                     b.HasOne("PhotoApp.Data.Models.Photo", "Photo")
                         .WithMany("PhotosChallanges")
                         .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PhotoApp.Data.Models.ReportReportedSubject", b =>
+                {
+                    b.HasOne("PhotoApp.Data.Models.Report", "Report")
+                        .WithMany("ReportReportedSubjects")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PhotoApp.Data.Models.ReportedSubject", "ReportedSubject")
+                        .WithMany("ReportReportedSubjects")
+                        .HasForeignKey("ReportedSubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

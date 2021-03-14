@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotoApp.Services.ChallangeService;
 using PhotoApp.Services.PhotoService;
+using PhotoApp.Services.ReportService;
 using PhotoApp.Services.UserService;
 using PhotoApp.Web.Areas.Admin.Models;
 using System;
@@ -16,14 +17,17 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
         private readonly IPhotoService photoService;
         private readonly IUserService userService;
         private readonly IChallangeService challangeService;
+        private readonly IReportService reportService;
 
         public AdminController(IPhotoService photoService,
                                IUserService userService,
-                               IChallangeService challangeService)
+                               IChallangeService challangeService,
+                               IReportService reportService)
         {
             this.photoService = photoService;
             this.userService = userService;
             this.challangeService = challangeService;
+            this.reportService = reportService;
         }
 
         [HttpGet]
@@ -35,7 +39,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
                 NewPhotosCount = await photoService.GetPhotosCountFromToday(),
                 TotalUsersCount = await userService.GetTotalUsersCount(),
                 NewUsersCount = await userService.GetUsersCountFromToday(),
-                NewReportsCount = 0,
+                NewReportsCount = await reportService.GetAllActiveReportsCount(),
                 UpcomingChallangesCount = await challangeService.GetUpcomigChallangesCount(),
                 OpenChallangeCount = await challangeService.GetOpenChallangesCount(),
                 ClosedChallangesCount = await challangeService.GetClosedChallangesCount()

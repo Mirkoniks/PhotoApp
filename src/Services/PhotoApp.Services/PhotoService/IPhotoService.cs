@@ -17,5 +17,7 @@ namespace PhotoApp.Services.PhotoService
         public Task<int> GetTotalPhotosCount();
 
         public Task<int> GetPhotosCountFromToday();
+
+        public Task<string> GetPhotoUrl(int id);
     }
 }

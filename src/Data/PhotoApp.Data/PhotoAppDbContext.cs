@@ -27,6 +27,7 @@ namespace PhotoApp.Data
 
         public DbSet<UserWonChallange> UserWonChallanges { get; set; }
 
+        public DbSet<Report> Reports { get; set; }
 
         public PhotoAppDbContext(DbContextOptions<PhotoAppDbContext> options)
             : base(options)

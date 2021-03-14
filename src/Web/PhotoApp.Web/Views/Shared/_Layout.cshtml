@@ -67,12 +67,20 @@
                                     <a href="#">@UserManager.GetUserAsync(User).Result.UserName</a>
                                     <ul>
                                         <li>
-                                            <a asp-area="" asp-controller="User" asp-action="MyPhotos">My photos</a>
+                                            <a asp-area="" asp-controller="User" asp-action="MyPhotos" title="My photos">My photos</a>
                                         </li>
-                                        <li><a asp-area="" asp-controller="User" asp-action="LikedPhotos">Liked photos</a></li>
-
-                                        <li><a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Settings</a></li>
-
+                                        <li>
+                                            <a asp-area="" asp-controller="User" asp-action="LikedPhotos" title="Liked photos">Liked photos</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Settings">Settings</a>
+                                        </li>
+                                        @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(this.User), "Admin"))
+                                        {
+                                            <li>
+                                                <a asp-area="Admin" asp-controller="Admin" asp-action="Index" title="Admin panel">Admin panel</a>
+                                            </li>
+                                        }
                                     </ul>
                                 </li>
                                 <li>
