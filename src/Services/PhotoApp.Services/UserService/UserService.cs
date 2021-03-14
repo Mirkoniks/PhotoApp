@@ -301,6 +301,26 @@ namespace PhotoApp.Services.UserService
             return serviceModel;
         }
 
+        public async Task<bool> CheckIfUsernameIsValid(string username)
+        {
+            var isValidUser = dbContext.Users.Where(u => u.UserName == username).FirstOrDefault();
+
+            if (isValidUser == null || isValidUser == default)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<string> GetUserIdByUsername(string username)
+        {
+            var userId = dbContext.Users.Where(u => u.UserName == username).FirstOrDefault().Id;
+
+            return userId;
+        }
+
+
         private async Task<List<IdentityUserRole<string>>> GetUserIdFromRoles(int role)
         {
             List<IdentityUserRole<string>> users = default;

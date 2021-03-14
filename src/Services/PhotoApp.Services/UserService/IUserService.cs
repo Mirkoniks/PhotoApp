@@ -29,5 +29,8 @@ namespace PhotoApp.Services.UserService
 
         public Task<UsersServiceModel> GetAllModerators();
 
+        public Task<bool> CheckIfUsernameIsValid(string username);
+
+        public Task<string> GetUserIdByUsername(string username);
     }
 }

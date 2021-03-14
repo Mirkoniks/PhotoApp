@@ -77,9 +77,31 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             return Redirect("/Admin/Roles/User/" + model.Id);
         }
 
-        public async Task<IActionResult> Search()
+        [HttpGet]
+        public async Task<IActionResult> Search(SearchModel model)
         {
-            return View();
+            if (!model.IsValid)
+            {
+                ModelState.AddModelError("Username", "Username is inavalid");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchConfirm(SearchModel model)
+        {
+            if (await userService.CheckIfUsernameIsValid(model.Username))
+            {
+                string userId = await userService.GetUserIdByUsername(model.Username);
+
+                return Redirect("/Admin/Roles/User/" + userId);
+            }
+
+
+            model.IsValid = false;
+
+            return RedirectToAction("Search", model);
         }
 
         [HttpGet]

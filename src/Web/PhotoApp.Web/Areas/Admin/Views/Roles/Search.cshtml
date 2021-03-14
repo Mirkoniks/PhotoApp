@@ -1,11 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿@model PhotoApp.Web.Areas.Admin.Models.SearchModel
 
-namespace PhotoApp.Web.Areas.Admin.Views.Roles
-{
-    public class Search
-    {
-    }
-}
+<div class="card spur-card">
+    <div class="card-header">
+        <div class="spur-card-icon">
+            <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="spur-card-title">Search</div>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-area="Admin" asp-controller="Roles" asp-action="SearchConfirm">
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input asp-for="Username" class="form-control">
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
