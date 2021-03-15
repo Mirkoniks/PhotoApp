@@ -11,31 +11,42 @@ namespace PhotoApp.Services.CloudinaryService
     {
         public async Task<List<string>> UploadAsync(Cloudinary cloudinary, ICollection<IFormFile> files)
         {
+            List<Task<string>> tasks = new List<Task<string>>();
             List<string> imageUrls = new List<string>();
 
             foreach (var file in files)
             {
-                byte[] destiantionImage;
+                tasks.Add(Task.Run(() => Upload(cloudinary, file)));
+            }
 
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    destiantionImage = memoryStream.ToArray();
-                }
-
-                using (var destinationStream = new MemoryStream(destiantionImage))
-                {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.FileName, destinationStream)
-                    };
-                   var response = await cloudinary.UploadAsync(uploadParams);
-
-                    imageUrls.Add(response.SecureUrl.AbsoluteUri);
-                }
+            foreach (var item in tasks)
+            {
+                imageUrls.Add(await item);
             }
 
             return imageUrls;
+        }
+
+        private async Task<string> Upload(Cloudinary cloudinary, IFormFile file)
+        {
+            byte[] destiantionImage;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                destiantionImage = memoryStream.ToArray();
+            }
+
+            using (var destinationStream = new MemoryStream(destiantionImage))
+            {
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, destinationStream)
+                };
+                var response = await cloudinary.UploadAsync(uploadParams);
+
+                return (response.SecureUrl.AbsoluteUri);
+            }
         }
     }
 }
