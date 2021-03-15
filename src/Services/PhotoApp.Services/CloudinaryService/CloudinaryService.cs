@@ -9,25 +9,40 @@ namespace PhotoApp.Services.CloudinaryService
 {
     public class CloudinaryService : ICloundinaryService
     {
+        private static List<string> urls;
+
         public async Task<List<string>> UploadAsync(Cloudinary cloudinary, ICollection<IFormFile> files)
         {
-            List<Task<string>> tasks = new List<Task<string>>();
-            List<string> imageUrls = new List<string>();
+            //List<Task<string>> tasks = new List<Task<string>>();
+            //List<string> imageUrls = new List<string>();
 
-            foreach (var file in files)
+            //foreach (var file in files)
+            //{
+            //    tasks.Add(Task.Run(() => Upload(cloudinary, file)));
+            //}
+
+            //foreach (var item in tasks)
+            //{
+            //    imageUrls.Add(await item);
+            //}
+
+            //return imageUrls;
+
+            urls = new List<string>();
+
+            List<Task> tasks = new List<Task>();
+
+            foreach (var item in files)
             {
-                tasks.Add(Task.Run(() => Upload(cloudinary, file)));
+                tasks.Add(Task.Run(() => Upload(cloudinary, item)));
             }
 
-            foreach (var item in tasks)
-            {
-                imageUrls.Add(await item);
-            }
+            Task.WaitAll(tasks.ToArray());
 
-            return imageUrls;
+            return urls;
         }
 
-        private async Task<string> Upload(Cloudinary cloudinary, IFormFile file)
+        private async Task Upload(Cloudinary cloudinary, IFormFile file)
         {
             byte[] destiantionImage;
 
@@ -45,7 +60,7 @@ namespace PhotoApp.Services.CloudinaryService
                 };
                 var response = await cloudinary.UploadAsync(uploadParams);
 
-                return (response.SecureUrl.AbsoluteUri);
+                urls.Add(response.SecureUrl.AbsoluteUri);
             }
         }
     }
