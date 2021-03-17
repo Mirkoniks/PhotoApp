@@ -238,5 +238,85 @@ namespace PhotoApp.Web.Hubs
                  topPhotosModel
                 );
         }
+
+        //NEW METHODS FOR LOADING
+
+        public async Task LoadPhotosNew(LoadInfo model)
+        {
+            PhotosViewModel photosViewModel = new PhotosViewModel();
+            List<PhotoViewModel> photos = new List<PhotoViewModel>();
+
+            int photosToSend = 8;
+            
+            int userLikedPhotosCount = dbContext.UsersPhotoLikes.Where(upl => upl.UserId == model.UserId).Where(upl => upl.ChallangeId == model.ChallangeId).Count();
+
+            if (IsMorePhotos(model.PhotosSend, model.ChallangeId, userLikedPhotosCount))
+            {
+                int totalPhotosLeft = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
+
+
+                totalPhotosLeft -= model.PhotosSend;
+                totalPhotosLeft -= userLikedPhotosCount;
+
+                if (photosToSend > totalPhotosLeft)
+                {
+                    photosToSend = totalPhotosLeft;
+                }
+
+                int skipCount = model.ActualPhotosCount;
+
+
+                List<int> challangePhotosIds = dbContext.PhotosChallanges
+                                                        .Where(c => c.ChallangeId == model.ChallangeId)
+                                                        .Skip(skipCount)
+                                                        .Take(photosToSend)
+                                                        .Select(c => c.PhotoId)
+                                                        .ToList();
+
+                foreach (var item in challangePhotosIds)
+                {
+                    if (!dbContext.UsersPhotoLikes.Any(p => p.PhotoId == item))
+                    {
+                        var photoDb = await photoService.FindPhotoByIdAsync(item);
+
+                        PhotoViewModel photo = new PhotoViewModel()
+                        {
+                            PhotoId = item,
+                            PhotoLink = photoDb.PhotoLink
+                        };
+
+                        photos.Add(photo);
+                    }
+                }
+
+                photosViewModel.Photos = photos;
+                photosViewModel.ExpectMorePhotos = true;
+                photosViewModel.ActualPhotosCount = photosToSend;
+            }
+            else
+            {
+                photosViewModel.ExpectMorePhotos = false;
+            }
+
+            ;
+
+            await Clients.Caller.SendAsync(
+                "GetPhotosNew",
+                photosViewModel
+                );
+
+        }
+
+        private bool IsMorePhotos(int photosCountSent, int challangeId, int userLikedPhotosCount)
+        {
+            int totalCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == challangeId).Count();
+
+            if (photosCountSent < totalCount - userLikedPhotosCount)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

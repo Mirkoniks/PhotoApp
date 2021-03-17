@@ -28,7 +28,8 @@ namespace PhotoApp.Web.Controllers
             UsersPhotoLikes usersPhotoLikes = new UsersPhotoLikes
             {
                 PhotoId = like.PhotoId,
-                UserId = like.UserId
+                UserId = like.UserId,
+                ChallangeId = like.ChallangeId
             };
 
             dbContext.UsersPhotoLikes.Add(usersPhotoLikes);

@@ -63,11 +63,12 @@
     </div>
     <div id="photos">
         <div class="card mt-3">
-            <div class="card-body">
+            <div id="photoBox" class="card-body">
                 <div id="photosContainer" class="row">
                     <div class="card-columns">
                     </div>
                 </div>
+              
             </div>
         </div>
     </div>
@@ -86,6 +87,9 @@
         var TotalPhotos = 0;
         var PhotosSend = 0;
         var likes = [];
+        var morePhotos = false;
+        var actualPhotosPacket = 0;
+        
 
         $(document).ready(function () {
             $("#photos").hide();
@@ -106,7 +110,9 @@
             .withUrl("/load")
             .build();
 
-        connection.on("GetPhotos",
+        var uid1 = document.getElementById("userId").textContent;
+
+        @*connection.on("GetPhotos",
             function (model) {
                 TotalPhotos = model.totalPhotos;
 
@@ -129,7 +135,6 @@
             }
         );
 
-        var uid1 = document.getElementById("userId").textContent;
 
         $("#rate").click(function () {
 
@@ -163,7 +168,73 @@
                     connection.invoke("LoadPhotos", loadInfo);
                 }
             }
+        });*@
+
+        //NEW METHODS FOR LOADING
+
+        connection.on("GetPhotosNew",
+            function (model) {
+
+                if ($('#rate').prop('disabled')) {
+
+                    //$("#photoBox").append("<div id=\"loader\" class=\"d-flex justify-content-center\"><div class=\"spinner-border\" style=\"width: 10rem; height: 10rem;\" role=\"status\"><span class=\"sr-only\">Loading...</span></div></div>");
+
+                    "<div id=\"loader\" class=\"d-flex justify-content-center\"><div class=\"spinner-border\" style=\"width: 10rem; height: 10rem;\" role=\"status\"><span class=\"sr-only\">Loading...</span></div></div>"
+
+                    morePhotos = model.expectMorePhotos;
+                    actualPhotosPacket += model.actualPhotosCount;
+
+                    var i;
+
+                        for (i = 0; i < model.photos.length; i++) {
+                            $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
+
+                            PhotosSend++;
+                        }
+
+
+                }
+
+            }
+        );
+
+        $("#rate").click(function () {
+
+            var loadInfo =
+            {
+                totalPhotos: 0,
+                photosSend: PhotosSend,
+                challangeId: @Model.Id,
+                userId: uid1,
+                actualPhotosCount: actualPhotosPacket
+            };
+
+            connection.invoke("LoadPhotosNew", loadInfo);
+        }
+        );
+
+
+        $(window).on("scroll", function () {
+
+            if (morePhotos) {
+                if ($('#rate').prop('disabled')) {
+                    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+
+                        var loadInfo =
+                        {
+                            totalPhotos: 0,
+                            photosSend: PhotosSend,
+                            challangeId: @Model.Id,
+                            userId: uid1,
+                            actualPhotosCount: actualPhotosPacket
+                        };
+
+                        connection.invoke("LoadPhotosNew", loadInfo);
+                    }
+                }
+            }
         });
+
 
         connection.start();
 

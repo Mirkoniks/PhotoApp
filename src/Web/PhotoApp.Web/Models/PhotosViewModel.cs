@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace PhotoApp.Web.Models
 {
-    public class LoadInfo
+    public class PhotosViewModel
     {
-        [JsonProperty("photosSend")]
-        public int PhotosSend { get; set; }
+        [JsonProperty("photosSent")]
+        public int PhotosSent { get; set; }
 
-        [JsonProperty("totalPhotos")]
-        public int TotalPhotos { get; set; }
+        [JsonProperty("photos")]
+        public IEnumerable<PhotoViewModel> Photos { get; set; }
+
+        [JsonProperty("expectMorePhotos")]
+        public bool ExpectMorePhotos { get; set; }
 
         [JsonProperty("challangeId")]
         public int ChallangeId { get; set; }

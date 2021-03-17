@@ -12,5 +12,6 @@ namespace PhotoApp.Data.Models
         public int PhotoId { get; set; }
         public Photo Photo { get; set; }
 
+        public int ChallangeId { get; set; }
     }
 }
