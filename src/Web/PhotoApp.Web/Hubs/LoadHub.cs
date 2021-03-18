@@ -247,16 +247,16 @@ namespace PhotoApp.Web.Hubs
             List<PhotoViewModel> photos = new List<PhotoViewModel>();
 
             int photosToSend = 8;
-            
+
             int userLikedPhotosCount = dbContext.UsersPhotoLikes.Where(upl => upl.UserId == model.UserId).Where(upl => upl.ChallangeId == model.ChallangeId).Count();
 
-            if (IsMorePhotos(model.PhotosSend, model.ChallangeId, userLikedPhotosCount))
+            int totalPhotosLeft = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
+
+            totalPhotosLeft -= userLikedPhotosCount;
+
+            if (IsMorePhotos(model.PhotosSend, totalPhotosLeft))
             {
-                int totalPhotosLeft = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
-
-
                 totalPhotosLeft -= model.PhotosSend;
-                totalPhotosLeft -= userLikedPhotosCount;
 
                 if (photosToSend > totalPhotosLeft)
                 {
@@ -307,11 +307,64 @@ namespace PhotoApp.Web.Hubs
 
         }
 
-        private bool IsMorePhotos(int photosCountSent, int challangeId, int userLikedPhotosCount)
+        public async Task LoadAllTopPhotosNew(TopPhotosLoadInfo model)
         {
-            int totalCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == challangeId).Count();
+            TopPhotosModelNew modelNew = new TopPhotosModelNew();
 
-            if (photosCountSent < totalCount - userLikedPhotosCount)
+            int totoalPhotosCount = dbContext.PhotosChallanges.Count();
+
+            if (IsMorePhotos(model.PhotosSent, totoalPhotosCount))
+            {
+                List<TopPhotoModel> photos = new List<TopPhotoModel>();
+
+                int photosToSend = 8;
+
+                if (photosToSend > totoalPhotosCount)
+                {
+                    photosToSend = totoalPhotosCount;
+                }
+
+                var photosDb = dbContext.PhotosChallanges
+                                      .Skip(model.PhotosSent)
+                                      .Take(photosToSend)
+                                      .OrderByDescending(c => c.VotesCount)
+                                      .ToList();
+
+                foreach (var item in photosDb)
+                {
+                    string userId = dbContext.UsersPhotos.Where(p => p.PhotoId == item.PhotoId).FirstOrDefault().UserId;
+
+                    string username = dbContext.Users.Where(u => u.Id == userId).FirstOrDefault().UserName;
+
+                    TopPhotoModel photo = new TopPhotoModel()
+                    {
+                        ChallangeName = dbContext.Challanges.Where(c => c.ChallangeId == item.ChallangeId).FirstOrDefault().Name,
+                        PhotoLink = dbContext.Photos.Where(p => p.PhotoId == item.PhotoId).FirstOrDefault().Link,
+                        Username = username,
+                        VotesCount = dbContext.PhotosChallanges.Where(p => p.ChallangeId == item.ChallangeId).FirstOrDefault().VotesCount
+                    };
+
+                    photos.Add(photo);
+                }
+
+                modelNew.Photos = photos;
+                modelNew.ExpectMorePhotos = true;
+            }
+            else
+            {
+                modelNew.ExpectMorePhotos = false;
+            }
+
+            await Clients.Caller.SendAsync(
+                "GetAllTopPhotosNew",
+                modelNew
+                );
+        }
+
+
+        private bool IsMorePhotos(int photosCountSent, int totalPhotos)
+        {
+            if (photosCountSent < totalPhotos)
             {
                 return true;
             }
