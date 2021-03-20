@@ -415,6 +415,62 @@ namespace PhotoApp.Web.Hubs
                 );
         }
 
+        public async Task ChallangeTopPhotos(ChallangeTopPhotosLoadInfo model)
+        {
+            ChallangeTopPhotosModel modelNew = new ChallangeTopPhotosModel();
+
+            int totoalPhotosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
+
+            if (IsMorePhotos(model.PhotosSent, totoalPhotosCount))
+            {
+                List<ChallangeTopPhotoModel> photos = new List<ChallangeTopPhotoModel>();
+
+                    
+                int photosToSend = 8;
+
+                if (photosToSend > totoalPhotosCount)
+                {
+                    photosToSend = totoalPhotosCount;
+                }
+
+                var photosDb = dbContext.PhotosChallanges
+                                        .Where(c => c.ChallangeId == model.ChallangeId)
+                                        .OrderByDescending(c => c.VotesCount)
+                                        .Skip(model.PhotosSent)
+                                        .Take(photosToSend)
+                                        .ToList();
+
+                foreach (var item in photosDb)
+                {
+                    string userId = dbContext.UsersPhotos.Where(p => p.PhotoId == item.PhotoId).FirstOrDefault().UserId;
+
+                    string username = dbContext.Users.Where(u => u.Id == userId).FirstOrDefault().UserName;
+
+                    ChallangeTopPhotoModel photo = new ChallangeTopPhotoModel()
+                    {
+                        ChallangeName = dbContext.Challanges.Where(c => c.ChallangeId == item.ChallangeId).FirstOrDefault().Name,
+                        PhotoLink = dbContext.Photos.Where(p => p.PhotoId == item.PhotoId).FirstOrDefault().Link,
+                        Username = username,
+                        VotesCount = dbContext.PhotosChallanges.Where(p => p.ChallangeId == item.ChallangeId).FirstOrDefault().VotesCount
+                    };
+
+                    photos.Add(photo);
+                }
+
+                modelNew.Photos = photos;
+                modelNew.ExpectMorePhotos = true;
+            }
+            else
+            {
+                modelNew.ExpectMorePhotos = false;
+            }
+
+            await Clients.Caller.SendAsync(
+                "GetChallangeTopPhotos",
+                modelNew
+                );
+        }
+
 
         private bool IsMorePhotos(int photosCountSent, int totalPhotos)
         {

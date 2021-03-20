@@ -30,11 +30,15 @@
     var challangeId1 = @Model.ChallangeId;
     var photosCount1 = 0;
 
+    var photosSentFE =  @Model.Photos.Count();
+    var challangeId = @Model.ChallangeId;
+    var expectMorePhotos = true;
+
     var connection = new signalR.HubConnectionBuilder()
             .withUrl("/load")
             .build();
 
-    connection.on("GetTopPhotos",
+    @*connection.on("GetTopPhotos",
         function (model) {
             photosCount1 = model.photosCount;
             if (photosSend1 != photosCount1) {
@@ -62,6 +66,38 @@
         };
 
             connection.invoke("LoadTopPhotos", loadInfo);
+        }
+    });*@
+
+     //NEW METHODS
+
+        connection.on("GetChallangeTopPhotos",
+            function (model) {
+
+                expectMorePhotos = model.expectMorePhotos
+
+                for (i = 0; i < model.photos.length; i++) {
+                    var i;
+                    $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
+                    photosSentFE++;
+                }
+            }
+        );
+
+
+    $(window).on("scroll", function () {
+
+        if (expectMorePhotos) {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+
+                var loadInfo =
+                {
+                    photosSent: photosSentFE,
+                    challangeId: challangeId
+                };
+
+                connection.invoke("ChallangeTopPhotos", loadInfo);
+            }
         }
     });
 

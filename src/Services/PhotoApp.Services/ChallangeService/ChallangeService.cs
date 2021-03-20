@@ -152,7 +152,7 @@ namespace PhotoApp.Services.ChallangeService
 
         public async Task<TopPhotosServiceModel> FirstTopPhotosFromChallange(int challangeId, int numPhotos)
         {
-            var photos = dbContext.PhotosChallanges.OrderByDescending(v => v.VotesCount).Where(c => c.ChallangeId == challangeId).Take(numPhotos).ToList();
+            var photos = dbContext.PhotosChallanges.Where(c => c.ChallangeId == challangeId).OrderByDescending(v => v.VotesCount).Take(numPhotos).ToList();
 
             TopPhotosServiceModel serviceModel = new TopPhotosServiceModel();
             List<TopPhotoServiceModel> photoServiceModels = new List<TopPhotoServiceModel>();
