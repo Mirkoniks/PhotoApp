@@ -241,24 +241,7 @@ namespace PhotoApp.Services.ChallangeService
 
             for (int i = 0; i < challanges.Count; i++)
             {
-
-                switch (CheckChallangeStatus(challanges[i].StartTime, challanges[i].EndTime))
-                {
-                    case -1:
-                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = true;
-                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = false;
-                        break;
-                    case 0:
-                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = true;
-                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = false;
-                        break;
-                    case 1:
-                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = false;
-                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = false;
-                        break;
-                    default:
-                        break;
-                }
+                await RunChallageCheckAsync(challanges[i].ChallangeId);
             }
 
             await dbContext.SaveChangesAsync();
@@ -271,15 +254,15 @@ namespace PhotoApp.Services.ChallangeService
             switch (CheckChallangeStatus(challangeDb.StartTime, challangeDb.EndTime))
             {
                 case -1:
-                    var challange = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = true;
+                    dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = true;
                     dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
                     break;
                 case 0:
-                    var challange1 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = true;
+                    dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = true;
                     dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = false;
                     break;
                 case 1:
-                    var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
+                    dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
                     dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = false;
                     break;
                 default:
