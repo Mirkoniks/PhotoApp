@@ -245,13 +245,16 @@ namespace PhotoApp.Services.ChallangeService
                 switch (CheckChallangeStatus(challanges[i].StartTime, challanges[i].EndTime))
                 {
                     case -1:
-                        var challange = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = true;
+                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = true;
+                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = false;
                         break;
                     case 0:
-                        var challange1 = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = true;
+                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = true;
+                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = false;
                         break;
                     case 1:
-                        var challange2 = dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = false;
+                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsOpen = false;
+                        dbContext.Challanges.Where(c => c.ChallangeId == challanges[i].ChallangeId).FirstOrDefault().IsUpcoming = false;
                         break;
                     default:
                         break;
