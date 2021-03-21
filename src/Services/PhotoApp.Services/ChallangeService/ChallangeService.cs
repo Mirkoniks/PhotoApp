@@ -11,6 +11,8 @@ using PhotoApp.Services.PhotoService;
 using PhotoApp.Services.CloudinaryService;
 using CloudinaryDotNet;
 using PhotoApp.Services.Models.Photo;
+using PhotoApp.Services.UserService;
+using PhotoApp.Services.NotificationService;
 
 namespace PhotoApp.Services.ChallangeService
 {
@@ -23,13 +25,22 @@ namespace PhotoApp.Services.ChallangeService
         private readonly IPhotoService photoService;
         private readonly ICloundinaryService cloundinaryService;
         private readonly Cloudinary cloudinary;
+        private readonly IUserService userService;
+        private readonly INotificationService notificationService;
 
-        public ChallangeService(PhotoAppDbContext dbContext, IPhotoService photoService, ICloundinaryService cloundinaryService, Cloudinary cloudinary)
+        public ChallangeService(PhotoAppDbContext dbContext
+                                , IPhotoService photoService
+                                , ICloundinaryService cloundinaryService
+                                , Cloudinary cloudinary
+                                , IUserService userService
+                                , INotificationService notificationService)
         {
             this.dbContext = dbContext;
             this.photoService = photoService;
             this.cloundinaryService = cloundinaryService;
             this.cloudinary = cloudinary;
+            this.userService = userService;
+            this.notificationService = notificationService;
         }
         public async Task<int> CreateChallangeAsync(CreateChallangeServiceModel serviceModel)
         {
@@ -264,6 +275,7 @@ namespace PhotoApp.Services.ChallangeService
                 case 1:
                     dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
                     dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = false;
+                    await CheckWinner(challangeDb.ChallangeId);
                     break;
                 default:
                     break;
@@ -272,6 +284,16 @@ namespace PhotoApp.Services.ChallangeService
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task CheckWinner(int challangeId)
+        {
+            var challangepPhoto = dbContext.PhotosChallanges.Where(pc => pc.ChallangeId == challangeId).OrderByDescending(pc => pc.VotesCount).FirstOrDefault();
+
+            var userId = dbContext.UsersPhotos.Where(p => p.PhotoId == challangepPhoto.PhotoId).FirstOrDefault().UserId;
+
+            await notificationService.NotifyWinner(userId, challangepPhoto.ChallangeId);
+        }
+
+
         public async Task SetChallangeCoverPhoto(int challangeId, int photoId)
         {
             dbContext.Challanges.Where(c => c.ChallangeId == challangeId).FirstOrDefault().ChallangeCoverPhotoId = photoId;
@@ -279,13 +301,11 @@ namespace PhotoApp.Services.ChallangeService
             await dbContext.SaveChangesAsync();
         }
 
-
-
         //temporary  solution
         //if -1 is upcommig, if 0 is now, if 1 closed
         private int CheckChallangeStatus(DateTime startTime, DateTime endTime)
         {
-            DateTime now = DateTime.UtcNow.Date.AddDays(-1);
+            DateTime now = DateTime.UtcNow.Date.AddDays(0);
 
             if ((DateTime.Compare(now, startTime) == -1) && (DateTime.Compare(now, endTime) == -1))
             {

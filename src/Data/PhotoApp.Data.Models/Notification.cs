@@ -12,6 +12,8 @@ namespace PhotoApp.Data.Models
 
         public bool IsDismissed { get; set; }
 
+        public int ChallangeId { get; set; }
+
         public ICollection<UserNotification> UserNotifications { get; set; } = new HashSet<UserNotification>();
     }
 }

@@ -10,6 +10,7 @@ using PhotoApp.Data;
 using PhotoApp.Data.Models;
 using PhotoApp.Services.ChallangeService;
 using PhotoApp.Services.CloudinaryService;
+using PhotoApp.Services.NotificationService;
 using PhotoApp.Services.PhotoService;
 using PhotoApp.Services.ReportService;
 using PhotoApp.Services.UpdateService;
@@ -63,6 +64,7 @@ namespace PhotoApp.Web
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IChallangeService, ChallangeService>();
             services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<INotificationService, NotificationService>();
 
 
             services.AddHostedService<ChallangeUpdateService>();

@@ -74,5 +74,7 @@ namespace PhotoApp.Services.ChallangeService
 
         public Task<AdminChallangeServiceModel> GetChallangeById(int id);
 
+        public Task CheckWinner(int challangeId);
+
     }
 }
