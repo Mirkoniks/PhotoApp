@@ -137,3 +137,12 @@ body {*/
     display: block;
     text-decoration: none;
 }
+
+.profile-head {
+    transform: translateY(5rem)
+}
+
+.cover {
+    background-size: cover;
+    background-repeat: no-repeat
+}

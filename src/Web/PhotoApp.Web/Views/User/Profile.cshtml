@@ -1,0 +1,50 @@
+﻿@model PhotoApp.Web.ViewModels.UserViewModel
+
+
+<div class="mx-auto pt-5 mt-5">
+    <!-- Profile widget -->
+    <div class="bg-white shadow rounded overflow-hidden">
+        <div class="px-4 pt-0 pb-4 cover" style="background-image: url(@Model.CoverPhotoLink);">
+            <div class="media align-items-end profile-head">
+                <div class="profile mr-3">
+                    <img src="@Model.ProfilePicLink"
+                         alt="..." width="130" class="rounded mb-2 img-thumbnail">
+                    @*<a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>*@
+                    <button type="button" class="btn btn-outline-dark btn-sm btn-block" data-toggle="modal" data-target="#exampleModal">
+                        Change profile or cover picture
+                    </button>
+                </div>
+                <div class="media-body mb-5 text-white">
+                    <h4 class="mt-0 mb-0">@Model.FirstName @Model.LastName</h4>
+                    <p class="mb-4">&#64;@Model.Username</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-light p-4 d-flex justify-content-start text-center">
+            <ul class="list-inline mb-0">
+                <li class="list-inline-item">
+                    <h5 class="font-weight-bold mb-0 d-block">@Model.PhotosCount</h5><small class="text-muted">
+                        <i class="fas fa-image mr-1"></i>Photos
+                    </small>
+                </li>
+            </ul>
+        </div>
+
+        <div class="py-4 px-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="mb-0">Recent photos</h5><a href="#" class="btn btn-link text-muted">Show all</a>
+            </div>
+            <div class="row">
+                @foreach (var item in Model.PhotoLinks)
+                {
+                    <div class="col-lg-6 mb-2 pr-lg-1">
+                        <img src="@item.Link"
+                             alt="" class="img-fluid rounded shadow-sm">
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -29,5 +29,9 @@ namespace PhotoApp.Services.Models.User
         public bool IsAdmin { get; set; }
 
         public string Role { get; set; }
+
+        public int CoverPhotoId { get; set; }
+
+        public int ProfilePicId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PhotoApp.Services.Models.Photo;
+﻿using Microsoft.AspNetCore.Http;
+using PhotoApp.Services.Models.Photo;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,5 +22,10 @@ namespace PhotoApp.Services.PhotoService
         public Task<string> GetPhotoUrl(int id);
 
         public Task<int> GetChallangeCoverPhotoId(int id);
+
+        public Task ChangeCoverPhoto(IFormFile file, string userId);
+
+        public Task ChangeProfilePhoto(IFormFile file, string userId);
+
     }
 }

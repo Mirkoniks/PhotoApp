@@ -25,6 +25,10 @@ namespace PhotoApp.Data.Models
 
         public DateTime CreatedOn { get; set; }
 
+        public int CoverPhotoId { get; set; }
+
+        public int ProfilePicId { get; set; }
+
         public ICollection<UserPhoto> UsersPhotos { get; set; } = new HashSet<UserPhoto>();
 
         public ICollection<UsersPhotoLikes> UsersPhotoLikes { get; set; } = new HashSet<UsersPhotoLikes>();

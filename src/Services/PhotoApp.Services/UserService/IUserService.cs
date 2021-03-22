@@ -32,5 +32,10 @@ namespace PhotoApp.Services.UserService
         public Task<bool> CheckIfUsernameIsValid(string username);
 
         public Task<string> GetUserIdByUsername(string username);
+
+        public Task<int> GetUserPhotosCount(string id);
+
+        public Task<List<PhotoServceModel>> GetUserPhotos(string userId, int count = 0);
+
     }
 }

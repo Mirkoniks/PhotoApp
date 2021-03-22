@@ -1,5 +1,8 @@
-﻿using PhotoApp.Data;
+﻿using CloudinaryDotNet;
+using Microsoft.AspNetCore.Http;
+using PhotoApp.Data;
 using PhotoApp.Data.Models;
+using PhotoApp.Services.CloudinaryService;
 using PhotoApp.Services.Models.Photo;
 using System;
 using System.Collections.Generic;
@@ -12,10 +15,14 @@ namespace PhotoApp.Services.PhotoService
     public class PhotoService : IPhotoService
     {
         private readonly PhotoAppDbContext dbContext;
+        private readonly Cloudinary cloudinary;
+        private readonly ICloundinaryService cloudinaryService;
 
-        public PhotoService(PhotoAppDbContext dbContext)
+        public PhotoService(PhotoAppDbContext dbContext, Cloudinary cloudinary, ICloundinaryService cloudinaryService)
         {
             this.dbContext = dbContext;
+            this.cloudinary = cloudinary;
+            this.cloudinaryService = cloudinaryService;
         }
 
         public async Task<int> AddPhotoAsync(string photoLink)
@@ -104,6 +111,32 @@ namespace PhotoApp.Services.PhotoService
             var photoId = dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault().ChallangeCoverPhotoId;
 
             return photoId;
+        }
+
+        public async Task ChangeCoverPhoto(IFormFile file, string userId)
+        {
+            List<IFormFile> files = new List<IFormFile> { file };
+
+            var uploadInfo = await cloudinaryService.UploadAsync(cloudinary, files);
+
+            var picId = await AddPhotoAsync(uploadInfo.FirstOrDefault());
+
+            dbContext.Users.Where(u => u.Id == userId).FirstOrDefault().CoverPhotoId = picId;
+
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task ChangeProfilePhoto(IFormFile file, string userId)
+        {
+            List<IFormFile> files = new List<IFormFile> { file };
+
+            var uploadInfo = await cloudinaryService.UploadAsync(cloudinary, files);
+
+            var picId = await AddPhotoAsync(uploadInfo.FirstOrDefault());
+
+            dbContext.Users.Where(u => u.Id == userId).FirstOrDefault().ProfilePicId = picId;
+
+            await dbContext.SaveChangesAsync();
         }
 
     }

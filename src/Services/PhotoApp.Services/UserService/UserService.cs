@@ -3,6 +3,7 @@ using PhotoApp.Data;
 using PhotoApp.Data.Models;
 using PhotoApp.Services.Models.Photo;
 using PhotoApp.Services.Models.User;
+using PhotoApp.Services.PhotoService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,15 @@ namespace PhotoApp.Services.UserService
     {
         private readonly PhotoAppDbContext dbContext;
         private readonly UserManager<PhotoAppUser> userManager;
+        private readonly IPhotoService photoService;
 
         public UserService(PhotoAppDbContext dbContext,
-                           UserManager<PhotoAppUser> userManager)
+                           UserManager<PhotoAppUser> userManager,
+                           IPhotoService photoService)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
+            this.photoService = photoService;
         }
 
         public async Task AssignUserToPhotoAsync(string userId, int photoId)
@@ -122,7 +126,9 @@ namespace PhotoApp.Services.UserService
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
-                RegisterDate = user.CreatedOn
+                RegisterDate = user.CreatedOn,
+                ProfilePicId = user.ProfilePicId,
+                CoverPhotoId = user.CoverPhotoId
             };
 
             var roles = await GetUserRole(userId);
@@ -318,6 +324,33 @@ namespace PhotoApp.Services.UserService
             var userId = dbContext.Users.Where(u => u.UserName == username).FirstOrDefault().Id;
 
             return userId;
+        }
+
+        public async Task<int> GetUserPhotosCount(string id)
+        {
+            return dbContext.UsersPhotos.Where(up => up.UserId == id).Count();
+        }
+
+        public async Task<List<PhotoServceModel>> GetUserPhotos(string userId, int count = 0)
+        {
+            List<PhotoServceModel> photos = new List<PhotoServceModel>();
+
+            var photoIds = dbContext.UsersPhotos.Where(pu => pu.UserId == userId).Select(pu => pu.PhotoId).ToList();
+
+            foreach (var item in photoIds)
+            {
+               var photo = await photoService.FindPhotoByIdAsync(item);
+
+                PhotoServceModel photo1 = new PhotoServceModel()
+                {
+                    Id = photo.PhotoId,
+                    Link = photo.PhotoLink
+                };
+
+                photos.Add(photo1);
+            }
+
+            return photos;
         }
 
 

@@ -21,12 +21,77 @@
                     <input asp-for="Input.PhoneNumber" class="form-control" />
                     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                 </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-dark btn-sm btn-block" data-toggle="modal" data-target="#exampleModal">
+                        Profile photo
+                    </button>
+                    <button type="button" class="btn btn-dark btn-sm btn-block" data-toggle="modal" data-target="#exampleModal1">
+                       Cover photo
+                    </button>
+                </div>
                 <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
             </form>
         </div>
     </div>
 </div>
 
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Profile photo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form  asp-area="" asp-controller="User" asp-action="ChangeProflePhoto" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="file" name="file" multiple />
+                        </div>
+                        <div class="col-6">
+                            <button class="text-center" type="submit" value="Upload">Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cover photo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form  method="post" enctype="multipart/form-data" asp-area="" asp-controller="User" asp-action="ChaneCoverPhoto">
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="file" name="file" multiple />
+                        </div>
+                        <div class="col-6">
+                            <button class="text-center" type="submit" value="Upload">Upload</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
