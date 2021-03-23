@@ -102,6 +102,7 @@ namespace PhotoApp.Web.Controllers
                 CoverPhotoLink =  await photoService.GetPhotoUrl(user.CoverPhotoId),
                 PhotosCount = await userService.GetUserPhotosCount(userId),
                 ProfilePicLink = await photoService.GetPhotoUrl(user.ProfilePicId),
+                UserId = user.Id
             };
 
             var photos = await userService.GetUserPhotos(userId);

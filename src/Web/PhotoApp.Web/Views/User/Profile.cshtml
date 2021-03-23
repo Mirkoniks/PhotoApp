@@ -10,7 +10,7 @@
                     <img src="@Model.ProfilePicLink"
                          alt="..." width="130" class="rounded mb-2 img-thumbnail">
                     @*<a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>*@
-                <a id="chatBtn1" onclick="openForm()" class="btn btn-dark btn-sm btn-block">
+                <a id="chatBtn1" onclick="add()" class="btn btn-dark btn-sm btn-block">
                     Chat
                 </a>
                 </div>
@@ -56,10 +56,7 @@
 
 
         function add() {
-            $('#chatBtn1').prop('disabled', false);
-            $("#chat-content").append("<div class=\"media media-chat media\"> <img id=\"toPic\" class=\"avatar\" src = \"https://img.icons8.com/color/36/000000/administrator-male.png\"><div class=\"media-body\"><p>Okay then see you on sunday!!</p></div></div>")
-            $('.avatar').attr('src', '@Model.ProfilePicLink');
-            $('#names').append('@Model.FirstName @Model.LastName');
+            openForm('@Model.FirstName @Model.LastName', '@Model.UserId');
         }
     </script>
 }

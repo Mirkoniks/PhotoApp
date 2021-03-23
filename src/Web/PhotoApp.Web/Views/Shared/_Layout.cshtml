@@ -478,14 +478,56 @@
     <script src="~/vendor/venobox/venobox.min.js"></script>
     <script src="~/vendor/aos/aos.js"></script>
     <script>
-        function openForm() {
+
+        var userIdToFE = "";
+
+        function openForm(nameTo, userIdTo) {
             document.getElementById("page-content").style.display = "block";
-            add();
+
+            $('#names').append(nameTo);
+
+            userIdToFE = userIdTo;
         }
 
         function closeForm() {
             document.getElementById("page-content").style.display = "none";
+
         }
+
+        var chatConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/chat")
+            .build();
+
+        chatConnection.on("ReceiveMessage",
+            function (model) {
+                if ($("#page-content").is(":hidden")) {
+                    openForm(model.namesFrom);
+                }
+
+                var getMsg = model.message;
+                userId =
+
+                $("#chat-content").append("<div class=\"media media-chat\"><div class=\"media-body\"><p>" + getMsg + "</p></div></div>");
+
+            });
+
+
+        function send() {
+            var msg = $("#chatArea").val();
+
+            $("#chat-content").append("<div class=\"media media-chat media-chat-reverse\"><div class=\"media-body\"><p>"+ msg +"</p></div></div>");
+
+            var model = {
+                toUserId: userIdToFE,
+                message: msg,
+                fromUserId: '@UserManager.GetUserId(this.User)'
+            };
+
+            chatConnection.invoke("Send", model);
+        }
+
+        chatConnection.start();
+
     </script>
     @RenderSection("Scripts", required: false)
 </body>

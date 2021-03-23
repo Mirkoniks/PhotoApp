@@ -18,6 +18,8 @@ namespace PhotoApp.Web.ViewModels
 
         public int PhotosCount { get; set; }
 
+        public string UserId { get; set; }
+
         public List<PhotoViewModel> PhotoLinks { get; set; }
     }
 }

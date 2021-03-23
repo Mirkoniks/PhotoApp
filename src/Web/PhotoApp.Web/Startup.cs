@@ -119,8 +119,26 @@ namespace PhotoApp.Web
                             ConcurrencyStamp = Guid.NewGuid().ToString()
                         });
 
-                        dbContext.SaveChanges();
                     }
+
+                    if (!(dbContext.Photos.Any(p => p.PhotoId == 1) && dbContext.Photos.Any(p => p.PhotoId == 2)))
+                    {
+
+                        Photo profileDefaultPhoto = new Photo()
+                        {
+                            Link = "https://res.cloudinary.com/djjdavsvc/image/upload/v1616507053/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM_ixmd8c.jpg"
+                        };
+
+                        Photo coverDefaultPhoto = new Photo()
+                        {
+                            Link = "https://res.cloudinary.com/djjdavsvc/image/upload/v1616507053/cover-default_zeok2s.jpg"
+                        };
+
+                        dbContext.Photos.Add(profileDefaultPhoto);
+                        dbContext.Photos.Add(coverDefaultPhoto);
+                    }
+
+                    dbContext.SaveChanges();
                 }
             }
 
@@ -139,6 +157,7 @@ namespace PhotoApp.Web
             {
                 endpoints.MapHub<LoadHub>("/load");
                 endpoints.MapHub<VoteHub>("/vote");
+                endpoints.MapHub<ChatHub>("/chat");
 
                 endpoints.MapControllerRoute(
                     name: "Admin",
