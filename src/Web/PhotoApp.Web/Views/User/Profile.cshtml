@@ -10,9 +10,9 @@
                     <img src="@Model.ProfilePicLink"
                          alt="..." width="130" class="rounded mb-2 img-thumbnail">
                     @*<a href="#" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a>*@
-                    <button type="button" class="btn btn-outline-dark btn-sm btn-block" data-toggle="modal" data-target="#exampleModal">
-                        Change profile or cover picture
-                    </button>
+                <a id="chatBtn1" onclick="openForm()" class="btn btn-dark btn-sm btn-block">
+                    Chat
+                </a>
                 </div>
                 <div class="media-body mb-5 text-white">
                     <h4 class="mt-0 mb-0">@Model.FirstName @Model.LastName</h4>
@@ -48,3 +48,18 @@
 </div>
 
 
+@section Scripts{ 
+    <script>
+
+      /*  "<div class=\"media media-chat media-chat-reverse\"><div class=\"media-body\"><p>Okay then see you on sunday!!</p></div></div>"*/
+
+
+
+        function add() {
+            $('#chatBtn1').prop('disabled', false);
+            $("#chat-content").append("<div class=\"media media-chat media\"> <img id=\"toPic\" class=\"avatar\" src = \"https://img.icons8.com/color/36/000000/administrator-male.png\"><div class=\"media-body\"><p>Okay then see you on sunday!!</p></div></div>")
+            $('.avatar').attr('src', '@Model.ProfilePicLink');
+            $('#names').append('@Model.FirstName @Model.LastName');
+        }
+    </script>
+}
