@@ -29,7 +29,9 @@ namespace PhotoApp.Web.Hubs
             MessageModel messageModel = new MessageModel()
             {
                 Message = message.Message,
-                NamesFrom = $"{user.FirstName} {user.LastName}"
+                NamesFrom = $"{user.FirstName} {user.LastName}",
+                FromUserId = message.FromUserId,
+                ToUserId = message.ToUserId
             };
 
             await Clients.User(message.ToUserId).SendAsync("ReceiveMessage", messageModel);

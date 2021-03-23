@@ -94,12 +94,13 @@ namespace PhotoApp.Web.Controllers
             var userId = await userService.GetUserIdByUsername(username);
             var user = await userService.GetUserById(userId);
 
+
             UserViewModel userViewModel = new UserViewModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Username = user.UserName,
-                CoverPhotoLink =  await photoService.GetPhotoUrl(user.CoverPhotoId),
+                CoverPhotoLink = await photoService.GetPhotoUrl(user.CoverPhotoId),
                 PhotosCount = await userService.GetUserPhotosCount(userId),
                 ProfilePicLink = await photoService.GetPhotoUrl(user.ProfilePicId),
                 UserId = user.Id
@@ -118,6 +119,18 @@ namespace PhotoApp.Web.Controllers
                 };
 
                 photosLinks.Add(photo);
+            }
+
+            if (photos == null)
+            {
+                PhotoViewModel photo = new PhotoViewModel
+                {
+                    Id = 0,
+                    Link = ""
+                };
+                photosLinks.Add(photo);
+
+                return View(userViewModel);
             }
 
             userViewModel.PhotoLinks = photosLinks;
