@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using PhotoApp.Data;
 using PhotoApp.Data.Models;
 
 namespace PhotoApp.Web.Areas.Identity.Pages.Account
@@ -24,17 +25,20 @@ namespace PhotoApp.Web.Areas.Identity.Pages.Account
         private readonly UserManager<PhotoAppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly PhotoAppDbContext dbContext;
 
         public RegisterModel(
             UserManager<PhotoAppUser> userManager,
             SignInManager<PhotoAppUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            PhotoAppDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            this.dbContext = dbContext;
         }
 
         [BindProperty]
@@ -98,9 +102,12 @@ namespace PhotoApp.Web.Areas.Identity.Pages.Account
             {
                 var user = new PhotoAppUser
                 {
-                    UserName = Input.UserName, Email = Input.Email,
-                    FirstName = Input.FirstName, LastName = Input.LastName,
-                    Birthday = Input.Birthday, CreatedOn = DateTime.UtcNow
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    Birthday = Input.Birthday,
+                    CreatedOn = DateTime.UtcNow
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -119,6 +126,13 @@ namespace PhotoApp.Web.Areas.Identity.Pages.Account
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     await _userManager.AddToRoleAsync(user, "User");
+
+                    var id = user.Id;
+
+                    dbContext.Users.Where(u => u.Id == user.Id).FirstOrDefault().ProfilePicId = 1;
+                    dbContext.Users.Where(u => u.Id == user.Id).FirstOrDefault().CoverPhotoId = 2;
+
+                    dbContext.SaveChanges();
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
