@@ -50,12 +50,7 @@ namespace PhotoApp.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (!signInManager.IsSignedIn(this.User))
-            {
-                return View();
-            }
-
-            return RedirectToAction("Home");
+            return View();
         }
 
         [Authorize]
@@ -74,9 +69,9 @@ namespace PhotoApp.Web.Controllers
 
             foreach (var photo in photoLinks)
             {
-               int photoId = await photoService.AddPhotoAsync(photo);
+                int photoId = await photoService.AddPhotoAsync(photo);
 
-              await userService.AssignUserToPhotoAsync(userId ,photoId);
+                await userService.AssignUserToPhotoAsync(userId, photoId);
             }
 
             return Redirect("/Challanges/Challange/1");
@@ -88,6 +83,10 @@ namespace PhotoApp.Web.Controllers
             return View();
         }
 
+        public IActionResult Test()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
