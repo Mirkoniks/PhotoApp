@@ -27,5 +27,7 @@ namespace PhotoApp.Services.PhotoService
 
         public Task ChangeProfilePhoto(IFormFile file, string userId);
 
+        public Task<string> GetTopChallangePhotoLink(int challageId);
+
     }
 }

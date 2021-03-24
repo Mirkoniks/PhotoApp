@@ -121,7 +121,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
             AllChalangesViewModel allChalangesViewModel = new AllChalangesViewModel();
             List<ChallangeViewModel> challangeViewModels = new List<ChallangeViewModel>();
 
-            var challanges =  await challangeService.AdminGetAllChallanges();
+            var challanges = await challangeService.AdminGetAllChallanges();
 
             foreach (var item in challanges.Challanges)
             {
@@ -132,7 +132,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
                     Description = item.Description,
                     StarTime = item.StartTime,
                     EndTime = item.EndTime,
-                    Status =  await challangeService.SetStatus(item.IsOpen, item.IsUpcoming),
+                    Status = await challangeService.SetStatus(item.IsOpen, item.IsUpcoming),
                 };
 
                 challangeViewModels.Add(model);
@@ -146,7 +146,16 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Challange(int id)
         {
-            var challangeServiceModel =  await challangeService.GetChallangeById(id);
+            var challangeServiceModel = await challangeService.GetChallangeById(id);
+
+            var coverPhotoLink = "";
+
+            var challangeCooverPhotoId = await photoService.GetChallangeCoverPhotoId(id);
+
+            if (challangeCooverPhotoId != 0)
+            {
+                coverPhotoLink = await photoService.GetPhotoUrl(challangeCooverPhotoId);
+            }
 
             ChallangeViewModel viewModel = new ChallangeViewModel()
             {
@@ -156,7 +165,7 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
                 StarTime = challangeServiceModel.StartTime,
                 EndTime = challangeServiceModel.EndTime,
                 Status = await challangeService.SetStatus(challangeServiceModel.IsOpen, challangeServiceModel.IsUpcoming),
-                CoverPhotoLink = await photoService.GetPhotoUrl( await photoService.GetChallangeCoverPhotoId(id))               
+                CoverPhotoLink = coverPhotoLink
             };
 
             return View(viewModel);

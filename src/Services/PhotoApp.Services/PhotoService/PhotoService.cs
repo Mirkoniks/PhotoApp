@@ -139,5 +139,14 @@ namespace PhotoApp.Services.PhotoService
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<string> GetTopChallangePhotoLink(int challageId)
+        {
+            var photoId = dbContext.PhotosChallanges.Where(c => c.ChallangeId == challageId).OrderByDescending(c => c.VotesCount).FirstOrDefault().PhotoId;
+
+            string photoUrl = await GetPhotoUrl(photoId);
+
+            return photoUrl;
+        }
+
     }
 }

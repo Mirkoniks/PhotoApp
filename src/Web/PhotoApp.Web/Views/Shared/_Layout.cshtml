@@ -1,7 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using PhotoApp.Data.Models
+@using PhotoApp.Services.NotificationService
 @inject UserManager<PhotoAppUser> UserManager
 @inject SignInManager<PhotoAppUser> SignInManager
+@inject INotificationService notificationSerivce 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +13,7 @@
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     <link href="~/css/styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 
 
     <!-- Favicons -->
@@ -365,6 +368,8 @@
                                 </li>
                                 <li><a asp-controller="Challanges" asp-action="Latest">Latest Photos</a></li>
                                 <li><a asp-controller="Challanges" asp-action="Top">Top Photos</a></li>
+                                <li><a asp-controller="User" asp-action="Notifications"><i class="fas fa-bell"></i>(@await notificationSerivce.GetUserNotifcationsCount(UserManager.GetUserId(this.User)))</a></li>
+
                                 <li class="drop-down">
                                     <a href="#">@UserManager.GetUserAsync(User).Result.UserName</a>
                                     <ul>

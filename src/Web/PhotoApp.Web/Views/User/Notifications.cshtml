@@ -1,0 +1,50 @@
+﻿@model PhotoApp.Web.ViewModels.NotificationsViewModel
+
+<div class="container mt-5 pt-5">
+    <div class="row pt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Notifications
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        @if (Model != null)
+                        {
+                            @foreach (var item in Model.Notifications)
+                            {
+                                <div class="card col-4 " style="width: 18rem;">
+                                    <img src="@item.WinnerPhotoLink" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Congratulations !</h5>
+                                        <p class="card-text">Your photo has most likes in @item.ChallengeName challenge</p>
+                                        <div class="row">
+                                            <div class="col-6 text-center">
+                                                <a asp-controller="Challange" asp-action="ChallangeAsync" asp-route-id="@item.ChallengeId" class="btn btn-primary">To challenge</a>
+                                            </div>
+                                            <div class="col-6 text-center">
+                                                <a asp-controller="User" asp-action="Discard" asp-route-id="@item.NotificatonId" class="btn btn-danger">Discard</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-12 ">
+                                    <div class="alert alert-danger" role="alert">
+                                        No new notifications
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

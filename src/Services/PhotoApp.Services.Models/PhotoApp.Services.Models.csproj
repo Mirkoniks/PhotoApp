@@ -8,8 +8,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Notification\" />
-  </ItemGroup>
-
 </Project>

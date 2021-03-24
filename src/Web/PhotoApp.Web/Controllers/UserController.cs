@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PhotoApp.Data.Models;
 using PhotoApp.Services.ChallangeService;
 using PhotoApp.Services.Models.Photo;
+using PhotoApp.Services.NotificationService;
 using PhotoApp.Services.PhotoService;
 using PhotoApp.Services.UserService;
 using PhotoApp.Web.ViewModels;
@@ -20,16 +21,19 @@ namespace PhotoApp.Web.Controllers
         private readonly UserManager<PhotoAppUser> userManager;
         private readonly IUserService userService;
         private readonly IPhotoService photoService;
+        private readonly INotificationService notificationService;
 
         public UserController(IChallangeService challangeService,
                               UserManager<PhotoAppUser> userManager,
                               IUserService userService,
-                              IPhotoService photoService)
+                              IPhotoService photoService,
+                              INotificationService notificationService)
         {
             this.challangeService = challangeService;
             this.userManager = userManager;
             this.userService = userService;
             this.photoService = photoService;
+            this.notificationService = notificationService;
         }
 
         public async Task<IActionResult> MyPhotosAsync()
@@ -136,6 +140,40 @@ namespace PhotoApp.Web.Controllers
             userViewModel.PhotoLinks = photosLinks;
 
             return View(userViewModel);
+        }
+
+        public async Task<IActionResult> Notifications()
+        {
+            var userId = userManager.GetUserId(this.User);
+
+            var nf = await notificationService.GetUserNotifcations(userId);
+
+            NotificationsViewModel viewModel = new NotificationsViewModel();
+            List<NotificationViewModel> notifications = new List<NotificationViewModel>();
+
+            foreach (var item in nf)
+            {
+                NotificationViewModel notificationViewModel = new NotificationViewModel()
+                {
+                    ChallengeId = item.ChallangeId,
+                    ChallengeName = item.ChallangeName,
+                    WinnerPhotoLink = await photoService.GetTopChallangePhotoLink(item.ChallangeId),
+                    NotificatonId = item.NotificationId
+                };
+
+                notifications.Add(notificationViewModel);
+            }
+
+            viewModel.Notifications = notifications;
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> Discard(int id)
+        {
+            await notificationService.DismisNotification(id);
+
+            return Redirect("/");
         }
 
         public async Task<IActionResult> ChangeProflePhoto(IFormFile file)
