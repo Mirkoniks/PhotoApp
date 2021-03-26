@@ -3,7 +3,7 @@
 @using PhotoApp.Services.NotificationService
 @inject UserManager<PhotoAppUser> UserManager
 @inject SignInManager<PhotoAppUser> SignInManager
-@inject INotificationService notificationSerivce 
+@inject INotificationService notificationSerivce
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -349,6 +349,20 @@
                         <ul>
                             @if (SignInManager.IsSignedIn(User))
                             {
+                                <li>
+                                    <form method="get" asp-controller="Home" asp-action="Search" class="form-inline ml-auto">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input name="q" type="text" class="form-control mr-sm-2" placeholder="Username search">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button type="submit" class="btn btn-dark"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </li>
                                 <li class="drop-down">
                                     <a>Challenges</a>
                                     <ul>
@@ -486,6 +500,13 @@
     <script>
 
         var userIdToFE = "";
+
+        function getData() {
+
+                alert('Changed!');
+                $("#boxSearch").attr("href", "/Home/SearchConfirm?q=" + $("#inputBox").val());
+
+        }
 
         function openForm(nameTo, userIdTo) {
             document.getElementById("page-content").style.display = "block";

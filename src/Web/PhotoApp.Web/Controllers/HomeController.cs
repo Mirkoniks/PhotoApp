@@ -78,6 +78,19 @@ namespace PhotoApp.Web.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Search(string q)
+        {
+            var isValid = await userService.CheckIfUsernameIsValid(q);
+
+            if (isValid)
+            {
+                return Redirect("/User/Profile/Profile?username=" + q);
+            }
+
+            return Redirect("/Home/Error");
+        }
+
         public IActionResult Privacy()
         {
             return View();
