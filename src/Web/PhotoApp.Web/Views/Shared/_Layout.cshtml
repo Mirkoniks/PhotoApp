@@ -550,6 +550,8 @@
                 fromUserId: '@UserManager.GetUserId(this.User)'
             };
 
+            document.getElementById("chatArea").value = "";
+
             chatConnection.invoke("Send", model);
         }
 
