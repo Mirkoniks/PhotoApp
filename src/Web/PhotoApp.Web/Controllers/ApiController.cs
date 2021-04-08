@@ -52,5 +52,17 @@ namespace PhotoApp.Web.Controllers
 
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task AddReport(Models.Report report)
+        {
+            Data.Models.Report newReport = new Data.Models.Report()
+            {
+                ReportedSubjectId = report.PhotoId
+            };
+
+            await dbContext.Reports.AddAsync(newReport);
+
+            await dbContext.SaveChangesAsync();
+        }
     }
 }
