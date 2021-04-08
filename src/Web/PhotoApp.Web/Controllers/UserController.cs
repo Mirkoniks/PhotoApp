@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PhotoApp.Data.Models;
@@ -36,6 +37,7 @@ namespace PhotoApp.Web.Controllers
             this.notificationService = notificationService;
         }
 
+        [Authorize]
         public async Task<IActionResult> MyPhotosAsync()
         {
             var userId = userManager.GetUserId(this.User);
@@ -63,6 +65,7 @@ namespace PhotoApp.Web.Controllers
             return View(myPhotosViewModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> LikedPhotosAsync()
         {
             var userId = userManager.GetUserId(this.User);
@@ -93,6 +96,7 @@ namespace PhotoApp.Web.Controllers
             return View(myPhotosViewModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> Profile(string username)
         {
             var userId = await userService.GetUserIdByUsername(username);
@@ -142,6 +146,7 @@ namespace PhotoApp.Web.Controllers
             return View(userViewModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> Notifications()
         {
             var userId = userManager.GetUserId(this.User);
@@ -169,6 +174,7 @@ namespace PhotoApp.Web.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> Discard(int id)
         {
             await notificationService.DismisNotification(id);
@@ -176,6 +182,7 @@ namespace PhotoApp.Web.Controllers
             return Redirect("/");
         }
 
+        [Authorize]
         public async Task<IActionResult> ChangeProflePhoto(IFormFile file)
         {
             var userId = userManager.GetUserId(this.User);
@@ -185,6 +192,7 @@ namespace PhotoApp.Web.Controllers
             return Redirect("/Identity/Account/Manage");
         }
 
+        [Authorize]
         public async Task<IActionResult> ChaneCoverPhoto(IFormFile file)
         {
             var userId = userManager.GetUserId(this.User);

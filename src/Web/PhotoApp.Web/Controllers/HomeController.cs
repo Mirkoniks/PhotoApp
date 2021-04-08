@@ -53,13 +53,6 @@ namespace PhotoApp.Web.Controllers
             return View();
         }
 
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> HomeAsync()
-        {
-            return View();
-        }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Upload(ICollection<IFormFile> files, int id)
@@ -78,6 +71,7 @@ namespace PhotoApp.Web.Controllers
 
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Search(string q)
         {
@@ -89,16 +83,6 @@ namespace PhotoApp.Web.Controllers
             }
 
             return Redirect("/Home/Error");
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Test()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
