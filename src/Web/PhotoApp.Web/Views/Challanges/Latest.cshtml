@@ -5,23 +5,31 @@
 
 }
 
-<div class="m-2">
-    <div class="card text-center p-2">
-        <div class="card-columns">
+<div class="container-fluid mt-5 pt-5">
+    <div class="px-lg-5 mt-5">
+        <div id="content" class="row">
             @foreach (var photo in Model.Photos)
             {
-            <div class="card">
-                <img class="card-img-top" src="@photo.PhotoLink" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">@photo.VotesCount Likes</h5>
-                    <p class="card-text">@photo.ChallangeName</p>
-                    <p class="card-text"><small class="text-muted">Photo by @photo.Username</small></p>
+                <!-- Gallery item -->
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="bg-white rounded shadow-sm">
+                        <img src="@photo.PhotoLink"
+                             alt="" class="img-fluid card-img-top">
+                        <div class="p-4">
+                            <h5 class="text-center"> <a href="#" class="text-dark ">@photo.VotesCount Likes</a></h5>
+                            <p class="small text-muted mb-0 text-center">Photo by @photo.Username</p>
+                            <div class="d-flex align-items-center justify-content-center rounded-pill bg-light px-3 py-2 mt-4">
+                                <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span>@photo.ChallangeName</span></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <!-- End -->
             }
         </div>
     </div>
 </div>
+
 
 @section Scripts{
     <script>
@@ -36,50 +44,18 @@
             .withUrl("/load")
             .build();
 
-    connection.on("GetLatestPhotos",
-        function (model) {
-            photosCount1 = model.photosCount;
-            if (photosSend1 != photosCount1) {
-                var i;
-                for (i = 0; i < model.photos.length; i++) {
-                    $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text">${model.photos[i].challangeName}</p><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
-                    photosSend1++;
-                }
-            }
+    connection.on("GetLatestPhotosNew", function (model) {
+
+        photosCount1 = model.photosCount;
+
+        expectMorePhotos = model.expectMorePhotos;
+
+        var i;
+        for (i = 0; i < model.photos.length; i++) {
+            $("#content").append(`<div class="col-xl-3 col-lg-4 col-md-6 mb-4"><div class="bg-white rounded shadow-sm"><img src="${model.photos[i].photoLink}"alt="" class="img-fluid card-img-top"><div class="p-4"><h5 class="text-center"> <a href="#" class="text-dark ">${model.photos[i].votesCount} Likes</a></h5><p class="small text-muted mb-0 text-center">Photo by ${model.photos[i].username}</p><div class="d-flex align-items-center justify-content-center rounded-pill bg-light px-3 py-2 mt-4"><p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span>${model.photos[i].challangeName}</span></p></div></div></div></div>`);
+            photosSentFE++;
         }
-    );
-
-
-    $(window).on("scroll", function () {
-
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-
-        var loadInfo =
-        {
-            photos: null,
-            challangeId: @Model.ChallangeId,
-            photosSend: photosSend1,
-        };
-
-            connection.invoke("LoadLatestPhotos", loadInfo);
-        }
-    });
-
-    //NEW METHODS
-
-
-            connection.on("GetLatestPhotosNew", function (model) {
-
-                photosCount1 = model.photosCount;
-
-                expectMorePhotos = model.expectMorePhotos;
-
-                var i;
-                for (i = 0; i < model.photos.length; i++) {
-                    $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text">${model.photos[i].challangeName}</p><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
-                    photosSentFE++;
-                }
-            }
+      }
     );
 
 
