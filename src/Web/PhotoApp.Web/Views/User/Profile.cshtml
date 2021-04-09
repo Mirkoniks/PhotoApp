@@ -32,16 +32,25 @@
 
         <div class="py-4 px-4">
             <div class="d-flex align-items-center justify-content-between mb-3">
-                <h5 class="mb-0">Recent photos</h5><a href="#" class="btn btn-link text-muted">Show all</a>
+                <h5 class="mb-0">Recent photos</h5>
             </div>
-            <div class="row">
-                @foreach (var item in Model.PhotoLinks)
-                {
-                    <div class="col-lg-6 mb-2 pr-lg-1">
-                        <img src="@item.Link"
-                             alt="" class="img-fluid rounded shadow-sm">
+
+            <div class="container-fluid">
+                <div class="px-lg-5">
+                    <div class="row">
+                        @foreach (var item in Model.PhotoLinks)
+                        {
+                            <!-- Gallery item -->
+                            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                                <div class="bg-white rounded shadow-sm">
+                                    <img src="@item.Link"
+                                         alt="" class="img-fluid card-img-top">
+                                </div>
+                            </div>
+                            <!-- End -->
+                        }
                     </div>
-                }
+                </div>
             </div>
         </div>
     </div>
