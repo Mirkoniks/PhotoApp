@@ -146,6 +146,12 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Challange(int id)
         {
+            if (!(await challangeService.CheckIfValidId(id)))
+            {
+                return Redirect("/Home/Error");
+            }
+
+
             var challangeServiceModel = await challangeService.GetChallangeById(id);
 
             var coverPhotoLink = "";

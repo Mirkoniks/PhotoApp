@@ -35,6 +35,11 @@ namespace PhotoApp.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> User(string id)
         {
+            if (!(await userService.CheckIfIdIsValid(id)))
+            {
+                return Redirect("/Home/Error");
+            }
+
             var user = await userService.GetUserById(id);
 
             EditUserViewModel viewModel = new EditUserViewModel()

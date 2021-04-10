@@ -353,6 +353,10 @@ namespace PhotoApp.Services.UserService
             return photos;
         }
 
+        public async Task<bool> CheckIfIdIsValid(string id)
+        {
+           return dbContext.Users.Any(u => u.Id == id);
+        }
 
         private async Task<List<IdentityUserRole<string>>> GetUserIdFromRoles(int role)
         {

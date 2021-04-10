@@ -672,6 +672,16 @@ namespace PhotoApp.Services.ChallangeService
             return adminChallangeServiceModel;
         }
 
+        public async Task<bool> CheckIfValidId(int id)
+        {
+            if (id <= 0)
+            {
+                return false;
+            }
+
+            return dbContext.Challanges.Any(c => c.ChallangeId == id);
+        }
+
 
         private string GetPhotoLinkById(int id)
         {

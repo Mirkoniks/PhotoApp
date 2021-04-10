@@ -76,5 +76,7 @@ namespace PhotoApp.Services.ChallangeService
 
         public Task CheckWinner(int challangeId);
 
+        public Task<bool> CheckIfValidId(int id);
+
     }
 }

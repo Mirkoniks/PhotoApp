@@ -99,6 +99,13 @@ namespace PhotoApp.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Profile(string username)
         {
+
+       
+            if (!(await userService.CheckIfUsernameIsValid(username)))
+            {
+                return Redirect("/Home/Errror");
+            }
+
             var userId = await userService.GetUserIdByUsername(username);
             var user = await userService.GetUserById(userId);
 
