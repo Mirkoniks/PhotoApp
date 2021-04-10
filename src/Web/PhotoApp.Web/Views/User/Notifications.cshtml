@@ -21,7 +21,7 @@
                                         <p class="card-text">Your photo has most likes in @item.ChallengeName challenge</p>
                                         <div class="row">
                                             <div class="col-6 text-center">
-                                                <a asp-controller="Challange" asp-action="ChallangeAsync" asp-route-id="@item.ChallengeId" class="btn btn-primary">To challenge</a>
+                                                <a asp-controller="Challanges" asp-action="Challange" asp-route-id="@item.ChallengeId" class="btn btn-primary">To challenge</a>
                                             </div>
                                             <div class="col-6 text-center">
                                                 <a asp-controller="User" asp-action="Discard" asp-route-id="@item.NotificatonId" class="btn btn-danger">Discard</a>

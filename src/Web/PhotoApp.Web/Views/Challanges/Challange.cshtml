@@ -5,63 +5,105 @@
 
 }
 
+<section>
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div id="ss" class="text-center"
+                     style="background: url('https://www.photoblog.com/learn/wp-content/uploads/2017/06/34961973010_6c8c9b5b47_h.jpg');">
+                    <div class="mt-5">
+                        <h1 id="name rounded "><span class="op text-white rounded-pill p-3">@Model.Name</span> </h1>
+                    </div>
+                    <div class="container rounded-pill text-white p-3 mt-5 op">
+                        <p>
+                            @Model.Description
+                        </p>
+                    </div>
+                    <div id="bts" class="container pt-5 mt-5">
+                        <div class="row">
+                            @if (Model.IsOpen)
+                            {
+                                <div class="col-md-4">
+                                    <button id="rate" class="btn btn-info btn-lg" data-toggle="modal"
+                                            data-target="#myModal">
+                                        <i class="fas fa-star"></i>
+                                        Rate photos
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <a asp-controller="Challanges" asp-action="ChallangePhotos" asp-route-id="@Model.Id" class="btn btn-info btn-lg">
+                                        <i class="fas fa-photo-video"></i>
+                                        Challenge Photos
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#exampleModal">
+                                        <i class="fas fa-upload"></i>
+                                        Upload photo
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-4">
+                                    <button id="rate" class="btn btn-info btn-lg" data-toggle="modal"
+                                            disabled>
+                                        <i class="fas fa-star"></i>
+                                        Rate photos
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <a asp-controller="Challanges" asp-action="ChallangePhotos" asp-route-id="@Model.Id" class="btn btn-info btn-lg">
+                                        <i class="fas fa-photo-video"></i>
+                                        Challenge Photos
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#exampleModalLong" disabled>
+                                        <i class="fas fa-upload"></i>
+                                        Upload photo
+                                    </button>
+                                </div>
+                            }
 
-<div class="ml-2 mr-2">
-    <div class="card text-center ">
-        <div class="containerPhoto">
-            <img src="@Model.TopPhotoLink"
-                 class="m-2" width="99%" alt="Alternate Text" />
-            <div class="centered ">@Model.Name</div>
-            <div class="centered1 back rounded ">
-                @Model.Description
-            </div>
-            <button id="rate" class="btn btn-primary btn-sm centered3 ">Rate photos</button>
-
-            <a id="rate" asp-controller="Challanges" asp-action="ChallangePhotos" asp-route-id="@Model.Id" class="btn btn-primary btn-sm  ">Top challange photos</a>
-
-
-            @if ((Model.IsOpen == true) || (Model.IsUpcoming == false))
-            {
-                <!-- Button trigger modal -->
-                <button id="uploadButton" type="button" class="btn btn-primary btn-sm centered4" data-toggle="modal" data-target="#exampleModal">
-                    Upload Photo
-                </button>
-
-
-                <!-- Modal -->
-                <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title text-dark" id="exampleModalLabel">Upload</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body text-dark ulpoadForm">
-                                <form method="post" enctype="multipart/form-data" asp-controller="Challanges" asp-action="Upload">
-                                    <input type="file" name="files" multiple />
-                                    <input type="number" name="challangeId" value="@Model.Id" hidden />
-                                    <button type="submit" value="Upload">Upload</button>
-                                </form>
-                            </div>
                         </div>
                     </div>
                 </div>
-            }
-            else
-            {
-                <button type="button" class="btn btn-primary btn-lg centered4" disabled>
-                    Upload Photo
-                </button>
-            }
-
-        </div>
-        <div class="card-body">
-
+            </div>
         </div>
     </div>
-    <div id="photos">
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="exampleModalLabel">Upload</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark ulpoadForm">
+                    <form method="post" enctype="multipart/form-data" asp-controller="Challanges" asp-action="Upload">
+                        <input type="file" name="files" multiple />
+                        <input type="number" name="challangeId" value="@Model.Id" hidden />
+                        <button type="submit" value="Upload">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        </div>
+    </div>
+
+    <div id="photos mt-5">
         <div class="card mt-3">
             <div id="photoBox" class="card-body">
                 <div id="photosContainer">
@@ -75,20 +117,20 @@
     <p id="challangeId" hidden>@Model.Id</p>
     <p id="userId" hidden>@Model.UserId</p>
 
-</div>
-<div class="container">
+    </div>
+    <div class="container">
 
-</div>
-
-@section Scripts{
-    <script>
+    </div>
+</section>
+    @section Scripts{
+        <script>
 
         var TotalPhotos = 0;
         var PhotosSend = 0;
         var likes = [];
         var morePhotos = false;
         var actualPhotosPacket = 0;
-        
+
 
         $(document).ready(function () {
             $("#photos").hide();
@@ -285,48 +327,48 @@
             });
         }
 
-        function like(id) {
+        //function like(id) {
 
-            if (likes.indexOf(id) === -1) {
+        //    if (likes.indexOf(id) === -1) {
 
-                //Add Like
+        //        //Add Like
 
-                alert(12121);
+        //        alert(12121);
 
-                likes.push(id);
+        //        likes.push(id);
 
-                document.getElementById(id).classList.remove('btn-danger');
-                document.getElementById(id).classList.add('btn-success');
+        //        document.getElementById(id).classList.remove('btn-danger');
+        //        document.getElementById(id).classList.add('btn-success');
 
-                doc = document.getElementById(id);
+        //        doc = document.getElementById(id);
 
-                doc.innerHTML = "<i class=\"fas fa-thumbs-down\"></i> Dislike";
+        //        doc.innerHTML = "<i class=\"fas fa-thumbs-down\"></i> Dislike";
 
-                removeLike(id);
-            }
-            else {
-                //Remove Like
+        //        removeLike(id);
+        //    }
+        //    else {
+        //        //Remove Like
 
-                let index = likes.indexOf(id);
-                delete likes[index];
+        //        let index = likes.indexOf(id);
+        //        delete likes[index];
 
-                document.getElementById(id).classList.remove('btn-success');
-                document.getElementById(id).classList.add('btn-danger');
+        //        document.getElementById(id).classList.remove('btn-success');
+        //        document.getElementById(id).classList.add('btn-danger');
 
-                doc = document.getElementById(id);
+        //        doc = document.getElementById(id);
 
-                doc.innerHTML = "<i class=\"fas fa-thumbs-up\"></i> Like";
+        //        doc.innerHTML = "<i class=\"fas fa-thumbs-up\"></i> Like";
 
-                addLike(id);
-            }
-        }
+        //        addLike(id);
+        //    }
+        //}
 
         function report(id) {
             document.getElementById(id).disabled = true;
 
             realId = id.substring(0, id.length - 2);
 
-            
+
             var info =
             {
                 photoId: realId
@@ -341,30 +383,30 @@
 
         }
 
-        //function like(id) {
-        //    if (likes.indexOf(id) === -1) {
-        //        likes.push(id);
+        function like(id) {
+            if (likes.indexOf(id) === -1) {
+                likes.push(id);
 
-        //        document.getElementById(id).classList.remove('btn-danger');
-        //        document.getElementById(id).classList.add('btn-success');
+                document.getElementById(id).classList.remove('btn-danger');
+                document.getElementById(id).classList.add('btn-success');
 
-        //        addLike(id);
-        //    }
-        //    else {
-        //        let index = likes.indexOf(id);
-        //        delete likes[index];
+                addLike(id);
+            }
+            else {
+                let index = likes.indexOf(id);
+                delete likes[index];
 
-        //        document.getElementById(id).classList.remove('btn-success');
-        //        document.getElementById(id).classList.add('btn-danger');
+                document.getElementById(id).classList.remove('btn-success');
+                document.getElementById(id).classList.add('btn-danger');
 
-        //        removeLike(id);
-        //    }
+                removeLike(id);
+            }
 
-        //    likes = likes.filter(function (el) {
-        //        return el != null && el != '';
-        //    });
+            likes = likes.filter(function (el) {
+                return el != null && el != '';
+            });
 
-        //}
+        }
 
-    </script>
-}
+        </script>
+    }

@@ -431,15 +431,6 @@
                                         <li><a asp-controller="Challanges" asp-action="Open">Ongoing</a></li>
                                         <li><a asp-controller="Challanges" asp-action="Upcoming">Upcoming</a></li>
                                         <li><a asp-controller="Challanges" asp-action="Closed">Closed</a></li>
-                                        @if (await UserManager.GetUserAsync(this.User) != null)
-                                        {
-                                            @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(this.User), "Admin"))
-                                            {
-                                                <hr />
-                                                <li><a asp-controller="Challanges" asp-action="Create">Create a challenge</a></li>
-                                            }
-                                        }
-
                                     </ul>
                                 </li>
                                 <li><a asp-controller="Challanges" asp-action="Latest">Latest Photos</a></li>

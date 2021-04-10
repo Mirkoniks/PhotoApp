@@ -6,7 +6,30 @@
 }
 
 
-<div class="m-2">
+<div class="container-fluid mt-5 pt-5">
+    <div class="px-lg-5 mt-5">
+        <div id="content" class="row">
+            @foreach (var photo in Model.Photos)
+            {
+                <!-- Gallery item -->
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="bg-white rounded shadow-sm">
+                        <img src="@photo.PhotoLink"
+                             alt="" class="img-fluid card-img-top">
+                        <div class="p-4">
+                            <h5 class="text-center"> <a href="#" class="text-dark ">@photo.VotesCount Likes</a></h5>
+                            <p class="small text-muted mb-0 text-center">Photo by @photo.Username</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- End -->
+            }
+        </div>
+    </div>
+</div>
+
+
+@*<div class="m-2">
     <div class="card text-center p-2">
         <div class="card-columns">
             @foreach (var photo in Model.Photos)
@@ -21,7 +44,7 @@
             }
         </div>
     </div>
-</div>
+</div>*@
 
 
 @section Scripts{
@@ -78,7 +101,7 @@
 
                 for (i = 0; i < model.photos.length; i++) {
                     var i;
-                    $(".card-columns").append(`<div class="card"><img class="card-img-top" src="${model.photos[i].photoLink}" alt="Card image cap"><div class="card-body"><h5 class="card-title">${model.photos[i].votesCount} Likes</h5><p class="card-text"><small class="text-muted">Photo by ${model.photos[i].username}</small></p></div></div>`);
+                    $("#content").append(`<div class="col-xl-3 col-lg-4 col-md-6 mb-4"><div class="bg-white rounded shadow-sm"><img src="${model.photos[i].photoLink}" alt="" class="img-fluid card-img-top"><div class="p-4"><h5 class="text-center"> <a href="#" class="text-dark ">${model.photos[i].votesCount} Likes</a></h5><p class="small text-muted mb-0 text-center">Photo by ${model.photos[i].username}</p></div></div></div>`);
                     photosSentFE++;
                 }
             }
