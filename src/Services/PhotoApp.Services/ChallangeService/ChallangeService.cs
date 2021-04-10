@@ -250,7 +250,9 @@ namespace PhotoApp.Services.ChallangeService
         {
             var challanges = dbContext.Challanges.ToList();
 
-            for (int i = 0; i < challanges.Count; i++)
+            int i;
+
+            for (i = 0; i < challanges.Count; i++)
             {
                 await RunChallageCheckAsync(challanges[i].ChallangeId);
             }
@@ -275,7 +277,7 @@ namespace PhotoApp.Services.ChallangeService
                 case 1:
                     dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsOpen = false;
                     dbContext.Challanges.Where(c => c.ChallangeId == challangeDb.ChallangeId).FirstOrDefault().IsUpcoming = false;
-                    await CheckWinner(challangeDb.ChallangeId);
+                    CheckWinner(challangeDb.ChallangeId);
                     break;
                 default:
                     break;
@@ -290,7 +292,7 @@ namespace PhotoApp.Services.ChallangeService
 
             var userId = dbContext.UsersPhotos.Where(p => p.PhotoId == challangepPhoto.PhotoId).FirstOrDefault().UserId;
 
-            await notificationService.NotifyWinner(userId, challangepPhoto.ChallangeId);
+            notificationService.NotifyWinner(userId, challangepPhoto.ChallangeId);
         }
 
 

@@ -27,13 +27,15 @@ namespace PhotoApp.Web.Controllers
         private readonly IPhotoService photoService;
         private readonly UserManager<PhotoAppUser> userManager;
         private readonly IUserService userService;
+        private readonly PhotoAppDbContext dbContext;
 
         public ChallangesController(IChallangeService challangeService,
                                      ICloundinaryService cloudinaryService,
                                      Cloudinary cloudinary,
                                      IPhotoService photoService,
                                      UserManager<PhotoAppUser> userManager,
-                                     IUserService userService)
+                                     IUserService userService,
+                                     PhotoAppDbContext dbContext)
         {
             this.challangeService = challangeService;
             this.cloudinaryService = cloudinaryService;
@@ -41,6 +43,7 @@ namespace PhotoApp.Web.Controllers
             this.photoService = photoService;
             this.userManager = userManager;
             this.userService = userService;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
@@ -220,7 +223,13 @@ namespace PhotoApp.Web.Controllers
             string photoLink;
             var photo = await challangeService.FirstTopPhotosFromChallange(id, 1);
 
-            if (photo.Photos.FirstOrDefault() == null)
+            var coverPhoto = dbContext.Challanges.Where(c => c.ChallangeId == id).FirstOrDefault().ChallangeCoverPhotoId;
+
+            if (coverPhoto != default)
+            {
+             photoLink = await photoService.GetPhotoUrl(coverPhoto);
+            }
+            else if (photo.Photos.FirstOrDefault() == null)
             {
                 photoLink = "https://www.ecpgr.cgiar.org/fileadmin/templates/ecpgr.org/Assets/images/No_Image_Available.jpg";
             }

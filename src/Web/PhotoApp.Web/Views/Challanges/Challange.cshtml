@@ -64,11 +64,10 @@
     <div id="photos">
         <div class="card mt-3">
             <div id="photoBox" class="card-body">
-                <div id="photosContainer" class="row">
-                    <div class="card-columns">
+                <div id="photosContainer">
+                    <div class="card-columns row">
                     </div>
                 </div>
-              
             </div>
         </div>
     </div>
@@ -187,7 +186,7 @@
                     var i;
 
                         for (i = 0; i < model.photos.length; i++) {
-                            $(".card-columns").append(`<div class="card show"><img src="${model.photos[i].photoLink}" class="card-img-top" alt="..."><button id="${model.photos[i].photoId}" class="btn btn-danger centered5" type="submit" onclick="like(this.id)">Like</button></div>`)
+                            $(".card-columns").append(`<div class="col-xl-3 col-lg-4 col-md-6 mb-4"><div class="bg-white rounded shadow-sm"><img src="${model.photos[i].photoLink}"alt="" class="img-fluid card-img-top"><div class="p-4"><div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4"><p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><button id="${model.photos[i].photoId}-r" class="btn btn-warning rounded-pill text-light" onclick="report(this.id)" ><i class="fas fa-exclamation-triangle"></i> Report</button></p><div><button id="${model.photos[i].photoId}" class="btn btn-danger rounded-pill text-light" type="submit" onclick="like(this.id)" > <i class="fas fa-thumbs-up"></i> Like</button></div></div></div></div></div>`)
 
                             PhotosSend++;
                         }
@@ -286,32 +285,86 @@
             });
         }
 
-
-
         function like(id) {
+
             if (likes.indexOf(id) === -1) {
+
+                //Add Like
+
+                alert(12121);
+
                 likes.push(id);
 
                 document.getElementById(id).classList.remove('btn-danger');
                 document.getElementById(id).classList.add('btn-success');
 
-                addLike(id);
+                doc = document.getElementById(id);
+
+                doc.innerHTML = "<i class=\"fas fa-thumbs-down\"></i> Dislike";
+
+                removeLike(id);
             }
             else {
+                //Remove Like
+
                 let index = likes.indexOf(id);
                 delete likes[index];
 
                 document.getElementById(id).classList.remove('btn-success');
                 document.getElementById(id).classList.add('btn-danger');
 
-                removeLike(id);
-            }
+                doc = document.getElementById(id);
 
-            likes = likes.filter(function (el) {
-                return el != null && el != '';
+                doc.innerHTML = "<i class=\"fas fa-thumbs-up\"></i> Like";
+
+                addLike(id);
+            }
+        }
+
+        function report(id) {
+            document.getElementById(id).disabled = true;
+
+            realId = id.substring(0, id.length - 2);
+
+            
+            var info =
+            {
+                photoId: realId
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: "https://localhost:44371/Api/AddReport",
+                data: info,
+                dataType: "text",
             });
 
         }
+
+        //function like(id) {
+        //    if (likes.indexOf(id) === -1) {
+        //        likes.push(id);
+
+        //        document.getElementById(id).classList.remove('btn-danger');
+        //        document.getElementById(id).classList.add('btn-success');
+
+        //        addLike(id);
+        //    }
+        //    else {
+        //        let index = likes.indexOf(id);
+        //        delete likes[index];
+
+        //        document.getElementById(id).classList.remove('btn-success');
+        //        document.getElementById(id).classList.add('btn-danger');
+
+        //        removeLike(id);
+        //    }
+
+        //    likes = likes.filter(function (el) {
+        //        return el != null && el != '';
+        //    });
+
+        //}
 
     </script>
 }

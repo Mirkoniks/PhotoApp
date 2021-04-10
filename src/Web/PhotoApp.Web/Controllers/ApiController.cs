@@ -57,10 +57,14 @@ namespace PhotoApp.Web.Controllers
         {
             Data.Models.Report newReport = new Data.Models.Report()
             {
-                ReportedSubjectId = report.PhotoId
+                ReportedSubjectId = report.PhotoId,
+                ReportedOn = DateTime.UtcNow.Date,
+                Descripton ="-",
+                IsResolved= false
+
             };
 
-            await dbContext.Reports.AddAsync(newReport);
+             dbContext.Add<Data.Models.Report>(newReport);
 
             await dbContext.SaveChangesAsync();
         }
