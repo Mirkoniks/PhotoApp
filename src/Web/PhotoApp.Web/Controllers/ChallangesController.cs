@@ -279,6 +279,12 @@ namespace PhotoApp.Web.Controllers
 
         public async Task<IActionResult> ChallangePhotosAsync(int id)
         {
+           
+            if (!(await challangeService.CheckIfValidId(id)))
+            {
+                return Redirect("/Home/Error");
+            }
+
             TopPhotosServiceModel serviceModel = await challangeService.FirstTopPhotosFromChallange(id, 10);
 
             TopPhotosViewModel viewModel = new TopPhotosViewModel();
