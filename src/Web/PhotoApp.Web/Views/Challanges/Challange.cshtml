@@ -228,7 +228,7 @@
                     var i;
 
                         for (i = 0; i < model.photos.length; i++) {
-                            $(".card-columns").append(`<div class="col-xl-3 col-lg-4 col-md-6 mb-4"><div class="bg-white rounded shadow-sm"><img src="${model.photos[i].photoLink}"alt="" class="img-fluid card-img-top"><div class="p-4"><div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4"><p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><button id="${model.photos[i].photoId}-r" class="btn btn-warning rounded-pill text-light" onclick="report(this.id)" ><i class="fas fa-exclamation-triangle"></i> Report</button></p><div><button id="${model.photos[i].photoId}" class="btn btn-danger rounded-pill text-light" type="submit" onclick="like(this.id)" > <i class="fas fa-thumbs-up"></i> Like</button></div></div></div></div></div>`)
+                            $(".card-columns").append(`<div class="col-xl-3 col-lg-4 col-md-6 mb-4"><div class="bg-white rounded shadow-sm"><img src="${model.photos[i].photoLink}"alt="" class="img-fluid card-img-top"><div class="p-4"><div class="d-flex align-items-center justify-content-center rounded-pill bg-light px-3 py-2 mt-4"><p class="small mb-0"><i class="fa fa-picture-o mr-2"></i></button></p><div><button id="${model.photos[i].photoId}" class="btn btn-danger rounded-pill text-light" type="submit" onclick="like(this.id)" > <i class="fas fa-thumbs-up"></i> Like</button></div></div></div></div></div>`)
 
                             PhotosSend++;
                         }
