@@ -53,6 +53,7 @@ namespace PhotoApp.Web.Controllers
             await dbContext.SaveChangesAsync();
         }
 
+        [HttpPost]
         public async Task AddReport(Models.Report report)
         {
             Data.Models.Report newReport = new Data.Models.Report()

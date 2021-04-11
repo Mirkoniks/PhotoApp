@@ -20,6 +20,9 @@ namespace PhotoApp.Web.Hubs
         private readonly IChallangeService challangeService;
         private readonly IPhotoService photoService;
         private readonly UserManager<PhotoAppUser> userManager;
+        private static int oldNumbersTop = 0;
+        private static int oldNumbersLatest = 0;
+        private static int oldChallanegPhotos = 0;
 
         private int PhotosCount { get; set; }
         private int StepsCount { get; set; }
@@ -309,9 +312,18 @@ namespace PhotoApp.Web.Hubs
 
         public async Task LoadAllTopPhotosNew(TopPhotosLoadInfo model)
         {
+            if (oldNumbersTop == model.PhotosSent)
+            {
+                return;
+            }
+
+            oldNumbersTop = model.PhotosSent;
+
             TopPhotosModelNew modelNew = new TopPhotosModelNew();
 
             int totoalPhotosCount = dbContext.PhotosChallanges.Count();
+
+      
 
             if (IsMorePhotos(model.PhotosSent, totoalPhotosCount))
             {
@@ -325,9 +337,9 @@ namespace PhotoApp.Web.Hubs
                 }
 
                 var photosDb = dbContext.PhotosChallanges
+                                      .OrderByDescending(c => c.VotesCount)
                                       .Skip(model.PhotosSent)
                                       .Take(photosToSend)
-                                      .OrderByDescending(c => c.VotesCount)
                                       .ToList();
 
                 foreach (var item in photosDb)
@@ -363,6 +375,14 @@ namespace PhotoApp.Web.Hubs
 
         public async Task LoadLatestPhotosNew(LatestPhotosLoadInfo model)
         {
+            if (oldNumbersLatest == model.PhotosSent)
+            {
+                return;
+            }
+
+            oldNumbersLatest = model.PhotosSent;
+
+            oldNumbersTop = model.PhotosSent;
             LatestPhotosModel modelNew = new LatestPhotosModel();
 
             int totoalPhotosCount = dbContext.PhotosChallanges.Count();
@@ -417,6 +437,13 @@ namespace PhotoApp.Web.Hubs
 
         public async Task ChallangeTopPhotos(ChallangeTopPhotosLoadInfo model)
         {
+            if (model.PhotosSent == oldChallanegPhotos)
+            {
+                return;
+            }
+
+            oldChallanegPhotos = model.PhotosSent;
+
             ChallangeTopPhotosModel modelNew = new ChallangeTopPhotosModel();
 
             int totoalPhotosCount = dbContext.PhotosChallanges.Where(c => c.ChallangeId == model.ChallangeId).Count();
